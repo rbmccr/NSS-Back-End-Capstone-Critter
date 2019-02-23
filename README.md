@@ -1,14 +1,14 @@
-# About the Project
+# About the Project (In Progress, Complete on 3/22/2019)
 
 ### Installing the project
-- Create an empty directory to house your new project
-- run `virtualenv env` to create a virtual environment within that directory
+- Create an empty directory to house the project
+- run `virtualenv env` within that directory to create a virtual environment 
 - run `source env/bin/activate` to initialize a virtual environment (type `deactivate` at any time to exit the environment)
 - run `git clone [repository id]`
-- run `cd BangazonAPI`
+- run `cd main`
 - run `pip install -r requirements.txt`
 
 ### Seed the database with pre-fabricated data
-We've already created a file to populate the database file.
+I've already created a file to populate the database.
 - run `python manage.py makemigrations api`
 - run `python manage.py migrate`
