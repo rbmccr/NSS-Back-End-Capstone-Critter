@@ -13,7 +13,10 @@ I've already created a file to populate the database.
 - run `python manage.py makemigrations api`
 - run `python manage.py migrate`
 
+## Run the project
+- run `python manage.py runserver` from the main prokkject directory (titled 'main')
+- visit http://localhost:8000/ to get started
+
 ### Adoption Applications
 - A user can submit only one adoption application per animal. Additionally, if a shelter staff member rejects the application, then the user who submitted the application will still not be able to submit another.
-- If an application is approved for a particular animal, then:
--- Remaining applications in the system for that animal will not be visible by shelter staff members
+- If an application is approved for a particular animal, then remaining applications in the system for that animal will not be visible by shelter staff members.

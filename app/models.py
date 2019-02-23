@@ -27,10 +27,10 @@ class Species(models.Model):
        Returns __str__ type
     """
 
-    name = models.CharField(max_length=75)
+    species = models.CharField(max_length=75)
 
     def __str__(self):
-        return f"Species: {self.name}"
+        return f"Species: {self.species}"
 
 
 class Breed(models.Model):
@@ -39,10 +39,10 @@ class Breed(models.Model):
        Returns __str__ breed
     """
 
-    name = models.CharField(max_length=75)
+    breed = models.CharField(max_length=75)
 
     def __str__(self):
-        return f"Breed: {self.name}"
+        return f"Breed: {self.breed}"
 
 
 class Color(models.Model):
@@ -51,10 +51,10 @@ class Color(models.Model):
        Returns __str__ color
     """
 
-    name = models.CharField(max_length=40)
+    color = models.CharField(max_length=40)
 
     def __str__(self):
-        return f"Color: {self.name}"
+        return f"Color: {self.color}"
 
 
 class Animal(models.Model):
@@ -67,8 +67,8 @@ class Animal(models.Model):
     # you never know if you're going to adopt out a sea turtle...
     age = models.PositiveIntegerField(validators=[MaxValueValidator(200)])
     species = models.ForeignKey(Species, on_delete=models.PROTECT)
-    breed = models.ForeignKey(Species, on_delete=models.PROTECT)
-    color = models.ForeignKey(Species, on_delete=models.PROTECT)
+    breed = models.ForeignKey(Breed, on_delete=models.PROTECT)
+    color = models.ForeignKey(Color, on_delete=models.PROTECT)
     SEX_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
@@ -90,8 +90,12 @@ class Application(models.Model):
     """
 
     date_submitted = models.DateTimeField(default=None, null=True, blank=True)
-    text = models.CharField(max_length=500)
+    text = models.CharField(max_length=1000)
+    animal = models.ForeignKey(Animal, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
+    # note that the 'staff' attribute is effectively a foreign key, but it cannot be a foreign key field relative to the User in this model, or it conflicts with the 'user' attribute. When an application is approved or rejected, the staff member who made the decision will have their id manually added to the field in the model
+    staff = models.PositiveSmallIntegerField()
+    approved = models.BooleanField(default=None, null=True)
 
     def __str__(self):
         return f"User: {self.user} Date Submitted: {self.date_submitted}"
