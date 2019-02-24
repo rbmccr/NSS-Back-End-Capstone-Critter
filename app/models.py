@@ -60,7 +60,7 @@ class Color(models.Model):
 class Animal(models.Model):
     """Defines an animal at the animal shelter.
 
-       Returns: __str__
+       Returns: __str__ name, age, species, sex
     """
 
     name = models.CharField(max_length=75)
