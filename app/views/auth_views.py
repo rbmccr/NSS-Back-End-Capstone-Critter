@@ -33,9 +33,9 @@ def register(request):
             user.set_password(user.password)
             user.save()
 
-            customer = volunteer_form.save(commit=False)
-            customer.user = user
-            customer.save()
+            volunteer = volunteer_form.save(commit=False)
+            volunteer.user = user
+            volunteer.save()
 
             # Update our variable to tell the template registration was successful.
             registered = True
@@ -45,9 +45,8 @@ def register(request):
     elif request.method == 'GET':
         user_form = UserForm()
         volunteer_form = VolunteerForm()
-        template_name = 'register.html'
         context = {'user_form': user_form, 'next': request.GET.get('next', '/'), 'volunteer_form': volunteer_form}
-        return render(request, template_name, context)
+        return render(request, 'app/register.html', context)
 
 # which would capture the next pass to registration form
 # Upon submit grab the next value in the form on the post that will be passed down to login

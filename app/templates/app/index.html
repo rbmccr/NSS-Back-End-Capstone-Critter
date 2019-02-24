@@ -28,6 +28,13 @@
           margin-bottom:10px;
         }
       }
+
+      /* used with navbar mobile view to place margin between buttons in menu */
+      @media only screen and (min-width: 992px) {
+        .nav-item:nth-last-child(2) {
+          margin-right:8px;
+        }
+      }
     </style>
 
   </head>
@@ -47,9 +54,9 @@
         <ul class="navbar-nav ml-lg-auto">
           {% if not user.is_authenticated %}
             <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:login' %}">Login</a></li>
-            {% comment %} <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:login' %}">Register</a></li> {% endcomment %}
+            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:register' %}">Register</a></li>
           {% else %}
-            <li class="nav-item" style="margin-right:7.5px"><a class="btn btn-outline-light" href="{% url 'app:index' %}">Account</a></li>
+            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:index' %}">Account</a></li>
             <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:logout' %}">Logout</a></li>
           {% endif %}
         </ul>
@@ -59,12 +66,10 @@
     <div class="container body-content pb-5">
     {% block content %}
 
-      <h1>Project Title</h1>
       {% if user.is_authenticated %}
       <h1>Authenticated view: {{ user.username }}!</h1>
-      <a href="{% url 'app:logout' %}">Logout</a>
       {% else %}
-      <h1>unauthenticated view</h1>
+      <h1>Unauthenticated view</h1>
       {% endif %}
 
     {% endblock content %}
@@ -97,7 +102,6 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-    {% comment %} {% block javascript %}{% endblock %} {% endcomment %}
 
   </body>
 </html>

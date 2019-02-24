@@ -6,7 +6,7 @@
   <div class="{{messages.tags}} alert alert-danger" role="alert">{{message}}</div>
   {% endfor %}
 
-    <h1>Login to Bangazon</h1>
+    <h1>Login to Volunteer or Adopt!</h1>
 
     <form id="login_form" method="post" action="{% url 'app:login' %}">
       {% csrf_token %}
@@ -20,10 +20,10 @@
       </div>
       <input type="hidden" value="{{next}}" name="next" />
       <div>
-        <input class="btn btn-primary" type="Submit" value="Submit" />
+        <input class="btn btn-dark" type="Submit" value="Submit" />
       </div>
     </form>
     {% if next != "/" %}
-      <a class ="btn btn-primary" href="/register?next={{next}}">Register</a>
+      <a class ="btn btn-dark" href="/register?next={{next}}">Register</a>
     {% endif %}
-{% endblock content %}
+{% endblock content %}``
