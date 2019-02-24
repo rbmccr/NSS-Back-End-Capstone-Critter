@@ -80,11 +80,11 @@ def login_user(request):
             # Bad login details were provided. So we can't log the user in.
             messages.error(request, "Login failed. Your username or password is incorrect.")
 
-    return render(request, 'login.html', context)
+    return render(request, 'app/login.html', context)
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
 @login_required
-def user_logout(request):
+def logout_user(request):
     # Since we know the user is logged in, we can now just log them out.
     logout(request)
 
