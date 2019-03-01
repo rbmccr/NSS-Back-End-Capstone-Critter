@@ -15,3 +15,10 @@ class VolunteerForm(forms.ModelForm):
     class Meta:
         model = Volunteer
         fields = ("phone_number", "street_address", "city", "state", "zipcode",)
+
+
+class AnimalForm(forms.ModelForm):
+
+    class Meta:
+        model = Animal
+        fields = ("name","age","species","breed","color","sex","image","description","date_arrival","date_adopted","staff",)

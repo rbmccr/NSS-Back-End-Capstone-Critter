@@ -15,4 +15,6 @@ urlpatterns = [
     path("profile", views.profile, name='profile'),
     # ex. /pets
     path("pets", views.view_available_pets, name='pets'),
+    # ex. /new_arrival
+    path("new_arrival", views.new_arrival, name='new_arrival'),
 ]

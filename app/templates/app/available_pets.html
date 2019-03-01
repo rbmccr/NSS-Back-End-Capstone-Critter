@@ -50,7 +50,7 @@
 {% block content %}
   {% for animal in animals %}
     <div class="card">
-      <img class="card-img-top" src="..." alt="Card image cap">
+      <img class="card-img-top" src={{ animal.image }} alt="Card image cap">
       <a href="#" class="btn btn-outline-dark btn-sm">View</a>
       <div class="card-body" style="max-height: 150px;">
         <h5 class="card-title">{{ animal.name }}</h5>

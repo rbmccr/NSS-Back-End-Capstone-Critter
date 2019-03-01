@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
-# Used with integerfield to restrict max value
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator # Used with integerfield to restrict max value
 from django.db import models
 
 class Volunteer(models.Model):
@@ -74,6 +73,7 @@ class Animal(models.Model):
         ('F', 'Female'),
     )
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
+    image = models.ImageField(upload_to='media/', default="media/placeholder.jpg")
     description = models.CharField(max_length=500)
     date_arrival = models.DateTimeField(default=None, null=True, blank=True)
     date_adopted = models.DateTimeField(default=None, null=True, blank=True)

@@ -49,7 +49,7 @@
         <ul class="navbar-nav mr-lg-auto">
           <li class="nav-item"><a class="nav-link" href="{% url 'app:pets' %}">Adopt a Pet</a></li>
           {% if user.is_staff %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'app:login' %}">New Arrival</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'app:new_arrival' %}">New Arrival</a></li>
           {% endif %}
         </ul>
         {% comment %} Login/Logout link and search on right side of navbar {% endcomment %}
