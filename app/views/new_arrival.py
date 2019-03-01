@@ -20,5 +20,5 @@ def new_arrival(request):
         if form.is_valid():
             # Save the animal's form data to the database.
             form.save()
-            messages.success(request, 'Saved new arrival!')
-            return HttpResponseRedirect(reverse("app:index"))
+            messages.success(request, 'New arrival saved successfully!')
+            return HttpResponseRedirect(reverse("app:pets"))

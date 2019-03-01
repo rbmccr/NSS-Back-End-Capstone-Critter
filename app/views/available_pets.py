@@ -3,10 +3,10 @@ from django.shortcuts import render
 from django.template import RequestContext
 from app.models import Animal
 
-def view_available_pets(request):
+def available_pets(request):
 
     if request.method == 'GET':
-        animals = Animal.objects.filter(date_adopted=None)
+        animals = Animal.objects.filter(date_adopted=None).order_by('date_arrival')
         context = {
             'animals': animals
         }

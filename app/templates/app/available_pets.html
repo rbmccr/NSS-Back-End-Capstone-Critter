@@ -13,8 +13,8 @@
     /* establish dimension of cards outside of media queries */
     .card {
       width: 310px;
-      height: 460px;
-      margin-bottom: 150px;
+      height: 450px;
+      margin-bottom: 10px;
       position: relative;
     }
 
@@ -22,7 +22,7 @@
     .card > a {
       width: 33%;
       position: absolute;
-      bottom: 5%;
+      bottom: 2.5%;
       left: 33%;
     }
 
@@ -40,8 +40,25 @@
       }
     }
 
+    /* used to center animal cards in body if window smaller than breakpoint-lg */
+    @media only screen and (max-width: 360px) {
+      .card {
+        width: 280px;
+      }
+      .card > img {
+        width: 280px;
+        height: 280px;
+      }
+    }
+
   </style>
 {% endblock style %}
+
+<div class="messages">
+  {% for message in messages %}
+    <div class="{{ message.tags }} alert alert-success" role="alert">{{ message }}</div>
+  {% endfor %}
+</div>
 
 {% block content %}
   {% for animal in animals %}
