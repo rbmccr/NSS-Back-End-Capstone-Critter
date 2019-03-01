@@ -8,18 +8,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <style>
-      html,body{
+
+      html, body {
         min-height: 100%;
       }
-      body{
-        display:flex;
+
+      body {
+        display: flex;
         flex-direction: column;
-      }
-      .content{
-        flex: 1 0 auto;
-      }
-      .footer{
-        flex-shrink: 0;
       }
 
       /* used with navbar mobile view to place margin between buttons in menu */
@@ -37,6 +33,9 @@
       }
     </style>
 
+    <!-- Block style tag for styling in each template -->
+    {% block style %}{% endblock style %}
+
   </head>
   <body>
     <div class="content">
@@ -48,7 +47,7 @@
       <div class="collapse navbar-collapse" id="navbar_collapse_content">
         {% comment %} Links on left side of navbar {% endcomment %}
         <ul class="navbar-nav mr-lg-auto">
-          <li class="nav-item"><a class="nav-link" href="{% url 'app:index' %}">Adopt a Pet</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'app:pets' %}">Adopt a Pet</a></li>
         </ul>
         {% comment %} Login/Logout link and search on right side of navbar {% endcomment %}
         <ul class="navbar-nav ml-lg-auto">
@@ -56,7 +55,7 @@
             <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:login' %}">Login</a></li>
             <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:register' %}">Register</a></li>
           {% else %}
-            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:index' %}">Account</a></li>
+            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:profile' %}">Edit Profile</a></li>
             <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:logout' %}">Logout</a></li>
           {% endif %}
         </ul>

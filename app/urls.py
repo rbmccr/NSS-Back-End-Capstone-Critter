@@ -11,4 +11,8 @@ urlpatterns = [
     path("logout", views.logout_user, name='logout'),
     # ex. /register
     path("register", views.register, name='register'),
+    # ex. /profile
+    path("profile", views.profile, name='profile'),
+    # ex. /pets
+    path("pets", views.view_available_pets, name='pets'),
 ]
