@@ -19,4 +19,6 @@ urlpatterns = [
     path("pets/details/<int:id>", views.animal_detail, name='animal_detail'),
     # ex. /new_arrival
     path("new_arrival", views.new_arrival, name='new_arrival'),
+    # ex. /pets/adopt/1
+    path("pets/adopt/<int:id>", views.adoption_app, name='adopt'),
 ]

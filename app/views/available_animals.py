@@ -19,7 +19,7 @@ def available_animals(request):
 
 def animal_detail(request, id):
     """
-        This view retrieves a single animal from the animal table, checks to ensure the animal is not adopted (control for manual user navigation to the url) and renders a detail template (otherwise redirects user with notification of adoption).
+        This view retrieves a single animal from the animal table, checks to ensure the animal is not adopted or id doesn't exist (control for manual user navigation to the url) and renders a detail template (otherwise redirects user with notification of animal status).
     """
 
     if request.method == 'GET':
@@ -34,5 +34,5 @@ def animal_detail(request, id):
             return render(request, 'app/animal_detail.html', context)
 
         except IndexError:
-            messages.success(request, 'The animal you\'re looking for has been adopted.')
+            messages.success(request, 'The animal you\'re looking for has been adopted or does not exist.')
             return HttpResponseRedirect(reverse('app:pets'))

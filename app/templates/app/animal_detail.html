@@ -12,4 +12,5 @@
 {% block content %}
   <img src='{{ animal.image.url }}' alt='{{ animal.name }}'>
   <div>{{ animal.name }}, {{ animal.age }}, {{ animal.description }}</div>
+  <a class='btn btn-dark' href="{% url 'app:adopt' animal.id %}">Apply for adoption</a>
 {% endblock content %}
