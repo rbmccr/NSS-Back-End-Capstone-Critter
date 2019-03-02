@@ -4,9 +4,9 @@
   <style>
 
     /* align cards in grid */
-    .body-content {
-      display: flex;
-      flex-wrap: wrap;
+    .card-container {
+      display: grid;
+      grid-template-columns: auto auto auto;
       justify-content: space-evenly;
     }
 
@@ -31,16 +31,28 @@
       height: 310px;
     }
 
-    /* used to center animal cards in body if window smaller than breakpoint-lg */
+    /* used to center animal cards in body if window smaller than 1200 px */
+    @media only screen and (max-width: 1200px) and (min-width:992px) {
+      .card {
+        width: 300px;
+        height: 450px;
+      }
+      .card > img {
+        width: 300px;
+        height: 300px;
+      }
+    }
+
+    /* used to center animal cards in body if window smaller than 992px */
     @media only screen and (max-width: 992px) {
-      .body-content {
+      .card-container {
         display: flex;
-        justify-content: center;
+        justify-content: space-evenly;
         flex-wrap: wrap;
       }
     }
 
-    /* used to center animal cards in body if window smaller than breakpoint-lg */
+    /* used to scale animal cards in body if window smaller than 360px (used for iphone5 width of 320px) */
     @media only screen and (max-width: 360px) {
       .card {
         width: 280px;
@@ -54,21 +66,23 @@
   </style>
 {% endblock style %}
 
-<div class="messages">
-  {% for message in messages %}
-    <div class="{{ message.tags }} alert alert-success" role="alert">{{ message }}</div>
-  {% endfor %}
-</div>
-
 {% block content %}
-  {% for animal in animals %}
-    <div class="card">
-      <img class="card-img-top" src={{ animal.image }} alt="Card image cap">
-      <a href="#" class="btn btn-outline-dark btn-sm">View</a>
-      <div class="card-body" style="max-height: 150px;">
-        <h5 class="card-title">{{ animal.name }}</h5>
-        <p class="card-text">{{ animal.breed }}, {{ animal.color }}</p>
+  <div class="messages">
+    {% for message in messages %}
+      <div class="{{ message.tags }} alert alert-success" role="alert">{{ message }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="card-container">
+    {% for animal in animals %}
+      <div class="card">
+        <img class="card-img-top" src={{ animal.image }} alt="Card image cap">
+        <a href="#" class="btn btn-outline-dark btn-sm">View</a>
+        <div class="card-body" style="max-height: 150px;">
+          <h5 class="card-title">{{ animal.name }}</h5>
+          <p class="card-text">{{ animal.breed }}, {{ animal.color }}</p>
+        </div>
       </div>
-    </div>
-  {% endfor %}
+    {% endfor %}
+  </div>
 {% endblock content %}
