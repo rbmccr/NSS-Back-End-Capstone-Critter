@@ -14,7 +14,9 @@ urlpatterns = [
     # ex. /profile
     path("profile", views.profile, name='profile'),
     # ex. /pets
-    path("pets", views.available_pets, name='pets'),
+    path("pets", views.available_animals, name='pets'),
+    # ex. /pets/details/1
+    path("pets/details/<int:id>", views.animal_detail, name='animal_detail'),
     # ex. /new_arrival
     path("new_arrival", views.new_arrival, name='new_arrival'),
 ]
