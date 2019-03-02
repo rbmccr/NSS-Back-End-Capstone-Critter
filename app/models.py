@@ -62,7 +62,7 @@ class Animal(models.Model):
        Returns: __str__ name, age, species, sex
     """
 
-    name = models.CharField(max_length=75)
+    name = models.CharField(max_length=16)
     # you never know if you're going to adopt out a sea turtle...
     age = models.PositiveIntegerField(validators=[MaxValueValidator(200)])
     species = models.ForeignKey(Species, on_delete=models.PROTECT)
