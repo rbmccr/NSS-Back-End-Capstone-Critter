@@ -22,6 +22,12 @@
         flex-direction: column;
       }
 
+      /* 56px to account for fixed navbar */
+      .container {
+        margin-top: 56px;
+      }
+
+
       /* used with navbar mobile view to place margin between buttons in menu */
       @media only screen and (max-width: 992px) {
         .nav-item:nth-last-child(2) {
@@ -43,7 +49,7 @@
   </head>
   <body>
     <div class="content">
-    <nav class="navbar navbar-expand-lg navbar-fixed-top navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
       <a class="navbar-brand" href="{% url 'app:index' %}">Shelter Name</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_collapse_content" aria-controls="navbar_collapse_content" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

@@ -10,14 +10,20 @@
       justify-content: space-evenly;
     }
 
-    .card-body{
-      max-height: 150px;
+    /* control max height of card body below image */
+    .card-body {
+      max-height: 130px;
+    }
+
+    /* override bootstrap card-text margin */
+    .card-text {
+      margin-bottom: 6px;
     }
 
     /* establish dimension of cards outside of media queries */
     .card {
       width: 310px;
-      height: 450px;
+      height: 430px; /* was 450px */
       margin-bottom: 10px;
       position: relative;
     }
@@ -26,8 +32,8 @@
     .card > a {
       width: 33%;
       position: absolute;
-      bottom: 2.5%;
-      left: 33%;
+      bottom: 16%; /* was 2.5% */
+      right: 5%; /* was 33% */
     }
 
     .card > img {
@@ -93,7 +99,8 @@
         <a href="{% url 'app:animal_detail' animal.id %}" class='btn btn-outline-dark btn-sm'>View</a>
         <div class='card-body'>
           <h5 class='card-title'>{{ animal.name }}</h5>
-          <p class='card-text'>{{ animal.breed }}, {{ animal.color }}</p>
+          <p class='card-text'>{{ animal.breed }}</p>
+          <p class='card-text'>Age: {{ animal.age }}</p>
         </div>
       </div>
     {% endfor %}
