@@ -31,7 +31,7 @@
       height: 310px;
     }
 
-    /* used to center animal cards in body if window smaller than 1200 px */
+    /* used to center animal cards in body if window between 1200px and 992px */
     @media only screen and (max-width: 1200px) and (min-width:992px) {
       .card {
         width: 300px;
@@ -43,12 +43,21 @@
       }
     }
 
-    /* used to center animal cards in body if window smaller than 992px */
-    @media only screen and (max-width: 992px) {
+    /* used to center animal cards in body if window between 992px and 768px */
+    @media only screen and (max-width: 992px) and (min-width:768px) {
       .card-container {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto auto;
         justify-content: space-evenly;
-        flex-wrap: wrap;
+      }
+    }
+
+    /* used to center animal cards in body if window smaller than 768px */
+    @media only screen and (max-width: 768px) {
+      .card-container {
+        display: grid;
+        grid-template-columns: auto;
+        justify-content: center;
       }
     }
 

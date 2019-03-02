@@ -6,6 +6,9 @@ from django.contrib import messages
 from app.models import Animal
 
 def available_animals(request):
+    """
+        This view retrieves all unadopted animals from the animal table and renders a grid-based template to display bootstrap cards.
+    """
 
     if request.method == 'GET':
         animals = Animal.objects.filter(date_adopted=None).order_by('date_arrival')
@@ -15,6 +18,9 @@ def available_animals(request):
         return render(request, 'app/available_animals.html', context)
 
 def animal_detail(request, id):
+    """
+        This view retrieves a single animal from the animal table, checks to ensure the animal is not adopted (control for manual user navigation to the url) and renders a detail template (otherwise redirects user with notification of adoption).
+    """
 
     if request.method == 'GET':
         animal = Animal.objects.filter(pk=id, date_adopted=None)
