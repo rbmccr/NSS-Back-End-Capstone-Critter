@@ -10,6 +10,10 @@
       justify-content: space-evenly;
     }
 
+    .card-body{
+      max-height: 150px;
+    }
+
     /* establish dimension of cards outside of media queries */
     .card {
       width: 310px;
@@ -76,20 +80,20 @@
 {% endblock style %}
 
 {% block content %}
-  <div class="messages">
+  <div class='messages'>
     {% for message in messages %}
-      <div class="{{ message.tags }} alert alert-info" role="alert">{{ message }}</div>
+      <div class='{{ message.tags }} alert alert-info' role='alert'>{{ message }}</div>
     {% endfor %}
   </div>
 
-  <div class="card-container">
+  <div class='card-container'>
     {% for animal in animals %}
-      <div class="card">
-        <img class="card-img-top" src={{ animal.image }} alt="Card image cap">
-        <a href="{% url 'app:animal_detail' animal.id %}" class="btn btn-outline-dark btn-sm">View</a>
-        <div class="card-body" style="max-height: 150px;">
-          <h5 class="card-title">{{ animal.name }}</h5>
-          <p class="card-text">{{ animal.breed }}, {{ animal.color }}</p>
+      <div class='card'>
+        <img class='card-img-top' src='{{ animal.image.url }}' alt='{{ animal.name }}'>
+        <a href="{% url 'app:animal_detail' animal.id %}" class='btn btn-outline-dark btn-sm'>View</a>
+        <div class='card-body'>
+          <h5 class='card-title'>{{ animal.name }}</h5>
+          <p class='card-text'>{{ animal.breed }}, {{ animal.color }}</p>
         </div>
       </div>
     {% endfor %}
