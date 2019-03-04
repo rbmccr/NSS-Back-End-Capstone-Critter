@@ -28,20 +28,19 @@ def animal_detail(request, id):
         # A user who manually navigates to an adopted animal's detail view is redirected to the main pets page -- animal[0] won't exist
         try:
             animal = animal[0]
+            context = {'animal': animal}
 
-            # Check to see if user has already applied to adopt this animal. Get the status of their application if they have.
-            application = Application.objects.filter(user=request.user, animal=animal)
+            # Check to see if a logged in user has already applied to adopt this animal. Get the status of their application if they have.
+            if request.user.is_authenticated:
+                application = Application.objects.filter(user=request.user, animal=animal)
 
-            if len(application) == 1:
-                context = {
-                    'animal': animal,
-                    'existing_application': True,
-                    'application': application[0]
-                }
-            else:
-                context = {
-                    'animal': animal
-                }
+                if len(application) == 1:
+                    context = {
+                        'animal': animal,
+                        'existing_application': True,
+                        'application': application[0]
+                    }
+
             return render(request, 'app/animal_detail.html', context)
 
         except IndexError:
