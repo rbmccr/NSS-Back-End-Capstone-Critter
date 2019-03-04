@@ -22,19 +22,29 @@
         flex-direction: column;
       }
 
-      /* used with navbar mobile view to place margin between buttons in menu */
+      /* 56px to account for fixed navbar */
+      .container {
+        margin-top: 56px;
+      }
+
+      /* used with navbar mobile view to swap buttons with nav links for consistency in dropdown menu */
       @media only screen and (max-width: 992px) {
-        .nav-item:nth-last-child(2) {
-          margin-bottom:10px;
+        .nav-lg {
+          display: none;
+        }
+        .nav-sm {
+          display: block;
         }
       }
 
-      /* used with navbar mobile view to place margin between buttons in menu */
+      /* used with navbar mobile view to swap buttons with nav links for consistency in dropdown menu */
       @media only screen and (min-width: 992px) {
-        .nav-item:nth-last-child(2) {
-          margin-right:8px;
+        .nav-sm {
+          display: none;
         }
       }
+
+
     </style>
 
     <!-- Block style tag for styling in each template -->
@@ -43,7 +53,7 @@
   </head>
   <body>
     <div class="content">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
       <a class="navbar-brand" href="{% url 'app:index' %}">Shelter Name</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_collapse_content" aria-controls="navbar_collapse_content" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -52,6 +62,10 @@
         {% comment %} Links on left side of navbar {% endcomment %}
         <ul class="navbar-nav mr-lg-auto">
           <li class="nav-item"><a class="nav-link" href="{% url 'app:pets' %}">Adopt a Pet</a></li>
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'app:my_applications' %}">My Applications</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'app:index' %}">Volunteering</a></li>
+          {% endif %}
           {% if user.is_staff %}
             <li class="nav-item"><a class="nav-link" href="{% url 'app:new_arrival' %}">New Arrival</a></li>
           {% endif %}
@@ -59,11 +73,15 @@
         {% comment %} Login/Logout link and search on right side of navbar {% endcomment %}
         <ul class="navbar-nav ml-lg-auto">
           {% if not user.is_authenticated %}
-            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:login' %}">Login</a></li>
-            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:register' %}">Register</a></li>
+            <li class="nav-item nav-lg" style="margin-right:8px;"><a class="btn btn-outline-light" href="{% url 'app:login' %}">Login</a></li>
+            <li class="nav-item nav-lg"><a class="btn btn-outline-light" href="{% url 'app:register' %}">Register</a></li>
+            <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:login' %}">Login</a></li>
+            <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:register' %}">Register</a></li>
           {% else %}
-            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:profile' %}">Edit Profile</a></li>
-            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:logout' %}">Logout</a></li>
+            <li class="nav-item nav-lg" style="margin-right:8px;"><a class="btn btn-outline-light" href="{% url 'app:profile' %}">Edit Profile</a></li>
+            <li class="nav-item nav-lg"><a class="btn btn-outline-light" href="{% url 'app:logout' %}">Logout</a></li>
+            <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:profile' %}">Edit Profile</a></li>
+            <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:logout' %}">Logout</a></li>
           {% endif %}
         </ul>
       </div>

@@ -1,0 +1,24 @@
+{% extends 'app/index.html' %}
+
+{% block style %}
+  <style>
+    img {
+      max-width: 500px;
+      max-height: 500px;
+    }
+  </style>
+{% endblock style %}
+
+{% block content %}
+  <img src='{{ animal.image.url }}' alt='{{ animal.name }}'>
+  <div>{{ animal.name }}, {{ animal.age }}, {{ animal.description }}</div>
+  {% if existing_application %}
+    {% if application.approved == None %}
+      <button class='btn btn-secondary' disabled>Application pending</button>
+    {% elif application.approved == False %}
+      <button class='btn btn-danger' disabled>Application declined</button>
+    {% endif %}
+  {% else %}
+    <a class='btn btn-dark' href="{% url 'app:adopt' animal.id %}">Apply for adoption</a>
+  {% endif %}
+{% endblock content %}

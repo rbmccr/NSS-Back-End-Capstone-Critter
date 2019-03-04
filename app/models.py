@@ -62,7 +62,7 @@ class Animal(models.Model):
        Returns: __str__ name, age, species, sex
     """
 
-    name = models.CharField(max_length=75)
+    name = models.CharField(max_length=16)
     # you never know if you're going to adopt out a sea turtle...
     age = models.PositiveIntegerField(validators=[MaxValueValidator(200)])
     species = models.ForeignKey(Species, on_delete=models.PROTECT)
@@ -94,8 +94,9 @@ class Application(models.Model):
     animal = models.ForeignKey(Animal, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     # note that the 'staff' attribute is effectively a foreign key, but it cannot be a foreign key field relative to the User in this model, or it conflicts with the 'user' attribute. When an application is approved or rejected, the staff member who made the decision will have their id manually added to the field in the model
-    staff = models.PositiveSmallIntegerField()
+    staff = models.PositiveSmallIntegerField(default=None, null=True, blank=True)
     approved = models.BooleanField(default=None, null=True)
+    reason = models.CharField(max_length=500, default=None, null=True)
 
     def __str__(self):
         return f"User: {self.user} Date Submitted: {self.date_submitted}"
