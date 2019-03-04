@@ -14,7 +14,7 @@
   <h6>Adoption Application</h6>
   <div>{{ animal.name }}, {{ animal.age }}</div>
   <div>Please provide us with an explanation (up to 1,000 characters) that describes why you are a suitable candidate for adoption. Your user information is submitted automatically with this application. A staff member will contact you if your application is accepted. You can view the status of any of your adoption application(s) by visiting the link in the navigation bar, titled 'My Applications'.</div>
-  <form id="adoption_form" method="post" action="{% url 'app:adopt' animal.id %}">
+  <form id="adoption_form" method="POST" action="{% url 'app:adopt' animal.id %}">
       {% csrf_token %}
       {{ app_form.as_p }}
       <input class="btn btn-dark" type="submit" name="submit" value="Submit Application" />

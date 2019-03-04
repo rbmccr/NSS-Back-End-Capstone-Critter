@@ -25,6 +25,7 @@ class AnimalForm(forms.ModelForm):
 
 
 class ApplicationForm(forms.ModelForm):
+    text = forms.CharField(widget=forms.Textarea, label='',)
 
     class Meta:
         model = Application
