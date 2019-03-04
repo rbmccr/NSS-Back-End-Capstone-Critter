@@ -27,7 +27,7 @@ def adoption_app(request, id):
             application = Application.objects.filter(user=request.user, animal=animal)
 
             if len(application) == 1:
-                return HttpResponseRedirect(reverse('app:pets'))
+                return HttpResponseRedirect(reverse('app:animal_detail', args=(id,)))
             else:
                 app_form = ApplicationForm()
                 context = {

@@ -5,7 +5,9 @@ from django.urls import reverse
 from app.models import Animal
 from app.forms import AnimalForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def new_arrival(request):
 
     if request.method == 'GET':

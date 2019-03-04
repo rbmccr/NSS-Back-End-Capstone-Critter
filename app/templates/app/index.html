@@ -63,7 +63,7 @@
         <ul class="navbar-nav mr-lg-auto">
           <li class="nav-item"><a class="nav-link" href="{% url 'app:pets' %}">Adopt a Pet</a></li>
           {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'app:index' %}">My Applications</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'app:my_applications' %}">My Applications</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'app:index' %}">Volunteering</a></li>
           {% endif %}
           {% if user.is_staff %}
