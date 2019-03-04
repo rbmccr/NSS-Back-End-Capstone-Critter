@@ -4,8 +4,10 @@ from django.template import RequestContext
 from django.urls import reverse
 from app.models import Animal, Application
 from app.forms import ApplicationForm
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+@login_required
 def adoption_app(request, id):
     """
         This view retrieves a single animal from the animal table, checks to ensure the animal is not adopted or the id doesn't exist (control for manual user navigation to the url) and renders an adoption application template (otherwise redirects user with notification of animal status).

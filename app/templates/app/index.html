@@ -27,20 +27,24 @@
         margin-top: 56px;
       }
 
-
-      /* used with navbar mobile view to place margin between buttons in menu */
+      /* used with navbar mobile view to swap buttons with nav links for consistency in dropdown menu */
       @media only screen and (max-width: 992px) {
-        .nav-item:nth-last-child(2) {
-          margin-bottom:10px;
+        .nav-lg {
+          display: none;
+        }
+        .nav-sm {
+          display: block;
         }
       }
 
-      /* used with navbar mobile view to place margin between buttons in menu */
+      /* used with navbar mobile view to swap buttons with nav links for consistency in dropdown menu */
       @media only screen and (min-width: 992px) {
-        .nav-item:nth-last-child(2) {
-          margin-right:8px;
+        .nav-sm {
+          display: none;
         }
       }
+
+
     </style>
 
     <!-- Block style tag for styling in each template -->
@@ -69,11 +73,15 @@
         {% comment %} Login/Logout link and search on right side of navbar {% endcomment %}
         <ul class="navbar-nav ml-lg-auto">
           {% if not user.is_authenticated %}
-            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:login' %}">Login</a></li>
-            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:register' %}">Register</a></li>
+            <li class="nav-item nav-lg" style="margin-right:8px;"><a class="btn btn-outline-light" href="{% url 'app:login' %}">Login</a></li>
+            <li class="nav-item nav-lg"><a class="btn btn-outline-light" href="{% url 'app:register' %}">Register</a></li>
+            <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:login' %}">Login</a></li>
+            <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:register' %}">Register</a></li>
           {% else %}
-            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:profile' %}">Edit Profile</a></li>
-            <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'app:logout' %}">Logout</a></li>
+            <li class="nav-item nav-lg" style="margin-right:8px;"><a class="btn btn-outline-light" href="{% url 'app:profile' %}">Edit Profile</a></li>
+            <li class="nav-item nav-lg"><a class="btn btn-outline-light" href="{% url 'app:logout' %}">Logout</a></li>
+            <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:profile' %}">Edit Profile</a></li>
+            <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:logout' %}">Logout</a></li>
           {% endif %}
         </ul>
       </div>
