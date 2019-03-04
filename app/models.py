@@ -96,6 +96,7 @@ class Application(models.Model):
     # note that the 'staff' attribute is effectively a foreign key, but it cannot be a foreign key field relative to the User in this model, or it conflicts with the 'user' attribute. When an application is approved or rejected, the staff member who made the decision will have their id manually added to the field in the model
     staff = models.PositiveSmallIntegerField(default=None, null=True, blank=True)
     approved = models.BooleanField(default=None, null=True)
+    reason = models.CharField(max_length=500, default=None, null=True)
 
     def __str__(self):
         return f"User: {self.user} Date Submitted: {self.date_submitted}"

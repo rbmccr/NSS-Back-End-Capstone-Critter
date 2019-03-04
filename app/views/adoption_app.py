@@ -22,12 +22,13 @@ def adoption_app(request, id):
         # A user who manually navigates to an adopted animal's detail view is redirected to the main pets page -- animal[0] won't exist
         try:
             animal = animal[0]
-            # TODO: check status of a user's app for this animal. if one exixts, look at app status and provide appropriate context to modify look of page
+            
             app_form = ApplicationForm()
             context = {
                 'animal': animal,
                 'app_form': app_form
             }
+
             return render(request, 'app/adoption_app.html', context)
 
         except IndexError:
