@@ -86,6 +86,10 @@
 {% endblock style %}
 
 {% block content %}
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+    <h3>Available Pets</h3>
+  </div>
+
   <div class='messages'>
     {% for message in messages %}
       <div class='{{ message.tags }} alert alert-info' role='alert'>{{ message }}</div>

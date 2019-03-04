@@ -11,7 +11,7 @@
 
 {% block content %}
   <div class='pb-2 mt-4 mb-4 border-bottom'>
-    <h4>My Applications</h4>
+    <h3>My Applications</h3>
   </div>
   <ul class='list-group'>
     {% if applications|length == 0 %}
@@ -24,8 +24,8 @@
           <div class='media-body'>
             <h5 class='mt-0'>{{ application.animal.name }}</h5>
             {{ application.animal.breed }} <br>
-            Age: {{ application.animal.age }}
-            <button class='btn btn-outline-dark btn-sm'>Details</button>
+            Age: {{ application.animal.age }} <br>
+            <a class='btn btn-outline-dark btn-sm' href="{% url 'app:animal_detail' application.animal.id %}">View Animal Details</a>
           </div>
         </div>
       </li>
