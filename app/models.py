@@ -2,18 +2,43 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator # Used with integerfield to restrict max value
 from django.db import models
 
+# required for custom user model
+from django.contrib.auth.models import AbstractUser
+from django.utils.translation import ugettext_lazy
+from .managers import CustomUserManager
+from django.conf import settings # used with foreign keys related to custom user model
+
+
+class CustomUser(AbstractUser):
+    """
+        This model overwrites the default Django user model in order to remove the username field and authenticate with e-mail.
+    """
+
+    username = None
+    email = models.EmailField(ugettext_lazy('email address'), unique=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    # defines create_superuser and create_user methods
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email
+
+
 class Volunteer(models.Model):
     """Defines a model for a volunteer (a verified user). Volunteers who are admin are treated as staff.
 
         Returns: __str__ userId, street_address, and phone_number
     """
 
-    user = models.OneToOneField(User, on_delete=models.PROTECT)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     street_address = models.CharField(max_length=100)
     city = models.CharField(max_length=75)
     state = models.CharField(max_length=50)
     zipcode = models.CharField(max_length=12)
-    phone_number = models.PositiveIntegerField(validators=[MaxValueValidator(999999999)])
+    phone_number = models.PositiveIntegerField(validators=[MaxValueValidator(9999999999)])
     delete_date = models.DateTimeField(default=None, null=True, blank=True)
 
     def __str__(self):
@@ -77,7 +102,7 @@ class Animal(models.Model):
     description = models.CharField(max_length=500)
     date_arrival = models.DateTimeField(default=None, null=True, blank=True)
     date_adopted = models.DateTimeField(default=None, null=True, blank=True)
-    staff = models.ForeignKey(User, on_delete=models.PROTECT)
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
 
     def __str__(self):
         return f"Name: {self.name} Age: {self.age} Species: {self.species} Sex: {self.sex}"
@@ -92,7 +117,7 @@ class Application(models.Model):
     date_submitted = models.DateTimeField(default=None, null=True, blank=True)
     text = models.CharField(max_length=1000)
     animal = models.ForeignKey(Animal, on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     # note that the 'staff' attribute is effectively a foreign key, but it cannot be a foreign key field relative to the User in this model, or it conflicts with the 'user' attribute. When an application is approved or rejected, the staff member who made the decision will have their id manually added to the field in the model
     staff = models.PositiveSmallIntegerField(default=None, null=True, blank=True)
     approved = models.BooleanField(default=None, null=True)

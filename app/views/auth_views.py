@@ -63,9 +63,9 @@ def login_user(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
         # Use the built-in authenticate method to verify
-        username=request.POST['username']
+        email=request.POST['email']
         password=request.POST['password']
-        authenticated_user = authenticate(username=username, password=password)
+        authenticated_user = authenticate(email=email, password=password)
 
         # If authentication was successful, log the user in
         if authenticated_user is not None:
@@ -77,7 +77,7 @@ def login_user(request):
 
         else:
             # Bad login details were provided. So we can't log the user in.
-            messages.error(request, "Login failed. Your username or password is incorrect.")
+            messages.error(request, "Login failed. Your email or password is incorrect.")
 
     return render(request, 'app/login.html', context)
 
