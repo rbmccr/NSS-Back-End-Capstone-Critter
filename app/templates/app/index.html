@@ -78,9 +78,9 @@
             <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:login' %}">Login</a></li>
             <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:register' %}">Register</a></li>
           {% else %}
-            <li class="nav-item nav-lg" style="margin-right:8px;"><a class="btn btn-outline-light" href="{% url 'app:profile' %}"> My Profile and Applications</a></li>
+            <li class="nav-item nav-lg" style="margin-right:8px;"><a class="btn btn-outline-light" href="{% url 'app:profile' %}">Profile and Applications</a></li>
             <li class="nav-item nav-lg"><a class="btn btn-outline-light" href="{% url 'app:logout' %}">Logout</a></li>
-            <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:profile' %}">My Profile and Applications</a></li>
+            <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:profile' %}">Profile and Applications</a></li>
             <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:logout' %}">Logout</a></li>
           {% endif %}
         </ul>
