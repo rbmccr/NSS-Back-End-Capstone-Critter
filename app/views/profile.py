@@ -12,10 +12,16 @@ def edit_profile(request):
 
     if request.method == 'GET':
         user = request.user
+        applications = Application.objects.filter(user=request.user)
         user_form = UserForm()
         volunteer_form = VolunteerForm()
-        context = {'user': user, 'user_form': user_form, 'volunteer_form': volunteer_form}
-        return render(request, 'app/edit_profile.html', context)
+        context = {
+            'edit_mode': True,
+            'user': user,
+            'applications': applications,
+            'user_form': user_form,
+            'volunteer_form': volunteer_form}
+        return render(request, 'app/profile.html', context)
 
 @login_required
 def profile(request):

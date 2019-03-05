@@ -30,7 +30,7 @@
   <div class='pb-2 mt-4 mb-4 border-bottom'>
     <h3>{{ user.first_name }} {{ user.last_name }}</h3>
     <div>
-      Member since: {{ user.date_joined|date:'m-d-Y' }}
+      Member since: {{ user.date_joined|date:'m-d-Y' }}&nbsp;
       {% if user.is_staff %}
         <span class="badge badge-primary">Admin</span>
       {% endif %}
@@ -43,26 +43,26 @@
     {% endfor %}
   </div>
 
-  <div class="card mb-3">
-    <div class="card-header">
+  <div class='card mb-3'>
+    <div class='card-header'>
       Contact Information
     </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">
-        <div class="card-body">
-          <h5 class="card-title">Mailing Address</h5>
-          <p class="card-text" style='margin-bottom: 6px;'>{{ user.volunteer.street_address}}</p>
-          <p class="card-text">{{ user.volunteer.city }}, {{ user.volunteer.state }} {{ user.volunteer.zipcode }}</p>
+    <ul class='list-group list-group-flush'>
+      <li class='list-group-item'>
+        <div class='card-body'>
+          <h5 class='card-title'>Mailing Address</h5>
+          <p class='card-text' style='margin-bottom: 6px;'>{{ user.volunteer.street_address}}</p>
+          <p class='card-text'>{{ user.volunteer.city }}, {{ user.volunteer.state }} {{ user.volunteer.zipcode }}</p>
         </div>
       </li>
-      <li class="list-group-item">
-        <div class="card-body">
-          <h5 class="card-title">Phone and E-mail</h5>
-          <p class="card-text" style='margin-bottom: 6px;'>
-            ({{ user.volunteer.phone_number|make_list|slice:"0:3"|join:"" }})
-            {{ user.volunteer.phone_number|make_list|slice:"3:6"|join:"" }}-{{ user.volunteer.phone_number|make_list|slice:"6:"|join:"" }}
+      <li class='list-group-item'>
+        <div class='card-body'>
+          <h5 class='card-title'>Phone and E-mail</h5>
+          <p class='card-text' style='margin-bottom: 6px;'>
+            ({{ user.volunteer.phone_number|make_list|slice:'0:3'|join:'' }})
+            {{ user.volunteer.phone_number|make_list|slice:'3:6'|join:'' }}-{{ user.volunteer.phone_number|make_list|slice:'6:'|join:'' }}
           </p>
-          <p class="card-text">{{ user.email }}</p>
+          <p class='card-text'>{{ user.email }}</p>
         </div>
       </li>
     </ul>

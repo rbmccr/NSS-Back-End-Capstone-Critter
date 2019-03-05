@@ -7,21 +7,21 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("username", "email", "password", "first_name", "last_name",)
+        fields = ('username', 'email', 'password', 'first_name', 'last_name',)
 
 
 class VolunteerForm(forms.ModelForm):
 
     class Meta:
         model = Volunteer
-        fields = ("phone_number", "street_address", "city", "state", "zipcode",)
+        fields = ('phone_number', 'street_address', 'city', 'state', 'zipcode',)
 
 
 class AnimalForm(forms.ModelForm):
 
     class Meta:
         model = Animal
-        fields = ("name","age","species","breed","color","sex","image","description","date_arrival","staff",)
+        fields = ('name','age','species','breed','color','sex','image','description','date_arrival','staff',)
 
 
 class ApplicationForm(forms.ModelForm):
@@ -29,4 +29,4 @@ class ApplicationForm(forms.ModelForm):
 
     class Meta:
         model = Application
-        fields = ("text",)
+        fields = ('text',)
