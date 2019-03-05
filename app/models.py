@@ -16,9 +16,11 @@ class CustomUser(AbstractUser):
 
     username = None
     email = models.EmailField(ugettext_lazy('email address'), unique=True)
+    first_name = models.CharField(ugettext_lazy('first name'), max_length=30, blank=False)
+    last_name = models.CharField(ugettext_lazy('last name'), max_length=30, blank=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['first_name','last_name'] # prompted for these fields (in addition to email and password) when creating superuser
 
     # defines create_superuser and create_user methods
     objects = CustomUserManager()

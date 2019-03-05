@@ -13,20 +13,17 @@ def edit_profile(request):
     if request.method == 'GET':
         user = request.user
         applications = Application.objects.filter(user=request.user)
-        user_form = UserForm()
-        volunteer_form = VolunteerForm()
         context = {
             'edit_mode': True,
             'user': user,
-            'applications': applications,
-            'user_form': user_form,
-            'volunteer_form': volunteer_form}
+            'applications': applications
+        }
         return render(request, 'app/profile.html', context)
 
 @login_required
 def profile(request):
     """
-        This view loads a user's personal profile, including their applications submitted to the shelter.
+        This view loads a user's personal profile, including their adoption applications submitted to the shelter.
     """
 
     if request.method == 'GET':
@@ -37,35 +34,3 @@ def profile(request):
             'applications': applications
         }
         return render(request, 'app/profile.html', context)
-
-    # elif request.method == "POST":
-
-    #     if 'edit' in request.POST:
-    #         user = request.user
-    #         form = {"formA": UserCustomerFormA(instance = user), "formB": UserCustomerFormB(instance = user.customer)}
-    #         context = {"user": request.user,
-    #                     "form": form}
-    #         return render(request, 'customer_profile.html', context)
-
-    #     else:
-    #         req=request.POST
-    #         form_user = {"last_name": req["last_name"]}
-    #         form_cust = {"phone_number": req["phone_number"], "street_address": req["street_address"], "city": req["city"], "state": req["state"], "zipcode": req["zipcode"]}
-
-
-    #         user_form = UserCustomerFormA(form_user)
-
-    #         if user_form.is_valid():
-    #             with connection.cursor() as cursor:
-    #                 cursor.execute("UPDATE auth_user SET last_name=%s WHERE id=%s", [req["last_name"], request.user.id])
-
-    #         customer_form = UserCustomerFormB(form_cust)
-
-    #         if customer_form.is_valid():
-    #             with connection.cursor() as cursor:
-    #                 cursor.execute("UPDATE website_customer SET phone_number=%s, street_address=%s, city=%s, state=%s, zipcode=%s WHERE id=%s", [req["phone_number"], req["street_address"], req["city"], req["state"], req["zipcode"], request.user.customer.id])
-
-
-    #         user = User.objects.raw("Select * From auth_user where id=%s",[request.user.id])
-    #         context = {"user": user[0]}
-    #         return render(request, 'customer_profile.html', context)

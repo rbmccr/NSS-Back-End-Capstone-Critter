@@ -1,12 +1,13 @@
 {% extends 'app/index.html' %}
 
 {% block content %}
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+      <h3>Log In to Volunteer or Adopt!</h3>
+  </div>
 
   {% for message in messages %}
   <div class="{{messages.tags}} alert alert-danger" role="alert">{{message}}</div>
   {% endfor %}
-
-    <h1>Login to Volunteer or Adopt!</h1>
 
     <form id="login_form" method="post" action="{% url 'app:login' %}">
       {% csrf_token %}

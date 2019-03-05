@@ -6,8 +6,8 @@ class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
-        model = User
-        fields = ('username', 'email', 'password', 'first_name', 'last_name',)
+        model = CustomUser
+        fields = ('email', 'password', 'first_name', 'last_name',)
 
 
 class VolunteerForm(forms.ModelForm):
@@ -18,6 +18,7 @@ class VolunteerForm(forms.ModelForm):
 
 
 class AnimalForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea,)
 
     class Meta:
         model = Animal
