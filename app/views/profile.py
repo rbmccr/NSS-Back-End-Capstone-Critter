@@ -9,7 +9,7 @@ from django.urls import reverse
 # messages
 from django.contrib import messages
 # models
-from app.models import CustomUser, Application
+from app.models import CustomUser, Application, Volunteer
 # forms
 from app.forms import UserForm, VolunteerForm, EditProfileUserForm, EditProfileVolunteerForm
 
@@ -49,24 +49,29 @@ def edit_profile(request):
         return render(request, 'app/edit_profile.html', context)
 
     if request.method == 'POST':
-        # get user instance to provide to form class
+        # get user instance used with form class instance (for validating unique fields) and volunteer instance
         user = CustomUser.objects.get(pk=request.user.id)
+        volunteer = Volunteer.objects.get(user=user)
         edit_user_form = EditProfileUserForm(data=request.POST, instance=user)
         edit_volunteer_form = EditProfileVolunteerForm(data=request.POST)
 
         # check data types in submission. Django also checks to ensure username (e-mail in this project) is unique.
         if edit_user_form.is_valid() and edit_volunteer_form.is_valid():
-            # Get user instance and update the user's data
+            # Note that user and volunteer instances are used here for updating (not posting)
             user.first_name = request.POST['first_name']
             user.last_name = request.POST['last_name']
             user.email = request.POST['email']
             user.save()
 
-            # volunteer = edit_volunteer_form.save(commit=False)
-            # volunteer.user = user
-            # volunteer.save()
+            volunteer.phone_number = request.POST['phone_number']
+            volunteer.street_address = request.POST['street_address']
+            volunteer.city = request.POST['city']
+            volunteer.state = request.POST['state']
+            volunteer.zipcode = request.POST['zipcode']
+            volunteer.save()
 
-            # return to user profile
+            # return to user profile with success message
+            messages.success(request, "Contact information updated successfully!")
             return HttpResponseRedirect(reverse('app:profile'))
 
         else:

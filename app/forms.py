@@ -58,23 +58,6 @@ class EditProfileUserForm(forms.ModelForm):
         The __init__ method has been modified in order to display crispy forms in a specific way.
     """
 
-    # def clean_email(self):
-    #     cleaned_data = super(EditProfileUserForm, self).clean()
-    #     my_email = cleaned_data.get('email')
-    #     my_current_instance_id = CustomUser.objects.get(email=my_email).id
-    #     users = CustomUser.objects.all()
-
-    #     for user in users:
-    #         if my_email == user.email:
-    #             user_email_owner_id = CustomUser.objects.get(email=user.email).id
-    #             print("$$$$$$$$$$$$$$$ user email owner id", user_email_owner_id, my_current_instance_id)
-    #             if my_current_instance_id == user_email_owner_id:
-    #                 pass
-    #             else:
-    #                 raise forms.ValidationError('')
-
-        # return cleaned_data['email']
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
