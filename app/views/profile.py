@@ -57,13 +57,17 @@ def change_password(request):
             # re-authenticate with new password
             authenticated_user = authenticate(email=user.email, password=request.POST['password'])
             login(request=request, user=authenticated_user)
-
+            
             # return to user profile with success message after logging user in with new credentials
             messages.success(request, "Password changed successfully!")
-            return HttpResponseRedirect(reverse('app:profile'))
+
+            if request.POST.get('next') == '/':
+                return HttpResponseRedirect('/')
+            else:
+                return HttpResponseRedirect(request.POST.get('next', '/profile'))
 
         else:
-            # re-populate form with submitted data. Include message
+            # return to form with form instance and message
             context = {'new_password_form': new_password_form}
             messages.error(request, "Password change failed. Please try again.")
             return render(request, 'app/change_password.html', context)
