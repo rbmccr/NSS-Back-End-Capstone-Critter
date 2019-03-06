@@ -2,18 +2,97 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator # Used with integerfield to restrict max value
 from django.db import models
 
+# required for custom user model
+from django.contrib.auth.models import AbstractUser
+from django.utils.translation import ugettext_lazy
+from .managers import CustomUserManager
+from django.conf import settings # used with foreign keys related to custom user model
+
+
+class CustomUser(AbstractUser):
+    """
+        This model overwrites the default Django user model in order to remove the username field and authenticate with e-mail.
+    """
+
+    username = None
+    email = models.EmailField(ugettext_lazy('email address'), unique=True)
+    first_name = models.CharField(ugettext_lazy('first name'), max_length=30, blank=False)
+    last_name = models.CharField(ugettext_lazy('last name'), max_length=30, blank=False)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name','last_name'] # prompted for these fields (in addition to email and password) when creating superuser
+
+    # defines create_superuser and create_user methods
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email
+
+STATE_CHOICES = (
+    ('AL','Alabama'),
+    ('AK','Alaska'),
+    ('AZ','Arizona'),
+    ('AR','Arkansas'),
+    ('CA','California'),
+    ('CO','Colorado'),
+    ('CT','Connecticut'),
+    ('DE','Delaware'),
+    ('FL','Florida'),
+    ('GA','Georgia'),
+    ('HI','Hawaii'),
+    ('ID','Idaho'),
+    ('IL','Illinois'),
+    ('IN','Indiana'),
+    ('IA','Iowa'),
+    ('KS','Kansas'),
+    ('KY','Kentucky'),
+    ('LA','Louisiana'),
+    ('ME','Maine'),
+    ('MD','Maryland'),
+    ('MA','Massachusetts'),
+    ('MI','Michigan'),
+    ('MN','Minnesota'),
+    ('MS','Mississippi'),
+    ('MO','Missouri'),
+    ('MT','Montana'),
+    ('NE','Nebraska'),
+    ('NV','Nevada'),
+    ('NH','New Hampshire'),
+    ('NJ','New Jersey'),
+    ('NM','New Mexico'),
+    ('NY','New York'),
+    ('NC','North Carolina'),
+    ('ND','North Dakota'),
+    ('OH','Ohio'),
+    ('OK','Oklahoma'),
+    ('OR','Oregon'),
+    ('PA','Pennsylvania'),
+    ('RI','Rhode Island'),
+    ('SC','South Carolina'),
+    ('SD','South Dakota'),
+    ('TN','Tennessee'),
+    ('TX','Texas'),
+    ('UT','Utah'),
+    ('VT','Vermont'),
+    ('VA','Virginia'),
+    ('WA','Washington'),
+    ('WV','West Virginia'),
+    ('WI','Wisconsin'),
+    ('WY','Wyoming'),
+)
+
 class Volunteer(models.Model):
     """Defines a model for a volunteer (a verified user). Volunteers who are admin are treated as staff.
 
         Returns: __str__ userId, street_address, and phone_number
     """
 
-    user = models.OneToOneField(User, on_delete=models.PROTECT)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     street_address = models.CharField(max_length=100)
     city = models.CharField(max_length=75)
-    state = models.CharField(max_length=50)
+    state = models.CharField(max_length=2, choices=STATE_CHOICES)
     zipcode = models.CharField(max_length=12)
-    phone_number = models.PositiveIntegerField(validators=[MaxValueValidator(999999999)])
+    phone_number = models.PositiveIntegerField(validators=[MaxValueValidator(9999999999)])
     delete_date = models.DateTimeField(default=None, null=True, blank=True)
 
     def __str__(self):
@@ -77,7 +156,7 @@ class Animal(models.Model):
     description = models.CharField(max_length=500)
     date_arrival = models.DateTimeField(default=None, null=True, blank=True)
     date_adopted = models.DateTimeField(default=None, null=True, blank=True)
-    staff = models.ForeignKey(User, on_delete=models.PROTECT)
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
 
     def __str__(self):
         return f"Name: {self.name} Age: {self.age} Species: {self.species} Sex: {self.sex}"
@@ -92,7 +171,7 @@ class Application(models.Model):
     date_submitted = models.DateTimeField(default=None, null=True, blank=True)
     text = models.CharField(max_length=1000)
     animal = models.ForeignKey(Animal, on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     # note that the 'staff' attribute is effectively a foreign key, but it cannot be a foreign key field relative to the User in this model, or it conflicts with the 'user' attribute. When an application is approved or rejected, the staff member who made the decision will have their id manually added to the field in the model
     staff = models.PositiveSmallIntegerField(default=None, null=True, blank=True)
     approved = models.BooleanField(default=None, null=True)

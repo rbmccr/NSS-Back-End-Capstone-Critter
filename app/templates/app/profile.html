@@ -1,12 +1,100 @@
 {% extends 'app/index.html' %}
 
+{% block style %}
+  <style>
+    img {
+      max-width: 100px;
+      max-height: 100px;
+    }
+
+    /* used to scale animal cards in body if window smaller than 360px (used for iphone5 width of 320px) */
+    @media only screen and (max-width: 474px) {
+      .edit-btns {
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+      }
+    }
+
+    /* used to scale animal images to prevent poor formatting on small screens */
+    @media only screen and (max-width: 374px) {
+      img {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  </style>
+{% endblock style %}
+
 {% block content %}
-    <h1>Edit your personal details</h1>
-      <form id="user_form" method="post" action="{% url 'app:register' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ user_form.as_p }}
-          {{ volunteer_form.as_p }}
-          <input type="hidden" value="{{next}}" name="next"/>
-          <input class="btn btn-dark" type="submit" name="submit" value="Update" />
-      </form>
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+    <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+    <div>
+      Member since: {{ user.date_joined|date:'m-d-Y' }}&nbsp;
+      {% if user.is_staff %}
+        <span class="badge badge-primary">Admin</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class='messages'>
+    {% for message in messages %}
+      <div class='{{ message.tags }} alert alert-info' role='alert'>{{ message }}</div>
+    {% endfor %}
+  </div>
+
+  <div class='card mb-3'>
+    <div class='card-header'>
+      Contact Information
+    </div>
+    <ul class='list-group list-group-flush'>
+      <li class='list-group-item'>
+        <div class='card-body'>
+          <h5 class='card-title'>Mailing Address</h5>
+          <p class='card-text' style='margin-bottom: 6px;'>{{ user.volunteer.street_address}}</p>
+          <p class='card-text'>{{ user.volunteer.city }}, {{ user.volunteer.state }} {{ user.volunteer.zipcode }}</p>
+        </div>
+      </li>
+      <li class='list-group-item'>
+        <div class='card-body'>
+          <h5 class='card-title'>Phone and E-mail</h5>
+          <p class='card-text' style='margin-bottom: 6px;'>
+            ({{ user.volunteer.phone_number|make_list|slice:'0:3'|join:'' }})
+            {{ user.volunteer.phone_number|make_list|slice:'3:6'|join:'' }}-{{ user.volunteer.phone_number|make_list|slice:'6:'|join:'' }}
+          </p>
+          <p class='card-text'>{{ user.email }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class='edit-btns'>
+    <a class='btn btn-outline-dark btn-sm' href="{% url 'app:index' %}">Edit Contact Info</a>
+    <a class='btn btn-outline-dark btn-sm' href="{% url 'app:index' %}">Change Password</a>
+  </div>
+
+  <!-- User's adoption applications -->
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+    <h3>My Applications</h3>
+  </div>
+  <ul class='list-group'>
+    {% if applications|length == 0 %}
+      <li class='list-group-item'>You haven't submitted any applications.</li>
+    {% endif %}
+    {% for application in applications %}
+      <li class='list-group-item'>
+        <div class='media'>
+          <img class='mr-3' src='{{ application.animal.image.url }}' alt='{{ application.animal.name }}'>
+          <div class='media-body'>
+            <h5 class='mt-0'>{{ application.animal.name }}</h5>
+            {{ application.animal.breed }} <br>
+            Age: {{ application.animal.age }} <br>
+            Arrived: {{ application.animal.date_arrival|date:'m-d-Y' }}
+            {% comment %} <a class='btn btn-outline-dark btn-sm' href="{% url 'app:animal_detail' application.animal.id %}">View Animal Details</a> {% endcomment %}
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+
 {% endblock content %}

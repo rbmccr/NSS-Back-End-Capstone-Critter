@@ -10,9 +10,21 @@
 {% endblock style %}
 
 {% block content %}
-  <img src='{{ animal.image.url }}' alt='{{ animal.name }}'>
-  <h6>Adoption Application</h6>
-  <div>{{ animal.name }}, {{ animal.age }}</div>
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+    <h3>Adoption Application</h3>
+  </div>
+  <ul class='list-group'>
+    <li class='list-group-item'>
+      <div class='media'>
+        <img class='mr-3' src='{{ animal.image.url }}' alt='{{ animal.name }}'>
+        <div class='media-body'>
+          <h5 class='mt-0'>{{ animal.name }}</h5>
+            {{ animal.breed }} <br>
+            Age: {{ animal.age }} <br>
+        </div>
+      </div>
+    </li>
+  </ul>
   <div>Please provide us with an explanation (up to 1,000 characters) that describes why you are a suitable candidate for adoption. Your user information is submitted automatically with this application. A staff member will contact you if your application is accepted. You can view the status of any of your adoption application(s) by visiting the link in the navigation bar, titled 'My Applications'.</div>
   <form id="adoption_form" method="POST" action="{% url 'app:adopt' animal.id %}">
       {% csrf_token %}

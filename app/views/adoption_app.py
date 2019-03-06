@@ -60,8 +60,7 @@ def adoption_app(request, id):
                 new_app.save()
 
                 messages.success(request, 'Thanks for applying to adopt! You can monitor the status of your application(s) here!')
-                # TODO: reverse to my applications page of website
-                return HttpResponseRedirect(reverse('app:pets'))
+                return HttpResponseRedirect(reverse('app:profile'))
 
         except IndexError:
             messages.success(request, 'This animal has been adopted! There are plenty of forever friends left, though!')

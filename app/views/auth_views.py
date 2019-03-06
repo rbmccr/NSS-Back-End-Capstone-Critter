@@ -1,11 +1,10 @@
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 from django.urls import reverse
 from django.contrib import messages
-
 from app.forms import UserForm, VolunteerForm
 
 def register(request):
@@ -14,12 +13,6 @@ def register(request):
       request -- The full HTTP request object
     '''
 
-    # A boolean value for telling the template whether the registration was successful.
-    # Set to False initially. Code changes value to True when registration succeeds.
-    registered = False
-
-    # Create a new user by invoking the `create_user` helper method
-    # on Django's built-in User model
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
         volunteer_form = VolunteerForm(data=request.POST)
@@ -37,10 +30,11 @@ def register(request):
             volunteer.user = user
             volunteer.save()
 
-            # Update our variable to tell the template registration was successful.
-            registered = True
-
-        return login_user(request)
+            return login_user(request)
+        else:
+            context = {'user_form': user_form, 'next': request.GET.get('next', '/'), 'volunteer_form': volunteer_form}
+            messages.error(request, "Registration failed. Check password if no error displayed.")
+            return render(request, 'app/register.html', context)
 
     elif request.method == 'GET':
         user_form = UserForm()
@@ -63,9 +57,9 @@ def login_user(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
         # Use the built-in authenticate method to verify
-        username=request.POST['username']
+        email=request.POST['email']
         password=request.POST['password']
-        authenticated_user = authenticate(username=username, password=password)
+        authenticated_user = authenticate(email=email, password=password)
 
         # If authentication was successful, log the user in
         if authenticated_user is not None:
@@ -77,7 +71,7 @@ def login_user(request):
 
         else:
             # Bad login details were provided. So we can't log the user in.
-            messages.error(request, "Login failed. Your username or password is incorrect.")
+            messages.error(request, "Login failed. Your email or password is incorrect.")
 
     return render(request, 'app/login.html', context)
 
