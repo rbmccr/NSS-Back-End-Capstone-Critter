@@ -14,9 +14,16 @@ from app.models import CustomUser, Application, Volunteer
 from app.forms import UserForm, VolunteerForm, EditProfileUserForm, EditProfileVolunteerForm, ChangePasswordForm
 # local files
 from .auth_views import login_user
+# password validation
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 @login_required
 def profile(request):
+    """
+        This view loads a user's personal profile, including their adoption applications submitted to the shelter.
+    """
+
     if request.method == 'GET':
         user = request.user
         applications = Application.objects.filter(user=request.user)
@@ -29,7 +36,7 @@ def profile(request):
 @login_required
 def change_password(request):
     """
-        This view loads a user's personal profile, including their adoption applications submitted to the shelter.
+        This view provides a user with a form to update their password. A successful update will redirect the user back to their profile with a success message.
     """
 
     if request.method == 'GET':
@@ -43,6 +50,15 @@ def change_password(request):
         user = CustomUser.objects.get(pk=request.user.id)
         old_password = request.POST['old_password']
         new_password_form = ChangePasswordForm(data=request.POST, instance=user)
+
+        # validate password using installed validators in settings.py
+        try:
+            validate_password(request.POST['password']) == None
+        except ValidationError:
+            # return to form with form instance and message
+            context = {'new_password_form': new_password_form}
+            messages.error(request, "Password change failed. Please try again.")
+            return render(request, 'app/change_password.html', context)
 
         # verify requesting user's email and old_password match
         authenticated_user = authenticate(email=user.email, password=old_password)
@@ -60,11 +76,7 @@ def change_password(request):
             
             # return to user profile with success message after logging user in with new credentials
             messages.success(request, "Password changed successfully!")
-
-            if request.POST.get('next') == '/':
-                return HttpResponseRedirect('/')
-            else:
-                return HttpResponseRedirect(request.POST.get('next', '/profile'))
+            return HttpResponseRedirect(request.POST.get('next', '/profile'))
 
         else:
             # return to form with form instance and message
