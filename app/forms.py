@@ -27,7 +27,8 @@ class UserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = False
+        # this line is used to prevent crispy from automatically applying a form tag (i.e. I can wrap multiple forms together and define my own form tag and submit button)
+        self.helper.form_tag = False 
         self.helper.layout = Layout(
             Row(
                 Column('first_name', css_class='form-group col-md-6 mb-0'),
@@ -48,6 +49,46 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('email', 'password', 'first_name', 'last_name',)
+
+
+class EditProfileUserForm(forms.ModelForm):
+    """
+        This class allows a user to edit their first_name, last_name, and email.
+        The __init__ method has been modified in order to display crispy forms in a specific way.
+    """
+    password = forms.CharField(widget=forms.PasswordInput(), label='Password (at least 8 characters)')
+    confirm_email=forms.CharField()
+
+    def clean(self):
+        cleaned_data = super(EditProfileUserForm, self).clean()
+        email = cleaned_data.get('password')
+        confirm_email = cleaned_data.get('confirm_email')
+
+        if email != confirm_email:
+            raise forms.ValidationError('')
+
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False 
+        self.helper.layout = Layout(
+            Row(
+                Column('first_name', css_class='form-group col-md-6 mb-0'),
+                Column('last_name', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+            Row(
+                Column('email', css_class='form-group col-md-6 mb-0'),
+                Column('confirm_email', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+        )
+
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'first_name', 'last_name',)
 
 
 class VolunteerForm(forms.ModelForm):

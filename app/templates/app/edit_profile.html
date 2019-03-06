@@ -1,14 +1,49 @@
 {% extends 'app/index.html' %}
+{% load crispy_forms_tags %}
+
+  {% block style %}
+    <style>
+      /* hide ugly validation error block that appears when passwords don't match */
+      .alert-block {
+        display: none;
+      }
+    </style>
+  {% endblock style %}
 
 {% block content %}
     <div class='pb-2 mt-4 mb-4 border-bottom'>
-        <h3>Edit Profile</h3>
+        <h3>Register to Volunteer or Adopt</h3>
     </div>
-      <form id="user_form" method="post" action="{% url 'app:register' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ user_form.as_p }}
-          {{ volunteer_form.as_p }}
-          <input type="hidden" value="{{next}}" name="next"/>
-          <input class="btn btn-dark" type="submit" name="submit" value="Update" />
+
+    <div class='messages'>
+      {% for message in messages %}
+        <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
+      {% endfor %}
+    </div>
+
+    {% if registered %}
+      <strong>Thank you for registering!</strong>
+      <a href="{% url 'app:index' %}">Return Home</a>
+    {% else %}
+      <form id='user_form' method='post' action="{% url 'app:register' %}" enctype='multipart/form-data'>
+        {% csrf_token %}
+        <div class='card mb-3'>
+          <div class='card-header'>
+            Name, E-mail, and Password
+          </div>
+          <div class='card-body' style='padding-top: 10px; padding-bottom: 10px;'>
+            {% crispy user_form %}
+          </div>
+        </div>
+        <div class='card mb-3'>
+          <div class='card-header'>
+            Phone and Mailing Address
+          </div>
+          <div class='card-body' style='padding-top: 10px; padding-bottom: 10px;'>
+            {% crispy volunteer_form %}
+          </div>
+        </div>
+        <input class='btn btn-outline-dark' type='submit' name='submit' value='Update Profile' />
       </form>
+    {% endif %}
 {% endblock content %}

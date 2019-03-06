@@ -5,20 +5,19 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from app.models import Application
-from app.forms import UserForm, VolunteerForm
+from app.forms import UserForm, VolunteerForm, EditProfileUserForm
 
 @login_required
 def edit_profile(request):
 
     if request.method == 'GET':
         user = request.user
-        applications = Application.objects.filter(user=request.user)
+        edit_user_form = EditProfileUserForm()
         context = {
-            'edit_mode': True,
             'user': user,
-            'applications': applications
+            'edit_user_form': edit_user_form,
         }
-        return render(request, 'app/profile.html', context)
+        return render(request, 'app/edit_profile.html', context)
 
 @login_required
 def profile(request):
