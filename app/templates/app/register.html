@@ -9,14 +9,33 @@
       <strong>Thank you for registering!</strong>
       <a href="{% url 'app:index' %}">Return to the homepage.</a><br />
     {% else %}
-      {% comment %} <form id="user_form" method="post" action="{% url 'app:register' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ user_form|crispy }}
-          {{ volunteer_form|crispy }}
-          <input type="hidden" value="{{next}}" name="next"/>
-          <input class="btn btn-dark" type="submit" name="submit" value="Register" />
-      </form> {% endcomment %}
-      {% crispy user_form %}
-      {% crispy volunteer_form %}
+      <form id='user_form' method='post' action="{% url 'app:register' %}" enctype='multipart/form-data'>
+        {% csrf_token %}
+        <div class='card mb-3'>
+          <div class='card-header'>
+            Name, E-mail, and Password
+          </div>
+          <ul class='list-group'>
+            <li class='list-group-item'>
+              <div class='card-body'>
+                {% crispy user_form %}
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class='card mb-3'>
+          <div class='card-header'>
+            Mailing Address
+          </div>
+          <ul class='list-group'>
+            <li class='list-group-item'>
+              <div class='card-body'>
+                {% crispy volunteer_form %}
+              </div>
+            </li>
+          </ul>
+        </div>
+        <input class="btn btn-outline-dark" type="submit" name="submit" value="Complete Registration" />
+      </form>
     {% endif %}
 {% endblock content %}
