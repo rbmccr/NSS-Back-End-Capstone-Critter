@@ -15,6 +15,8 @@ urlpatterns = [
     path("profile", views.profile, name='profile'),
     # ex. /profile/edit
     path("profile/edit", views.edit_profile, name='edit_profile'),
+    # ex. /profile/edit
+    path("profile/edit/password", views.change_password, name='change_password'),
     # ex. /pets
     path("pets", views.available_animals, name='pets'),
     # ex. /pets/details/1

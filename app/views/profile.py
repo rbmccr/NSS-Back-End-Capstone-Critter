@@ -1,5 +1,5 @@
 # authentication
-from django.contrib.auth import authenticate
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 # HTTP
 from django.http import HttpResponseRedirect
@@ -11,7 +11,62 @@ from django.contrib import messages
 # models
 from app.models import CustomUser, Application, Volunteer
 # forms
-from app.forms import UserForm, VolunteerForm, EditProfileUserForm, EditProfileVolunteerForm
+from app.forms import UserForm, VolunteerForm, EditProfileUserForm, EditProfileVolunteerForm, ChangePasswordForm
+# local files
+from .auth_views import login_user
+
+@login_required
+def profile(request):
+    if request.method == 'GET':
+        user = request.user
+        applications = Application.objects.filter(user=request.user)
+        context = {
+            'user': user,
+            'applications': applications
+        }
+        return render(request, 'app/profile.html', context)
+
+@login_required
+def change_password(request):
+    """
+        This view loads a user's personal profile, including their adoption applications submitted to the shelter.
+    """
+
+    if request.method == 'GET':
+        user = request.user
+        new_password_form = ChangePasswordForm()
+        context = {'new_password_form': new_password_form}
+        return render(request, 'app/change_password.html', context)
+
+    if request.method == 'POST':
+        # get user instance used with form class instance (for validating unique fields) and volunteer instance
+        user = CustomUser.objects.get(pk=request.user.id)
+        old_password = request.POST['old_password']
+        new_password_form = ChangePasswordForm(data=request.POST, instance=user)
+
+        # verify requesting user's email and old_password match
+        authenticated_user = authenticate(email=user.email, password=old_password)
+
+        # check data types in submission.
+        if new_password_form.is_valid() and authenticated_user is not None:
+            # Note that user instance is used here for updating (not posting)
+            # Hash the password and update the user object
+            user.set_password(request.POST['password'])
+            user.save()
+
+            # re-authenticate with new password
+            authenticated_user = authenticate(email=user.email, password=request.POST['password'])
+            login(request=request, user=authenticated_user)
+
+            # return to user profile with success message after logging user in with new credentials
+            messages.success(request, "Password changed successfully!")
+            return HttpResponseRedirect(reverse('app:profile'))
+
+        else:
+            # re-populate form with submitted data. Include message
+            context = {'new_password_form': new_password_form}
+            messages.error(request, "Password change failed. Please try again.")
+            return render(request, 'app/change_password.html', context)
 
 @login_required
 def edit_profile(request):
@@ -83,18 +138,3 @@ def edit_profile(request):
 
             messages.error(request, "Update failed.")
             return render(request, 'app/edit_profile.html', context)
-
-@login_required
-def profile(request):
-    """
-        This view loads a user's personal profile, including their adoption applications submitted to the shelter.
-    """
-
-    if request.method == 'GET':
-        user = request.user
-        applications = Application.objects.filter(user=request.user)
-        context = {
-            'user': user,
-            'applications': applications
-        }
-        return render(request, 'app/profile.html', context)
