@@ -60,7 +60,7 @@
       <div class="collapse navbar-collapse" id="navbar_collapse_content">
         {% comment %} Links on left side of navbar {% endcomment %}
         <ul class="navbar-nav mr-lg-auto">
-          <li class="nav-item"><a class="nav-link" href="{% url 'app:pets' %}">Adopt a Pet</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'app:pets' %}">Available Pets</a></li>
           {% if user.is_authenticated %}
             <li class="nav-item"><a class="nav-link" href="{% url 'app:index' %}">Volunteering</a></li>
           {% endif %}

@@ -4,7 +4,7 @@ from app.models import *
 
 import itertools
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
+from crispy_forms.layout import Layout, Row, Column
 
 class UserForm(forms.ModelForm):
     """
@@ -16,11 +16,11 @@ class UserForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
 
         if password != confirm_password:
-            raise forms.ValidationError("password and confirm_password does not match")
+            raise forms.ValidationError('')
 
         return cleaned_data
 

@@ -32,8 +32,9 @@ def register(request):
 
             return login_user(request)
         else:
-            messages.error(request, "Registration failed. Passwords may not match or may be too simple.")
-            return HttpResponseRedirect(reverse('app:register'))
+            context = {'user_form': user_form, 'next': request.GET.get('next', '/'), 'volunteer_form': volunteer_form}
+            messages.error(request, "Registration failed. Check password if no error displayed.")
+            return render(request, 'app/register.html', context)
 
     elif request.method == 'GET':
         user_form = UserForm()
