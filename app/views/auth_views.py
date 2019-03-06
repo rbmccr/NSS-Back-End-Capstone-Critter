@@ -1,11 +1,10 @@
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 from django.urls import reverse
 from django.contrib import messages
-
 from app.forms import UserForm, VolunteerForm
 
 def register(request):
@@ -14,12 +13,6 @@ def register(request):
       request -- The full HTTP request object
     '''
 
-    # A boolean value for telling the template whether the registration was successful.
-    # Set to False initially. Code changes value to True when registration succeeds.
-    registered = False
-
-    # Create a new user by invoking the `create_user` helper method
-    # on Django's built-in User model
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
         volunteer_form = VolunteerForm(data=request.POST)
@@ -37,10 +30,10 @@ def register(request):
             volunteer.user = user
             volunteer.save()
 
-            # Update our variable to tell the template registration was successful.
-            registered = True
-
-        return login_user(request)
+            return login_user(request)
+        else:
+            messages.error(request, "Registration failed. Passwords may not match or may be too simple.")
+            return HttpResponseRedirect(reverse('app:register'))
 
     elif request.method == 'GET':
         user_form = UserForm()

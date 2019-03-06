@@ -28,6 +28,58 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
+STATE_CHOICES = (
+    ('AL','Alabama'),
+    ('AK','Alaska'),
+    ('AZ','Arizona'),
+    ('AR','Arkansas'),
+    ('CA','California'),
+    ('CO','Colorado'),
+    ('CT','Connecticut'),
+    ('DE','Delaware'),
+    ('FL','Florida'),
+    ('GA','Georgia'),
+    ('HI','Hawaii'),
+    ('ID','Idaho'),
+    ('IL','Illinois'),
+    ('IN','Indiana'),
+    ('IA','Iowa'),
+    ('KS','Kansas'),
+    ('KY','Kentucky'),
+    ('LA','Louisiana'),
+    ('ME','Maine'),
+    ('MD','Maryland'),
+    ('MA','Massachusetts'),
+    ('MI','Michigan'),
+    ('MN','Minnesota'),
+    ('MS','Mississippi'),
+    ('MO','Missouri'),
+    ('MT','Montana'),
+    ('NE','Nebraska'),
+    ('NV','Nevada'),
+    ('NH','New Hampshire'),
+    ('NJ','New Jersey'),
+    ('NM','New Mexico'),
+    ('NY','New York'),
+    ('NC','North Carolina'),
+    ('ND','North Dakota'),
+    ('OH','Ohio'),
+    ('OK','Oklahoma'),
+    ('OR','Oregon'),
+    ('PA','Pennsylvania'),
+    ('RI','Rhode Island'),
+    ('SC','South Carolina'),
+    ('SD','South Dakota'),
+    ('TN','Tennessee'),
+    ('TX','Texas'),
+    ('UT','Utah'),
+    ('VT','Vermont'),
+    ('VA','Virginia'),
+    ('WA','Washington'),
+    ('WV','West Virginia'),
+    ('WI','Wisconsin'),
+    ('WY','Wyoming'),
+)
 
 class Volunteer(models.Model):
     """Defines a model for a volunteer (a verified user). Volunteers who are admin are treated as staff.
@@ -38,7 +90,7 @@ class Volunteer(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     street_address = models.CharField(max_length=100)
     city = models.CharField(max_length=75)
-    state = models.CharField(max_length=50)
+    state = models.CharField(max_length=2, choices=STATE_CHOICES)
     zipcode = models.CharField(max_length=12)
     phone_number = models.PositiveIntegerField(validators=[MaxValueValidator(9999999999)])
     delete_date = models.DateTimeField(default=None, null=True, blank=True)

@@ -11,10 +11,18 @@ class UserForm(forms.ModelForm):
         This class is used in registration to define first_name, last_name, email, and password.
         The __init__ method has been modified in order to display crispy forms in a specific way.
     """
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'John'}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Doe'}))
-    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'johndoe@example.com'}))
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput(), label='Password (at least 8 characters)')
+    confirm_password=forms.CharField(widget=forms.PasswordInput())
+
+    def clean(self):
+        cleaned_data = super(UserForm, self).clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password != confirm_password:
+            raise forms.ValidationError("password and confirm_password does not match")
+
+        return cleaned_data
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,15 +32,16 @@ class UserForm(forms.ModelForm):
             Row(
                 Column('first_name', css_class='form-group col-md-6 mb-0'),
                 Column('last_name', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
+                css_class='form-row mb-n2'
             ),
             Row(
                 Column('email', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
+                css_class='form-row mb-n2'
             ),
             Row(
                 Column('password', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
+                Column('confirm_password', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row mb-n2'
             ),
         )
 
@@ -50,17 +59,17 @@ class VolunteerForm(forms.ModelForm):
         self.helper.layout = Layout(
             Row(
                 Column('phone_number', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
+                css_class='form-row mb-n2'
             ),
             Row(
                 Column('street_address', css_class='form-group col-md-12 mb-0'),
-                css_class='form-row'
+                css_class='form-row mb-n2'
             ),
             Row(
                 Column('city', css_class='form-group col-md-6 mb-0'),
                 Column('state', css_class='form-group col-md-4 mb-0'),
                 Column('zipcode', css_class='form-group col-md-2 mb-0'),
-                css_class='form-row'
+                css_class='form-row mb-n2'
             ),
         )
 
