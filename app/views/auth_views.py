@@ -86,7 +86,7 @@ def login_user(request):
 
         else:
             # Bad login details were provided. So we can't log the user in.
-            messages.error(request, "Login failed. Your email or password is incorrect.")
+            messages.error(request, "Login failed. Your e-mail or password is incorrect.")
 
     return render(request, 'app/login.html', context)
 

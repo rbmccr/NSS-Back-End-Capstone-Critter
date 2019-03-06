@@ -90,7 +90,7 @@
     {% block content %}
 
       {% if user.is_authenticated %}
-      <h1>Authenticated view: {{ user.username }}!</h1>
+      <h3>Authenticated view... Current user: {{ user.first_name }}</h3>
       {% else %}
       <h1>Unauthenticated view</h1>
       {% endif %}

@@ -11,18 +11,25 @@
 
     <form id="login_form" method="post" action="{% url 'app:login' %}">
       {% csrf_token %}
-      <div class="form-group">
-        <label for="email">E-mail:</label>
-        <input class="form-control" type="text" id="email" name="email" value="" size="50" />
+      <div class='card mb-3'>
+        <div class='card-header'>
+          Login via E-mail and Password
+        </div>
+        <div class='card-body'>
+          <div class='row'>
+          <div class="form-group col-md-6 mb-0">
+            <label for="email">E-mail:</label>
+            <input class="form-control" type="text" id="email" name="email" value="" size="50" />
+          </div>
+          <div class="form-group col-md-6 mb-0">
+            <label for="password">Password:</label>
+            <input class="form-control" type="password" id="password" name="password" value="" size="50" />
+          </div>
+          </div>
+            <input type="hidden" value="{{next}}" name="next" />
+        </div>
       </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input class="form-control" type="password" id="password" name="password" value="" size="50" />
-      </div>
-      <input type="hidden" value="{{next}}" name="next" />
-      <div>
-        <input class="btn btn-dark" type="Submit" value="Submit" />
-      </div>
+      <input class="btn btn-outline-dark" type="Submit" value="Authenticate" />
     </form>
     {% if next != "/" %}
       <a class ="btn btn-dark" href="/register?next={{next}}">Register</a>

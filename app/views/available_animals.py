@@ -17,6 +17,24 @@ def available_animals(request):
         }
         return render(request, 'app/available_animals.html', context)
 
+# def available_animals_search(request):
+#     if request.method == "POST":
+#     search_text = request.POST["search_text"]
+#     if search_text is not "":
+#         results = Animal.objects.filter(name__contains=search_text).order_by('date_arrival')
+#         context = {
+#             "results": results,
+#             "length": len(results),
+#             "search_text": search_text,
+#             "no_results": True if len(results) is 0 else False
+#         }
+#     else:
+#         context = {
+#             "no_results": True,
+#             "search_text": search_text
+#         }
+#     return render(request, 'app/available_animals.html', context)
+
 def animal_detail(request, id):
     """
         This view retrieves a single animal from the animal table, checks to ensure the animal is not adopted or id doesn't exist (control for manual user navigation to the url) and renders a detail template (otherwise redirects user with notification of animal status).
