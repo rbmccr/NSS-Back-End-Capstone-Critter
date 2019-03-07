@@ -58,8 +58,10 @@ def available_animals_search(request):
 
         # check for animal age button click in post.
         if 'young' in post:
+            # if the value isn't already 'young', set it to 'young'
             if post['animal_age'] != 'young':
                 animal_age = 'young'
+            # if the value is already 'young', set the age to None
             else:
                 animal_age = None
         elif 'adult' in post:
@@ -78,23 +80,12 @@ def available_animals_search(request):
             if post['animal_age'] is not 'None':
                 animal_age = post['animal_age']
 
-        # TODO: handle search by name
-        # search_text = request.POST["search_text"]
-        # if search_text is not "":
-        #     results = Animal.objects.filter(name__contains=search_text).order_by('date_arrival')
-        #     context = {
-        #         "results": results,
-        #         "length": len(results),
-        #         "search_text": search_text,
-        #         "no_results": True if len(results) is 0 else False
-        #     }
-        # else:
-        #     context = {
-        #         "no_results": True,
-        #         "search_text": search_text
-        #     }
+        # check for text in search box
+        if post['name_query'] is not None or '':
+            search_text = request.POST["name_query"]
+        else:
+            search_text = None
 
-        search_text = None
 
         def establish_query(animal_species, animal_age, search_text):
             """
@@ -106,62 +97,52 @@ def available_animals_search(request):
             """
 
             # special query variables used with 'other' query
-            cat_query = None
-            dog_query = None
+            cat_Q = None
+            dog_Q = None
 
             # animal_species
             if animal_species is None or animal_species == 'None' or animal_species == '':
-                animal_species_query = None
+                species_Q = None
             elif animal_species == 'other':
-                animal_species_query = None
-                cat_query = ~Q(species=Species.objects.get(species='cat'))
-                dog_query = ~Q(species=Species.objects.get(species='dog'))
+                species_Q = None
+                # need individual instances of cat and dog to provide main query below
+                cat_Q = ~Q(species=Species.objects.get(species='cat'))
+                dog_Q = ~Q(species=Species.objects.get(species='dog'))
             else:
-                animal_species_query = Q(species=Species.objects.get(species=animal_species))
+                species_Q = Q(species=Species.objects.get(species=animal_species))
 
             # TODO: establish weeks/months/years column in db for use with this query
             # animal_age
             if animal_age is None or animal_age == 'None' or animal_age == '':
-                animal_age_query = None
+                age_Q = None
             elif animal_age == 'young':
-                animal_age_query = Q(age__lte=2)
+                age_Q = Q(age__lte=2)
             elif animal_age == 'adult':
-                animal_age_query = Q(age__lt=8, age__gt=2)
+                age_Q = Q(age__lt=8, age__gt=2)
             else:
-                animal_age_query = Q(age__gte=8)
+                age_Q = Q(age__gte=8)
 
             # search_text
             if search_text is None or search_text == 'None' or search_text == '':
-                search_query = None
+                search_Q = None
             else:
-                search_query = Q(name__contains=search_text)
+                search_Q = Q(name__contains=search_text)
 
             # get all with primary key > 0 (used in filter_results to get everything for that filter if the condition is none)
             _ = Q(pk__gt=0)
+            # get only unadopted animals
+            unadopted = Q(date_adopted=None)
 
-            # filter(species).filter(age group).filter(name).filter(unadopted animals)
-            filter_results = Animal.objects.filter(animal_species_query if animal_species_query is not None else _).filter(cat_query if cat_query is not None else _).filter(dog_query if dog_query is not None else _).filter(animal_age_query if animal_age_query is not None else _).filter(search_query if search_query is not None else _).filter(Q(date_adopted=None))
+            # filter(species).filter(ignore cat and dog species if 'other' selected).filter(age).filter(name).filter(unadopted animals)
+            filter_results = Animal.objects.filter(species_Q if species_Q is not None else _).filter(cat_Q if cat_Q is not None else _).filter(dog_Q if dog_Q is not None else _).filter(age_Q if age_Q is not None else _).filter(search_Q if search_Q is not None else _).filter(unadopted)
 
             return filter_results
 
         filter_results = establish_query(animal_species, animal_age, search_text)
 
-
-        # if animal_species is not None, we need to filter the results - but there are MANY 'other' species
-        # if animal_species is not None and (animal_species == 'cat' or animal_species == 'dog'):
-        #     animal_species_instance = Species.objects.get(species=animal_species)
-        #     filter_results = Animal.objects.filter(Q(species=animal_species_instance), Q(date_adopted=None))
-        # elif animal_species == 'other':
-        #     cat_instance = Species.objects.get(species='cat')
-        #     dog_instance = Species.objects.get(species='dog')
-        #     filter_results = Animal.objects.filter(~Q(species=cat_instance), ~Q(species=dog_instance), Q(date_adopted=None))
-        # else:
-        #     filter_results = None
-
-
         context = {
             'animals': filter_results,
-            # 'animal_count': len(filter_results) if filter_results is not None else 0,
+            'animal_count': len(filter_results) if filter_results is not None else 0,
             'animal_species': animal_species,
             'animal_age': animal_age,
             'search_text': search_text
