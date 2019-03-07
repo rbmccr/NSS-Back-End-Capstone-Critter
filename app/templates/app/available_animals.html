@@ -113,54 +113,54 @@
 
     <div class='card-body'>
 
-        <form class=" filters ml-lg-auto my-2 my-lg-0" action="{% url 'app:search_pets' %}" method="POST">
+        <form class='filters ml-lg-auto my-2 my-lg-0' action="{% url 'app:search_pets' %}" method='POST'>
           {% csrf_token %}
-          <input type="hidden" value="{{ animal_species }}" name="animal_species">
-          <input type="hidden" value="{{ animal_age }}" name="animal_age">
-          <div class="">
-            <div class="btn-group" role="group" aria-label="animal filters">
+          <input type='hidden' value='{{ animal_species }}' name='animal_species'>
+          <input type='hidden' value='{{ animal_age }}' name='animal_age'>
+          <div class=''>
+            <div class='input-group'>
+              <input class='form-control' name='name_query' type='search' placeholder='Search by name' aria-label='Search' value='{{ search_text }}'>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-dark' type='submit'><i class='fas fa-search'></i></button>
+              </div>
+            </div>
+          </div>
+          <div class=''>
+            <div class='btn-group' role='group' aria-label='animal filters'>
               {% if animal_species == 'cat' %}
-                <button type="submit" class="btn btn-outline-dark active" name="cat">&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark active' name='cat'>&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
               {% else %}
-                <button type="submit" class="btn btn-outline-dark" name="cat">&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark' name='cat'>&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
               {% endif %}
               {% if animal_species == 'dog' %}
-                <button type="submit" class="btn btn-outline-dark active" name="dog">&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark active' name='dog'>&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
               {% else %}
-                <button type="submit" class="btn btn-outline-dark" name="dog">&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark' name='dog'>&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
               {% endif %}
               {% if animal_species == 'other' %}
-                <button type="submit" class="btn btn-outline-dark active" name="other">&nbsp; Other &nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark active' name='other'>&nbsp; Other &nbsp;</button>
               {% else %}
-                <button type="submit" class="btn btn-outline-dark" name="other">&nbsp; Other &nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark' name='other'>&nbsp; Other &nbsp;</button>
               {% endif %}
             </div>
           </div>
           <div class=''>
-            <div class="btn-group" role="group" aria-label="animal filters">
+            <div class='btn-group' role='group' aria-label='animal filters'>
               {% if animal_age == 'young' %}
-                <button type="submit" class="btn btn-outline-dark active" name="young">&nbsp; Young &nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark active' name='young'>&nbsp; Young &nbsp;</button>
               {% else %}
-                <button type="submit" class="btn btn-outline-dark" name="young">&nbsp; Young &nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark' name='young'>&nbsp; Young &nbsp;</button>
               {% endif %}
               {% if animal_age == 'adult' %}
-                <button type="submit" class="btn btn-outline-dark active" name="adult">&nbsp; Adult &nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark active' name='adult'>&nbsp; Adult &nbsp;</button>
               {% else %}
-                <button type="submit" class="btn btn-outline-dark" name="adult">&nbsp; Adult &nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark' name='adult'>&nbsp; Adult &nbsp;</button>
               {% endif %}
               {% if animal_age == 'senior' %}
-                <button type="submit" class="btn btn-outline-dark active" name="senior">&nbsp; Senior &nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark active' name='senior'>&nbsp; Senior &nbsp;</button>
               {% else %}
-                <button type="submit" class="btn btn-outline-dark" name="senior">&nbsp; Senior &nbsp;</button>
+                <button type='submit' class='btn btn-outline-dark' name='senior'>&nbsp; Senior &nbsp;</button>
               {% endif %}
-            </div>
-          </div>
-          <div class=''>
-            <div class="input-group">
-              <input class="form-control" name="name_query" type="search" placeholder="Search by name" aria-label="Search" value={{ search_text }}>
-              <div class="input-group-append">
-                <button class="btn btn-outline-dark" type="submit"><i class="fas fa-search"></i></button>
-              </div>
             </div>
           </div>
         </form>
@@ -170,6 +170,19 @@
   </div>
 
   <div class='card-container'>
+  <!-- give user search feedback if no animals are in queryset -->
+    {% if animal_count == 0 %}
+      <div class='card'>
+        <div class='card-body'>
+          <h5 class="card-title">Sorry! No pets match!</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Here's what we looked for:</h6>
+            <ul>
+              <li>Species: {{ animal_species }}</li>
+              <li>Age group: {{ animal_age }}</li>
+              <li>Name search: {% if search_text == None or search_text == 'None' or search_text == '' %}None{% else %} {{ search_text }} {% endif %}</li>
+            </ul>
+        </div>
+    {% endif %}
     {% for animal in animals %}
       <div class='card'>
         <img class='card-img-top' src='{{ animal.image.url }}' alt='{{ animal.name }}'>
