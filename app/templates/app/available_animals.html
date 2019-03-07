@@ -41,6 +41,13 @@
       height: 310px;
     }
 
+    /* align filters in each column */
+    .filters {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      justify-content: space-evenly;
+    }
+
     /* used to center animal cards in body if window between 1200px and 992px */
     @media only screen and (max-width: 1200px) and (min-width:992px) {
       .card {
@@ -95,6 +102,50 @@
       <div class='{{ message.tags }} alert alert-info' role='alert'>{{ message }}</div>
     {% endfor %}
   </div>
+
+    <div class='card mb-3' style='width: 100%; height: auto;'>
+
+      <div class='card-header'>
+        Apply a filter or search by name
+      </div>
+
+      <div class='card-body'>
+
+        <div class='row filters'>
+
+          <div class="col-sm">
+            <div class="btn-group" role="group" aria-label="animal filters">
+              <button type="button" class="btn btn-outline-dark">&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
+              <button type="button" class="btn btn-outline-dark">&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
+              <button type="button" class="btn btn-outline-dark">&nbsp; Other &nbsp;</button>
+            </div>
+          </div>
+
+          <div class='col-sm'>
+            <div class="btn-group" role="group" aria-label="animal filters">
+              <button type="button" class="btn btn-outline-dark">&nbsp; Young &nbsp;</button>
+              <button type="button" class="btn btn-outline-dark">&nbsp; Adult &nbsp;</button>
+              <button type="button" class="btn btn-outline-dark">&nbsp; Senior &nbsp;</button>
+            </div>
+          </div>
+
+          <div class='col-sm'>
+            <form class="form-inline ml-lg-auto my-2 my-lg-0" action="{% url 'app:index' %}" method="POST">
+              {% csrf_token %}
+              <div class="input-group">
+                <input class="form-control" name="product_query" type="search" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                  <button class="btn btn-dark" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
 
   <div class='card-container'>
     {% for animal in animals %}
