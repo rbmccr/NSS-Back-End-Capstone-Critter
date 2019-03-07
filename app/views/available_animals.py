@@ -78,13 +78,6 @@ def available_animals_search(request):
             if post['animal_age'] is not 'None':
                 animal_age = post['animal_age']
 
-        # TODO: establish weeks/months/years column in db for use with this query
-        # if animal_age == None or animal_age == 'None':
-        #     animal_age_instance = None
-        # else:
-        #     animal_age_instance = None
-            # animal_age_instance = Species.objects.get(species=animal_age)
-
         # TODO: handle search by name
         # search_text = request.POST["search_text"]
         # if search_text is not "":
@@ -104,14 +97,29 @@ def available_animals_search(request):
         search_text = None
 
         def establish_query(animal_species, animal_age, search_text):
+            """
+                This function accepts three filter arguments, constructs a query based on conditional logic, and completes the query.
+
+                args: animal_species, animal_age, search_text
+
+                returns: complete queryset matching filters
+            """
+
+            # special query variables used with 'other' query
+            cat_query = None
+            dog_query = None
+
             # animal_species
             if animal_species is None or animal_species == 'None' or animal_species == '':
                 animal_species_query = None
             elif animal_species == 'other':
-                animal_species_query = Q(species=Species.objects.filter(~Q(species='cat'), ~Q(species='dog')))
+                animal_species_query = None
+                cat_query = ~Q(species=Species.objects.get(species='cat'))
+                dog_query = ~Q(species=Species.objects.get(species='dog'))
             else:
                 animal_species_query = Q(species=Species.objects.get(species=animal_species))
 
+            # TODO: establish weeks/months/years column in db for use with this query
             # animal_age
             if animal_age is None or animal_age == 'None' or animal_age == '':
                 animal_age_query = None
@@ -124,12 +132,15 @@ def available_animals_search(request):
 
             # search_text
             if search_text is None or search_text == 'None' or search_text == '':
-                pass
+                search_query = None
             else:
                 search_query = Q(name__contains=search_text)
 
-            # query_parameters = [animal_species_query, animal_age_query, search_query]
-            filter_results = Animal.objects.filter(animal_species_query if animal_species_query is not None else Q(pk__gt=0)).filter(animal_age_query if animal_age_query is not None else Q(pk__gt=0)).filter(Q(date_adopted=None))
+            # get all with primary key > 0 (used in filter_results to get everything for that filter if the condition is none)
+            _ = Q(pk__gt=0)
+
+            # filter(species).filter(age group).filter(name).filter(unadopted animals)
+            filter_results = Animal.objects.filter(animal_species_query if animal_species_query is not None else _).filter(cat_query if cat_query is not None else _).filter(dog_query if dog_query is not None else _).filter(animal_age_query if animal_age_query is not None else _).filter(search_query if search_query is not None else _).filter(Q(date_adopted=None))
 
             return filter_results
 
@@ -156,8 +167,7 @@ def available_animals_search(request):
             'search_text': search_text
         }
 
-        #  TODO: set it up so if user clears both filters and text in search that all results appear
-        print("@@@@@@@@@@@@", "spec", type(animal_species), animal_species, "age", type(animal_age), animal_age, "txt", type(search_text))
+        # if all filters are empty / cleared then load the standard pets page, else load the search page
         if (animal_species == None or animal_species == 'None') and (animal_age == None or animal_age == '' or animal_age == 'None') and (search_text == None or search_text == ''):
             return HttpResponseRedirect(reverse('app:pets'))
         else:
