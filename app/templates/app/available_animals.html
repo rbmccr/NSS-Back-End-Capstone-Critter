@@ -6,7 +6,7 @@
     /* align cards in grid */
     .card-container {
       display: grid;
-      grid-template-columns: auto auto auto;
+      grid-template-columns: 27.93% 27.93% 27.93%; /* 310px card / 1110px container */
       justify-content: space-evenly;
     }
 
@@ -41,11 +41,22 @@
       height: 310px;
     }
 
+    /* align filters in each column in form */
+    .filters {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      justify-content: space-around;
+    }
+
     /* used to center animal cards in body if window between 1200px and 992px */
     @media only screen and (max-width: 1200px) and (min-width:992px) {
+      .card-container {
+        grid-template-columns: 32.25% 32.25% 32.25%; /* 300px card / 960px container */
+      }
+
       .card {
         width: 300px;
-        height: 450px;
+        height: 420px;
       }
       .card > img {
         width: 300px;
@@ -56,9 +67,7 @@
     /* used to center animal cards in body if window between 992px and 768px */
     @media only screen and (max-width: 992px) and (min-width:768px) {
       .card-container {
-        display: grid;
         grid-template-columns: auto auto;
-        justify-content: space-evenly;
       }
     }
 
@@ -96,7 +105,84 @@
     {% endfor %}
   </div>
 
+
+  <div class='card mb-3' style='width: 100%; height: auto;'>
+    <div class='card-header'>
+      Apply a filter or search by name
+    </div>
+
+    <div class='card-body'>
+
+        <form class='filters ml-lg-auto my-2 my-lg-0' action="{% url 'app:search_pets' %}" method='POST'>
+          {% csrf_token %}
+          <input type='hidden' value='{{ animal_species }}' name='animal_species'>
+          <input type='hidden' value='{{ animal_age }}' name='animal_age'>
+          <div class=''>
+            <div class='input-group'>
+              <input class='form-control' name='name_query' type='search' placeholder='Search by name' aria-label='Search' value='{{ search_text }}'>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-dark' type='submit'><i class='fas fa-search'></i></button>
+              </div>
+            </div>
+          </div>
+          <div class=''>
+            <div class='btn-group' role='group' aria-label='animal filters'>
+              {% if animal_species == 'cat' %}
+                <button type='submit' class='btn btn-outline-dark active' name='cat'>&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
+              {% else %}
+                <button type='submit' class='btn btn-outline-dark' name='cat'>&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
+              {% endif %}
+              {% if animal_species == 'dog' %}
+                <button type='submit' class='btn btn-outline-dark active' name='dog'>&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
+              {% else %}
+                <button type='submit' class='btn btn-outline-dark' name='dog'>&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
+              {% endif %}
+              {% if animal_species == 'other' %}
+                <button type='submit' class='btn btn-outline-dark active' name='other'>&nbsp; Other &nbsp;</button>
+              {% else %}
+                <button type='submit' class='btn btn-outline-dark' name='other'>&nbsp; Other &nbsp;</button>
+              {% endif %}
+            </div>
+          </div>
+          <div class=''>
+            <div class='btn-group' role='group' aria-label='animal filters'>
+              {% if animal_age == 'young' %}
+                <button type='submit' class='btn btn-outline-dark active' name='young'>&nbsp; Young &nbsp;</button>
+              {% else %}
+                <button type='submit' class='btn btn-outline-dark' name='young'>&nbsp; Young &nbsp;</button>
+              {% endif %}
+              {% if animal_age == 'adult' %}
+                <button type='submit' class='btn btn-outline-dark active' name='adult'>&nbsp; Adult &nbsp;</button>
+              {% else %}
+                <button type='submit' class='btn btn-outline-dark' name='adult'>&nbsp; Adult &nbsp;</button>
+              {% endif %}
+              {% if animal_age == 'senior' %}
+                <button type='submit' class='btn btn-outline-dark active' name='senior'>&nbsp; Senior &nbsp;</button>
+              {% else %}
+                <button type='submit' class='btn btn-outline-dark' name='senior'>&nbsp; Senior &nbsp;</button>
+              {% endif %}
+            </div>
+          </div>
+        </form>
+
+    </div>
+
+  </div>
+
   <div class='card-container'>
+  <!-- give user search feedback if no animals are in queryset -->
+    {% if animal_count == 0 %}
+      <div class='card'>
+        <div class='card-body'>
+          <h5 class="card-title">Sorry! No pets match!</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Here's what we looked for:</h6>
+            <ul>
+              <li>Species: {% if animal_species == None or animal_species == 'None' or animal_species == '' %}none{% else %} {{ animal_species }} {% endif %}</li>
+              <li>Age group: {% if animal_age == None or animal_age == 'None' or animal_age == '' %}none{% else %} {{ animal_age }} {% endif %}</li>
+              <li>Name search: {% if search_text == None or search_text == 'None' or search_text == '' %}none{% else %} {{ search_text }} {% endif %}</li>
+            </ul>
+        </div>
+    {% endif %}
     {% for animal in animals %}
       <div class='card'>
         <img class='card-img-top' src='{{ animal.image.url }}' alt='{{ animal.name }}'>

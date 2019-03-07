@@ -1,11 +1,16 @@
+# authentication
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+# HTTP
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 from django.urls import reverse
+# models
 from app.models import Animal, Application
+# forms
 from app.forms import ApplicationForm
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+# tools
 import datetime
 
 @login_required

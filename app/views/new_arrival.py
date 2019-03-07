@@ -1,11 +1,16 @@
+# authentication
+from django.contrib.auth.decorators import login_required
+# HTTP
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 from django.urls import reverse
+# models
 from app.models import Animal
+# forms
 from app.forms import AnimalForm
+# messages
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def new_arrival(request):

@@ -15,12 +15,18 @@ urlpatterns = [
     path("profile", views.profile, name='profile'),
     # ex. /profile/edit
     path("profile/edit", views.edit_profile, name='edit_profile'),
+    # ex. /profile/edit
+    path("profile/edit/password", views.change_password, name='change_password'),
     # ex. /pets
     path("pets", views.available_animals, name='pets'),
+    # ex. /pets/search
+    path("pets/search", views.available_animals_search, name='search_pets'),
     # ex. /pets/details/1
     path("pets/details/<int:id>", views.animal_detail, name='animal_detail'),
     # ex. /new_arrival
     path("new_arrival", views.new_arrival, name='new_arrival'),
     # ex. /pets/adopt/1
     path("pets/adopt/<int:id>", views.adoption_app, name='adopt'),
+    # ex. /adoptions/all
+    path("adoptions/all", views.list_applications, name='list_applications'),
 ]
