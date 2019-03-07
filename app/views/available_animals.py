@@ -78,11 +78,14 @@ def available_animals_search(request):
             if post['animal_age'] is not 'None':
                 animal_age = post['animal_age']
 
+        # TODO: establish weeks/months/years column in db for use with this query
+        if animal_age == None or animal_age == 'None':
+            animal_age_instance = None
+        else:
+            animal_age_instance = None
+            # animal_age_instance = Species.objects.get(species=animal_age)
 
-        # if animal_species = None:
-                # animal_species_instance = Species.objects.get(species=animal_species)
-
-
+        # TODO: handle search by name
         # search_text = request.POST["search_text"]
         # if search_text is not "":
         #     results = Animal.objects.filter(name__contains=search_text).order_by('date_arrival')
@@ -98,11 +101,22 @@ def available_animals_search(request):
         #         "search_text": search_text
         #     }
 
-        # if animal_species_instance is not None:
-        #     filter_results = Animal.objects.filter(Q(species=animal_species_instance), Q(date_adopted=None))
-        # else:
-        filter_results = None
-        print("##########", animal_species, animal_age)
+        #  TODO: set it up so if user clears both filters and text in search that all results appear
+        # if animal_species == None and animal_age == None:
+        #     filter_results = Animal.objects.filter(date_adopted=None).order_by('date_arrival')
+
+        # if animal_species is not None, we need to filter the results - but there are MANY 'other' species
+        if animal_species is not None and (animal_species == 'cat' or animal_species == 'dog'):
+            print("@@@@@@@@@@@@@@@", animal_species)
+            animal_species_instance = Species.objects.get(species=animal_species)
+            filter_results = Animal.objects.filter(Q(species=animal_species_instance), Q(date_adopted=None))
+        elif animal_species == 'other':
+            cat_instance = Species.objects.get(species='cat')
+            dog_instance = Species.objects.get(species='dog')
+            filter_results = Animal.objects.filter(~Q(species=cat_instance), ~Q(species=dog_instance), Q(date_adopted=None))
+        else:
+            filter_results = None
+
         context = {
             'animals': filter_results,
             'animal_species': animal_species,
