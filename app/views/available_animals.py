@@ -79,10 +79,10 @@ def available_animals_search(request):
                 animal_age = post['animal_age']
 
         # TODO: establish weeks/months/years column in db for use with this query
-        if animal_age == None or animal_age == 'None':
-            animal_age_instance = None
-        else:
-            animal_age_instance = None
+        # if animal_age == None or animal_age == 'None':
+        #     animal_age_instance = None
+        # else:
+        #     animal_age_instance = None
             # animal_age_instance = Species.objects.get(species=animal_age)
 
         # TODO: handle search by name
@@ -108,8 +108,7 @@ def available_animals_search(request):
             if animal_species is None or animal_species == 'None' or animal_species == '':
                 animal_species_query = None
             elif animal_species == 'other':
-                animal_species_query = None
-                # animal_species_query = Q(species=Species.objects.filter(Q(species='cat'), Q(species='dog')))
+                animal_species_query = Q(species=Species.objects.filter(~Q(species='cat'), ~Q(species='dog')))
             else:
                 animal_species_query = Q(species=Species.objects.get(species=animal_species))
 
@@ -117,9 +116,11 @@ def available_animals_search(request):
             if animal_age is None or animal_age == 'None' or animal_age == '':
                 animal_age_query = None
             elif animal_age == 'young':
-                animal_age_query = Q(age__lte=10)
+                animal_age_query = Q(age__lte=2)
+            elif animal_age == 'adult':
+                animal_age_query = Q(age__lt=8, age__gt=2)
             else:
-                animal_age_query = Q(age__gt=10)
+                animal_age_query = Q(age__gte=8)
 
             # search_text
             if search_text is None or search_text == 'None' or search_text == '':
@@ -128,7 +129,8 @@ def available_animals_search(request):
                 search_query = Q(name__contains=search_text)
 
             # query_parameters = [animal_species_query, animal_age_query, search_query]
-            filter_results = Animal.objects.filter(animal_species_query if animal_species_query is not None else Q(pk__gt=0) and Q(date_adopted=None))
+            filter_results = Animal.objects.filter(animal_species_query if animal_species_query is not None else Q(pk__gt=0)).filter(animal_age_query if animal_age_query is not None else Q(pk__gt=0)).filter(Q(date_adopted=None))
+
             return filter_results
 
         filter_results = establish_query(animal_species, animal_age, search_text)

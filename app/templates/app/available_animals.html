@@ -6,7 +6,7 @@
     /* align cards in grid */
     .card-container {
       display: grid;
-      grid-template-columns: auto auto auto;
+      grid-template-columns: 27.93% 27.93% 27.93%; /* 310px card / 1110px container */
       justify-content: space-evenly;
     }
 
@@ -50,9 +50,13 @@
 
     /* used to center animal cards in body if window between 1200px and 992px */
     @media only screen and (max-width: 1200px) and (min-width:992px) {
+      .card-container {
+        grid-template-columns: 32.25% 32.25% 32.25%; /* 300px card / 960px container */
+      }
+
       .card {
         width: 300px;
-        height: 450px;
+        height: 420px;
       }
       .card > img {
         width: 300px;
@@ -63,9 +67,7 @@
     /* used to center animal cards in body if window between 992px and 768px */
     @media only screen and (max-width: 992px) and (min-width:768px) {
       .card-container {
-        display: grid;
         grid-template-columns: auto auto;
-        justify-content: space-evenly;
       }
     }
 
