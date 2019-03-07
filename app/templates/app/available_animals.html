@@ -41,11 +41,11 @@
       height: 310px;
     }
 
-    /* align filters in each column */
+    /* align filters in each column in form */
     .filters {
       display: grid;
       grid-template-columns: auto auto auto;
-      justify-content: space-evenly;
+      justify-content: space-around;
     }
 
     /* used to center animal cards in body if window between 1200px and 992px */
@@ -103,49 +103,69 @@
     {% endfor %}
   </div>
 
-    <div class='card mb-3' style='width: 100%; height: auto;'>
 
-      <div class='card-header'>
-        Apply a filter or search by name
-      </div>
+  <div class='card mb-3' style='width: 100%; height: auto;'>
+    <div class='card-header'>
+      Apply a filter or search by name
+    </div>
 
-      <div class='card-body'>
+    <div class='card-body'>
 
-        <div class='row filters'>
-
-          <div class="col-sm">
+        <form class=" filters ml-lg-auto my-2 my-lg-0" action="{% url 'app:search_pets' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" value="{{ animal_species }}" name="animal_species">
+          <input type="hidden" value="{{ animal_age }}" name="animal_age">
+          <div class="">
             <div class="btn-group" role="group" aria-label="animal filters">
-              <button type="button" class="btn btn-outline-dark">&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
-              <button type="button" class="btn btn-outline-dark">&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
-              <button type="button" class="btn btn-outline-dark">&nbsp; Other &nbsp;</button>
+              {% if animal_species == 'cat' %}
+                <button type="submit" class="btn btn-outline-dark active" name="cat" value="cat">&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
+              {% else %}
+                <button type="submit" class="btn btn-outline-dark" name="cat" value="cat">&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
+              {% endif %}
+              {% if animal_species == 'dog' %}
+                <button type="submit" class="btn btn-outline-dark active" name="dog">&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
+              {% else %}
+                <button type="submit" class="btn btn-outline-dark" name="dog">&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
+              {% endif %}
+              {% if animal_species == 'other' %}
+                <button type="submit" class="btn btn-outline-dark active" name="other">&nbsp; Other &nbsp;</button>
+              {% else %}
+                <button type="submit" class="btn btn-outline-dark" name="other">&nbsp; Other &nbsp;</button>
+              {% endif %}
             </div>
           </div>
-
-          <div class='col-sm'>
+          <div class=''>
             <div class="btn-group" role="group" aria-label="animal filters">
-              <button type="button" class="btn btn-outline-dark">&nbsp; Young &nbsp;</button>
-              <button type="button" class="btn btn-outline-dark">&nbsp; Adult &nbsp;</button>
-              <button type="button" class="btn btn-outline-dark">&nbsp; Senior &nbsp;</button>
+              {% if animal_age == 'young' %}
+                <button type="submit" class="btn btn-outline-dark active" name="young" value='young'>&nbsp; Young &nbsp;</button>
+              {% else %}
+                <button type="submit" class="btn btn-outline-dark" name="young" value='young'>&nbsp; Young &nbsp;</button>
+              {% endif %}
+              {% if animal_age == 'adult' %}
+                <button type="submit" class="btn btn-outline-dark active" name="adult" value='adult'>&nbsp; Adult &nbsp;</button>
+              {% else %}
+                <button type="submit" class="btn btn-outline-dark" name="adult" value='adult'>&nbsp; Adult &nbsp;</button>
+              {% endif %}
+              {% if animal_age == 'senior' %}
+                <button type="submit" class="btn btn-outline-dark active" name="senior" value='senior'>&nbsp; Senior &nbsp;</button>
+              {% else %}
+                <button type="submit" class="btn btn-outline-dark" name="senior" value='senior'>&nbsp; Senior &nbsp;</button>
+              {% endif %}
             </div>
           </div>
-
-          <div class='col-sm'>
-            <form class="form-inline ml-lg-auto my-2 my-lg-0" action="{% url 'app:index' %}" method="POST">
-              {% csrf_token %}
-              <div class="input-group">
-                <input class="form-control" name="product_query" type="search" placeholder="Search" aria-label="Search">
-                <div class="input-group-append">
-                  <button class="btn btn-dark" type="submit"><i class="fas fa-search"></i></button>
-                </div>
+          <div class=''>
+            <div class="input-group">
+              <input class="form-control" name="name_query" type="search" placeholder="Search" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-outline-dark" type="submit"><i class="fas fa-search"></i></button>
               </div>
-            </form>
+            </div>
           </div>
-
-        </div>
-
-      </div>
+        </form>
 
     </div>
+
+  </div>
 
   <div class='card-container'>
     {% for animal in animals %}

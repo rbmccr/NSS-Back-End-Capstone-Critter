@@ -1,9 +1,15 @@
+# HTTP
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 from django.urls import reverse
+# messages
 from django.contrib import messages
-from app.models import Animal, Application
+# models
+from app.models import Animal, Application, Species
+# django tools
+from django.db.models import Q
+
 
 def available_animals(request):
     """
@@ -13,27 +19,97 @@ def available_animals(request):
     if request.method == 'GET':
         animals = Animal.objects.filter(date_adopted=None).order_by('date_arrival')
         context = {
-            'animals': animals
+            'animals': animals,
+            'animal_species': None,
+            # 'animal_age': None
         }
         return render(request, 'app/available_animals.html', context)
 
-# def available_animals_search(request):
-#     if request.method == "POST":
-#     search_text = request.POST["search_text"]
-#     if search_text is not "":
-#         results = Animal.objects.filter(name__contains=search_text).order_by('date_arrival')
-#         context = {
-#             "results": results,
-#             "length": len(results),
-#             "search_text": search_text,
-#             "no_results": True if len(results) is 0 else False
-#         }
-#     else:
-#         context = {
-#             "no_results": True,
-#             "search_text": search_text
-#         }
-#     return render(request, 'app/available_animals.html', context)
+def available_animals_search(request):
+    """
+        This view function is responsible for handling the filters and search functionality on the available animals page.
+    """
+
+    if request.method == "POST":
+        post = request.POST
+        # check for animal button name in post.
+        if 'cat' in post:
+            # if the value isn't already 'cat', set it to 'cat'
+            if post['animal_species'] != 'cat':
+                animal_species = 'cat'
+            # if the value is already 'cat', set the species to None
+            else:
+                animal_species = None
+        elif 'dog' in post:
+            if post['animal_species'] != 'dog':
+                animal_species = 'dog'
+            else:
+                animal_species = None
+        elif 'other' in post:
+            if post['animal_species'] != 'other':
+                animal_species = 'other'
+            else:
+                animal_species = None
+        # if none of these options are in post, check to see if post['animal_species'] is 'cat', 'dog', or 'other'
+        # if so, keep the value the same. If the value is None, then do nothing
+        else:
+            if post['animal_species'] is not 'None':
+                animal_species = post['animal_species']
+
+        # check for animal age button click in post.
+        if 'young' in post:
+            if post['animal_age'] != 'young':
+                animal_age = 'young'
+            else:
+                animal_age = None
+        elif 'adult' in post:
+            if post['animal_age'] != 'adult':
+                animal_age = 'adult'
+            else:
+                animal_age = None
+        elif 'senior' in post:
+            if post['animal_age'] != 'senior':
+                animal_age = 'senior'
+            else:
+                animal_age = None
+        # if none of these options are in post, check to see if post['animal_species'] is 'cat', 'dog', or 'other'
+        # if so, keep the value the same. If the value is None, then do nothing
+        else:
+            if post['animal_age'] is not 'None':
+                animal_age = post['animal_age']
+
+
+        # if animal_species = None:
+                # animal_species_instance = Species.objects.get(species=animal_species)
+
+
+        # search_text = request.POST["search_text"]
+        # if search_text is not "":
+        #     results = Animal.objects.filter(name__contains=search_text).order_by('date_arrival')
+        #     context = {
+        #         "results": results,
+        #         "length": len(results),
+        #         "search_text": search_text,
+        #         "no_results": True if len(results) is 0 else False
+        #     }
+        # else:
+        #     context = {
+        #         "no_results": True,
+        #         "search_text": search_text
+        #     }
+
+        # if animal_species_instance is not None:
+        #     filter_results = Animal.objects.filter(Q(species=animal_species_instance), Q(date_adopted=None))
+        # else:
+        filter_results = None
+        print("##########", animal_species, animal_age)
+        context = {
+            'animals': filter_results,
+            'animal_species': animal_species,
+            'animal_age': animal_age
+        }
+
+        return render(request, 'app/available_animals.html', context)
 
 def animal_detail(request, id):
     """
