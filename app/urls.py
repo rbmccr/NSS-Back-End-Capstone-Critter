@@ -27,4 +27,6 @@ urlpatterns = [
     path("new_arrival", views.new_arrival, name='new_arrival'),
     # ex. /pets/adopt/1
     path("pets/adopt/<int:id>", views.adoption_app, name='adopt'),
+    # ex. /adoptions/all
+    path("adoptions/all", views.list_applications, name='list_applications'),
 ]

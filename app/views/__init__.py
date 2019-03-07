@@ -4,3 +4,4 @@ from .profile import *
 from .available_animals import *
 from .new_arrival import *
 from .adoption_app import *
+from .adoptions import *
