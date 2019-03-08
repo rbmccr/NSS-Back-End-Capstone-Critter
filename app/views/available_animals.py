@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.contrib import messages
 # models
 from app.models import Animal, Application, Species
-# django tools
+# tools
 from django.db.models import Q
 
 
@@ -21,7 +21,7 @@ def available_animals(request):
         context = {
             'animals': animals,
             'animal_species': None,
-            # 'animal_age': None
+            'animal_age': None
         }
         return render(request, 'app/available_animals.html', context)
 
