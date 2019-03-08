@@ -37,7 +37,7 @@
 
     <p>Note that the following default reason for rejection will be provided to the applicant if no reason is provided in the field below.</p>
 
-    <p>Default reason for rejection: <em>"Thank you for your interest in this animal. While we believe that there is another more suitable applicant for this animal, we hope you will consider adopting another pet!"</em></p>
+    <p>Default reason for rejection: <em>"Thank you for your interest in this animal. While we believe that there is another, more suitable applicant for this animal, we hope you will consider adopting another pet!"</em></p>
 
     <form id='login_form' method='post' action="{% url 'app:reject_application' animal.id application.id %}">
       {% csrf_token %}
@@ -47,13 +47,12 @@
         </div>
         <div class='card-body'>
           <div class='form-group mb-0'>
-            <textarea class='form-control' rows='4'></textarea>
+            <textarea class='form-control' rows='4' name='manual_reason'></textarea>
           </div>
         </div>
       </div>
       <button class='btn btn-outline-danger' type='Submit'>Confirm Rejection</button>
       <a href="{% url 'app:list_specific_applications' animal.id %}" class='btn btn-outline-dark'>Cancel and Return</a>
     </form>
-
 
 {% endblock content %}

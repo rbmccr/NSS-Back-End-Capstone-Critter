@@ -113,6 +113,27 @@ def reject_application(request, animal_id, application_id):
             }
             return render(request, 'app/reject_application.html', context)
 
+        if request.method == 'POST':
+            print(request.POST['manual_reason'])
+
+            if form.is_valid():
+                # if the admin gave a manual reason, include it in the database file.
+                if request.POST['manual_reason'] is not None:
+                    application.reason = request.POST['manual_reason']
+                else:
+                    application.reason = 'Thank you for your interest in this animal. While we believe that there is another, more suitable applicant for this animal, we hope you will consider adopting another pet!'
+                # assign staff memeber who provided rejection to the application
+                application.staff = request.user.id
+                # apply rejection and save
+                application.approved = False
+                application.save()
+
+                messages.success(request, f"You rejected the application submitted by {application.user.first_name} {application.user.last_name}")
+                return HttpResponseRedirect(reverse('app:list_specific_applications', args=(animal_id,)))
+            else:
+                messages.error(request, "There was a problem with your rejection. Please try again.")
+                return HttpResponseRedirect(reverse('app:list_specific_applications', args=(animal_id,)))
+
     except IndexError:
         messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're looking for isn't there.")
         return HttpResponseRedirect(reverse('app:list_applications'))
