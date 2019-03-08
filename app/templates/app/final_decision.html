@@ -1,0 +1,41 @@
+{% extends 'app/index.html' %}
+
+  {% block style %}
+    <style>
+      img {
+        max-width: 100px;
+        max-height: 100px;
+      }
+    </style>
+  {% endblock style %}
+
+{% block content %}
+    <div class='pb-2 mt-4 mb-4 border-bottom'>
+        <h3>You're Viewing: {{ animal.name }}</h3>
+    </div>
+
+    <div class='list-group mb-4'>
+      <div class='list-group-item'>
+        <div class='media'>
+          <img class='mr-3' src='{{ animal.image.url }}' alt='img'>
+          <div class='media-body'>
+            <h5 class='mt-0'>{{ animal.name }}</h5>
+            {{ animal.breed }} <br>
+            Arrived: {{ animal.date_arrival|timesince }} ago
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='pb-2 mt-4 mb-4 border-bottom'>
+        <h3>Final Decision</h3>
+    </div>
+
+    <p>You're making a <strong>final adoption decision</strong> for this animal.</p>
+
+    <p>Please confirm that you would like to approve the adoption of <strong>{{ animal.name }}</strong> by <strong>{{ application.user.first_name }} {{ application.user.last_name }}</strong>.</p>
+
+    <a href="{% url 'app:list_specific_applications' animal.id %}" class='btn btn-outline-dark'>Cancel and Return</a>
+
+
+{% endblock content %}

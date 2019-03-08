@@ -1,5 +1,5 @@
 # authentication
-from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 # HTTP
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -12,7 +12,7 @@ from app.forms import AnimalForm
 # messages
 from django.contrib import messages
 
-@login_required
+@staff_member_required
 def new_arrival(request):
 
     if request.method == 'GET':

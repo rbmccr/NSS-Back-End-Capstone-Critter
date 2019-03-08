@@ -1,6 +1,6 @@
 # authentication
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 # HTTP
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -9,7 +9,7 @@ from django.urls import reverse
 # models
 from app.models import Application, Animal
 
-@login_required
+@staff_member_required
 def list_applications(request):
     """
         This function gets all unadopted animals that have pending adoption applications and provides the list_applications template with a list of animals and a dictionary that contains animal ID's  as keys and number of apps as values
@@ -37,12 +37,11 @@ def list_applications(request):
 
         return render(request, 'app/list_applications.html', context)
 
-@login_required
+@staff_member_required
 def list_specific_applications(request, id):
     """
         This view function loads all pending and rejected applications for a specific animal
     """
-
 
     if request.method == 'GET':
 
@@ -62,5 +61,27 @@ def list_specific_applications(request, id):
                 'num_rejections': len(rejections) if not None else 0
             }
             return render(request, 'app/list_specific_applications.html', context)
-        except:
+        except IndexError:
             return HttpResponseRedirect(reverse('app:list_applications'))
+
+@staff_member_required
+def final_decision(request, animal_id, application_id):
+
+    if request.method == 'GET':
+
+        # check that animal is in the database and it isn't adopted yet
+        animal = Animal.objects.filter(pk=animal_id, date_adopted=None)
+
+        try:
+            animal = animal[0] # if animal has been adopted or doesn't exist, admin is redirected back
+            application = Application.objects.get(pk=application_id)
+
+            context = {
+                'animal': animal,
+                'application': application
+            }
+
+        except IndexError:
+            return HttpResponseRedirect(reverse('app:list_applications'))
+
+        return render(request, 'app/final_decision.html', context)

@@ -53,7 +53,7 @@
     <div class="accordion" id="accordion">
       {% for application in applications %}
         <div class="card">
-          <!-- fix for missing bottom border with only 1 application -->
+          <!-- conditional fix for missing bottom border with only 1 application -->
           {% if num_applications == 1 %}
           <div class="card-header bg-light border-fix" id="heading{{forloop.counter}}">
           {% else %}
@@ -65,7 +65,12 @@
             </div>
           </div>
           <div id="collapse{{forloop.counter}}" class="collapse" aria-labelledby="heading{{forloop.counter}}"   data-parent="#accordion">
+            <!-- conditional fix for missing bottom border with only 1 application -->
+            {% if num_applications == 1 %}
+            <div class="card-body border-fix">
+            {% else %}
             <div class="card-body">
+            {% endif %}
               Submitted: <strong>{{ application.date_submitted }}</strong> ({{ application.date_submitted|timesince }} ago) <br>
               <div>
                 <h5 class='pb-2 mt-3 mb-2 border-bottom'>Contact Information</h5>
@@ -80,7 +85,7 @@
               <div class='pb-1 mt-3 mb-2 border-bottom'>
                 <h5>Controls</h5>
               </div>
-              <a href='#' class='btn btn-outline-success'>Approve</a>
+              <a href="{% url 'app:final_decision' animal.id application.id %}" class='btn btn-outline-success'>Approve</a>
               <a href='#' class='btn btn-outline-danger'>&nbsp; Reject &nbsp;</a>
             </div>
           </div>
@@ -96,7 +101,7 @@
     <div class="accordion" id="accordion">
       {% for application in rejections %}
         <div class="card">
-          <!-- fix for missing bottom border with only 1 rejection -->
+          <!-- conditional fix for missing bottom border with only 1 rejection -->
           {% if num_rejections == 1 %}
           <div class="card-header bg-light border-fix" id="heading{{forloop.counter|add:'200000'}}">
           {% else %}
@@ -108,7 +113,12 @@
             </div>
           </div>
           <div id="collapse{{forloop.counter|add:'200000'}}" class="collapse" aria-labelledby="heading{{forloop.counter|add:'200000'}}"   data-parent="#accordion">
+            <!-- conditional fix for missing bottom border with only 1 rejection -->
+            {% if num_rejections == 1 %}
+            <div class="card-body border-fix">
+            {% else %}
             <div class="card-body">
+            {% endif %}
               Submitted: <strong>{{ application.date_submitted }}</strong> ({{ application.date_submitted|timesince }} ago) <br>
               <div>
                 <h5 class='pb-2 mt-3 mb-2 border-bottom'>Contact Information</h5>
