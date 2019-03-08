@@ -86,7 +86,7 @@
                 <h5>Controls</h5>
               </div>
               <a href="{% url 'app:final_decision' animal.id application.id %}" class='btn btn-outline-success'>Approve</a>
-              <a href='#' class='btn btn-outline-danger'>&nbsp; Reject &nbsp;</a>
+              <a href="{% url 'app:reject_application' animal.id application.id %}" class='btn btn-outline-danger'>&nbsp; Reject &nbsp;</a>
             </div>
           </div>
         </div>

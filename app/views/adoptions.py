@@ -8,6 +8,8 @@ from django.template import RequestContext
 from django.urls import reverse
 # models
 from app.models import Application, Animal
+# messages
+from django.contrib import messages
 
 @staff_member_required
 def list_applications(request):
@@ -66,22 +68,51 @@ def list_specific_applications(request, id):
 
 @staff_member_required
 def final_decision(request, animal_id, application_id):
+    """
+        This view function is responsible for determining that the selected animal is not yet adopted before rendering a confirmation of adoption template for the administrator.
+    """
 
-    if request.method == 'GET':
+    # check that animal is in the database and it isn't adopted yet
+    animal = Animal.objects.filter(pk=animal_id, date_adopted=None)
+    application = Application.objects.filter(pk=application_id)
 
-        # check that animal is in the database and it isn't adopted yet
-        animal = Animal.objects.filter(pk=animal_id, date_adopted=None)
+    try:
+        animal = animal[0] # if animal has been adopted or doesn't exist, admin is redirected to adoption manager page
+        application = application[0] # if application doesn't exist, admin is redirected to adoption manager page
 
-        try:
-            animal = animal[0] # if animal has been adopted or doesn't exist, admin is redirected back
-            application = Application.objects.get(pk=application_id)
-
+        if request.method == 'GET':
             context = {
                 'animal': animal,
-                'application': application
+                'application': application,
             }
+            return render(request, 'app/final_decision.html', context)
 
-        except IndexError:
-            return HttpResponseRedirect(reverse('app:list_applications'))
+    except IndexError:
+        messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're looking for isn't there.")
+        return HttpResponseRedirect(reverse('app:list_applications'))
 
-        return render(request, 'app/final_decision.html', context)
+
+@staff_member_required
+def reject_application(request, animal_id, application_id):
+    """
+        This view function is responsible for determining that the selected animal is not yet adopted before rendering a rejection template for the administrator.
+    """
+
+    # check that animal is in the database and it isn't adopted yet
+    animal = Animal.objects.filter(pk=animal_id, date_adopted=None)
+    application = Application.objects.filter(pk=application_id)
+
+    try:
+        animal = animal[0] # if animal has been adopted or doesn't exist, admin is redirected to adoption manager page
+        application = application[0] # if application doesn't exist, admin is redirected to adoption manager page
+
+        if request.method == 'GET':
+            context = {
+                'animal': animal,
+                'application': application,
+            }
+            return render(request, 'app/reject_application.html', context)
+
+    except IndexError:
+        messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're looking for isn't there.")
+        return HttpResponseRedirect(reverse('app:list_applications'))
