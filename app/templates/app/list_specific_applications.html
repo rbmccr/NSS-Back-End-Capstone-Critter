@@ -6,6 +6,10 @@
         max-width: 100px;
         max-height: 100px;
       }
+
+      .border-fix {
+        border-bottom: 1.5px solid rgba(0,0,0,.125);
+      }
     </style>
   {% endblock style %}
 
@@ -45,16 +49,21 @@
         {% endif %}
     </div>
 
+    <!-- accordion layout for viewing applications -->
     <div class="accordion" id="accordion">
       {% for application in applications %}
         <div class="card">
+          <!-- fix for missing bottom border with only 1 application -->
+          {% if num_applications == 1 %}
+          <div class="card-header bg-light border-fix" id="heading{{forloop.counter}}">
+          {% else %}
           <div class="card-header bg-light" id="heading{{forloop.counter}}">
+          {% endif %}
             <div class="mb-0">
               <button class="btn btn-outline-dark btn-sm" type="button" data-toggle="collapse" data-target="#collapse{{forloop.counter}}" aria-expanded="false" aria-controls="collapse{{forloop.counter}}">View</button> &nbsp;
               <div style='display:inline-block'>{{ application.user.last_name }}, {{ application.user.first_name }}</div>
             </div>
           </div>
-
           <div id="collapse{{forloop.counter}}" class="collapse" aria-labelledby="heading{{forloop.counter}}"   data-parent="#accordion">
             <div class="card-body">
               Submitted: <strong>{{ application.date_submitted }}</strong> ({{ application.date_submitted|timesince }} ago) <br>
@@ -83,12 +92,41 @@
       <h3>Rejected Applications</h3>
     </div>
 
-    <div class='list-group'>
+    <!-- accordion layout for viewing rejected applications -->
+    <div class="accordion" id="accordion">
       {% for application in rejections %}
-        <a href='#' class='list-group-item list-group-item-action'>
-          {{ application.user.last_name }}, {{ application.user.first_name }} <br>
-          {{ application.date_submitted|timesince }} ago
-        </a>
+        <div class="card">
+          <!-- fix for missing bottom border with only 1 rejection -->
+          {% if num_rejections == 1 %}
+          <div class="card-header bg-light border-fix" id="heading{{forloop.counter|add:'200000'}}">
+          {% else %}
+          <div class="card-header bg-light" id="heading{{forloop.counter|add:'200000'}}">
+          {% endif %}
+            <div class="mb-0">
+              <button class="btn btn-outline-dark btn-sm" type="button" data-toggle="collapse" data-target="#collapse{{forloop.counter|add:'200000'}}" aria-expanded="false" aria-controls="collapse{{forloop.counter|add:'200000'}}">View</button> &nbsp;
+              <div style='display:inline-block'>{{ application.user.last_name }}, {{ application.user.first_name }}</div>
+            </div>
+          </div>
+          <div id="collapse{{forloop.counter|add:'200000'}}" class="collapse" aria-labelledby="heading{{forloop.counter|add:'200000'}}"   data-parent="#accordion">
+            <div class="card-body">
+              Submitted: <strong>{{ application.date_submitted }}</strong> ({{ application.date_submitted|timesince }} ago) <br>
+              <div>
+                <h5 class='pb-2 mt-3 mb-2 border-bottom'>Contact Information</h5>
+                  ({{ application.user.volunteer.phone_number|make_list|slice:'0:3'|join:'' }})
+                  {{ application.user.volunteer.phone_number|make_list|slice:'3:6'|join:'' }}-{{ application.user.volunteer.phone_number|make_list|slice:'6:'|join:'' }} <br>
+                  {{ application.user.email }}
+              </div>
+              <div class='pb-1 mt-3 mb-2 border-bottom'>
+                <h5>Application Text</h5>
+              </div>
+              <p>{{ application.text }}</p>
+              <div class='pb-1 mt-3 mb-2 border-bottom'>
+                <h5>Controls</h5>
+              </div>
+              <a href='#' class='btn btn-outline-success'>Revise Judgment</a>
+            </div>
+          </div>
+        </div>
       {% endfor %}
     </div>
 

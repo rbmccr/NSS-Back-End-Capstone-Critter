@@ -58,7 +58,8 @@ def list_specific_applications(request, id):
                 'animal': animal,
                 'applications': applications,
                 'num_applications': len(applications) if not None else 0,
-                'rejections': rejections
+                'rejections': rejections,
+                'num_rejections': len(rejections) if not None else 0
             }
             return render(request, 'app/list_specific_applications.html', context)
         except:
