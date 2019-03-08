@@ -27,6 +27,9 @@
       </div>
     </div>
 
+    <a class='btn btn-outline-dark' href="{% url 'app:animal_detail' animal.id %}">View Animal Details</a>
+    <a class='btn btn-outline-dark' href="{% url 'app:list_applications' %}">Return to Adoption Manager</a>
+
     <div class='messages'>
       {% for message in messages %}
         <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
@@ -68,6 +71,8 @@
               <div class='pb-1 mt-3 mb-2 border-bottom'>
                 <h5>Controls</h5>
               </div>
+              <a href='#' class='btn btn-outline-success'>Approve</a>
+              <a href='#' class='btn btn-outline-danger'>&nbsp; Reject &nbsp;</a>
             </div>
           </div>
         </div>
