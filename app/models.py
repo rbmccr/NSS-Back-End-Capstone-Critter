@@ -156,7 +156,7 @@ class Animal(models.Model):
     description = models.CharField(max_length=500)
     date_arrival = models.DateTimeField(default=None, null=True, blank=True)
     date_adopted = models.DateTimeField(default=None, null=True, blank=True)
-    staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, limit_choices_to={'is_staff': True}, default=None, null=True, blank=False)
 
     def __str__(self):
         return f"Name: {self.name} Age: {self.age} Species: {self.species} Sex: {self.sex}"

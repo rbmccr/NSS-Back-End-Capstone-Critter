@@ -56,14 +56,6 @@ def list_specific_applications(request, id):
             animal = animal[0] # if animal has been adopted or doesn't exist, admin is redirected back
             applications = Application.objects.filter(animal=animal).filter(approved=None).order_by('date_submitted')
             rejections = Application.objects.filter(animal=animal).filter(approved=False).order_by('date_submitted')
-            rejectors = list()
-
-            # get names of the employee who rejected each application
-            if rejections is not None:
-                for application in rejections:
-                    rejector = CustomUser.objects.get(pk=application.staff)
-                    rejector = rejector.first_name + ' ' + rejector.last_name
-                    rejectors.append(rejector)
 
             context = {
                 'animal': animal,
