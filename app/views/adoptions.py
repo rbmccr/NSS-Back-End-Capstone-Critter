@@ -99,7 +99,13 @@ def final_decision(request, animal_id, application_id):
             animal.date_adopted = datetime.datetime.now()
             animal.save()
 
-            # TODO: address all remaining applications that were not already rejected.
+            # "reject" all remaining applications that were not already rejected.
+            other_applications = Application.objects.filter(animal=animal).exclude(pk=application_id).exclude(approved=False)
+            for app in other_applications:
+                app.reason = 'A suitable owner was selected from an earlier application. Thank you for your interest, and please consider adopting another animal!'
+                app.staff = request.user
+                app.approved = False
+                app.save()
 
             messages.success(request, f'You\'ve approved the adoption of {animal.name} by {application.user.first_name}     {application.user.last_name}!')
             return HttpResponseRedirect(reverse('app:list_applications'))
