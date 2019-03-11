@@ -88,9 +88,13 @@
           <div class='media-body'>
             <h5 class='mt-0'>{{ application.animal.name }}</h5>
             {{ application.animal.breed }} <br>
-            Age: {{ application.animal.age }} <br>
-            Arrived: {{ application.animal.date_arrival|date:'m-d-Y' }}
-            {% comment %} <a class='btn btn-outline-dark btn-sm' href="{% url 'app:animal_detail' application.animal.id %}">View Animal Details</a> {% endcomment %}
+            {% if application.approved == True %}
+              <span class="badge badge-success">Approved</span> <br>
+            {% elif application.approved == False %}
+              <span class="badge badge-danger">Declined</span> <br>
+            {% else %}
+              <span class="badge badge-secondary">Pending</span> <br>
+            {% endif %}
           </div>
         </div>
       </li>

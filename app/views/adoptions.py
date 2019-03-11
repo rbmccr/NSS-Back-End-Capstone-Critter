@@ -164,7 +164,7 @@ def reject_application(request, animal_id, application_id):
 @staff_member_required
 def revise_judgment(request, animal_id, application_id):
     """
-        This view function is responsible for determining that the selected animal is not yet adopted before removing the False condition from Application.approved.
+        This view function is responsible for determining that the selected animal is not yet adopted before removing the False condition from Application.approved so that an application can be re-considered for adoption.
     """
 
     # check that animal and application are in the database and animal isn't adopted yet
@@ -182,6 +182,7 @@ def revise_judgment(request, animal_id, application_id):
             application.staff = request.user
             # apply revision (i.e. change 0 to null in database)
             application.approved = None
+            application.reason = None
             application.save()
             messages.success(request, f"The application submitted by {application.user.first_name} {application.user.last_name} was marked for revision.")
             return HttpResponseRedirect(reverse('app:list_specific_applications', args=(animal_id,)))
