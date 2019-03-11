@@ -35,6 +35,10 @@
 
     <p>Please confirm that you would like to approve the adoption of <strong>{{ animal.name }}</strong> by <strong>{{ application.user.first_name }} {{ application.user.last_name }}</strong>.</p>
 
-    <a href="{% url 'app:list_specific_applications' animal.id %}" class='btn btn-outline-dark'>Cancel and Return</a>
+    <form id='login_form' method='post' action="{% url 'app:final_decision' animal.id application.id %}">
+      {% csrf_token %}
+      <button class='btn btn-outline-success' type='Submit'>Approve Application</button>
+      <a href="{% url 'app:list_specific_applications' animal.id %}" class='btn btn-outline-dark'>Cancel and Return</a>
+    </form>
 
 {% endblock content %}

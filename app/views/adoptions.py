@@ -12,6 +12,8 @@ from app.models import Application, Animal, CustomUser
 from django.contrib import messages
 # forms
 from app.forms import RejectionForm
+# tools
+import datetime
 
 @staff_member_required
 def list_animals(request):
@@ -72,7 +74,7 @@ def final_decision(request, animal_id, application_id):
         This view function is responsible for determining that the selected animal is not yet adopted before rendering a confirmation of adoption template for the administrator.
     """
 
-    # check that animal is in the database and it isn't adopted yet
+    # check that animal and application are in the database and animal isn't adopted yet
     animal = Animal.objects.filter(pk=animal_id, date_adopted=None)
     application = Application.objects.filter(pk=application_id)
 
@@ -86,6 +88,21 @@ def final_decision(request, animal_id, application_id):
                 'application': application,
             }
             return render(request, 'app/final_decision.html', context)
+
+        if request.method == 'POST':
+            # mark approved as true
+            application.approved = True
+            # assign staff memeber who approved the application
+            application.staff = request.user
+            application.save()
+
+            animal.date_adopted = datetime.datetime.now()
+            animal.save()
+
+            # TODO: address all remaining applications that were not already rejected.
+
+            messages.success(request, f'You\'ve approved the adoption of {animal.name} by {application.user.first_name}     {application.user.last_name}!')
+            return HttpResponseRedirect(reverse('app:list_applications'))
 
     except IndexError:
         messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're looking for isn't there.")
