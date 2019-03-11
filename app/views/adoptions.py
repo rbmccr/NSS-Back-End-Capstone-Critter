@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.urls import reverse
 # models
-from app.models import Application, Animal
+from app.models import Application, Animal, CustomUser
 # messages
 from django.contrib import messages
 # forms
@@ -56,6 +56,14 @@ def list_specific_applications(request, id):
             animal = animal[0] # if animal has been adopted or doesn't exist, admin is redirected back
             applications = Application.objects.filter(animal=animal).filter(approved=None).order_by('date_submitted')
             rejections = Application.objects.filter(animal=animal).filter(approved=False).order_by('date_submitted')
+            rejectors = list()
+
+            # get names of the employee who rejected each application
+            if rejections is not None:
+                for application in rejections:
+                    rejector = CustomUser.objects.get(pk=application.staff)
+                    rejector = rejector.first_name + ' ' + rejector.last_name
+                    rejectors.append(rejector)
 
             context = {
                 'animal': animal,
@@ -93,14 +101,13 @@ def final_decision(request, animal_id, application_id):
         messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're looking for isn't there.")
         return HttpResponseRedirect(reverse('app:list_applications'))
 
-
 @staff_member_required
 def reject_application(request, animal_id, application_id):
     """
         This view function is responsible for determining that the selected animal is not yet adopted before rendering a rejection template for the administrator.
     """
 
-    # check that animal is in the database and it isn't adopted yet
+    # check that animal and application are in the database and animal isn't adopted yet
     animal = Animal.objects.filter(pk=animal_id, date_adopted=None)
     application = Application.objects.filter(pk=application_id)
 
@@ -135,6 +142,35 @@ def reject_application(request, animal_id, application_id):
             else:
                 messages.error(request, "There was a problem with your rejection. Please try again.")
                 return HttpResponseRedirect(reverse('app:list_specific_applications', args=(animal_id,)))
+
+    except IndexError:
+        messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're looking for isn't there.")
+        return HttpResponseRedirect(reverse('app:list_applications'))
+
+@staff_member_required
+def revise_judgment(request, animal_id, application_id):
+    """
+        This view function is responsible for determining that the selected animal is not yet adopted before removing the False condition from Application.approved.
+    """
+
+    # check that animal and application are in the database and animal isn't adopted yet
+    animal = Animal.objects.filter(pk=animal_id, date_adopted=None)
+    application = Application.objects.filter(pk=application_id)
+
+    try:
+        animal = animal[0] # if animal has been adopted or doesn't exist, admin is redirected to adoption manager page
+        application = application[0] # if application doesn't exist, admin is redirected to adoption manager page
+
+        if request.method == 'GET':
+            # get instance of application
+            application = Application.objects.get(pk=application_id)
+            # assign staff memeber who revised rejection to the application
+            application.staff = request.user.id
+            # apply revision (i.e. change 0 to null in database)
+            application.approved = None
+            application.save()
+            messages.success(request, f"The application submitted by {application.user.first_name} {application.user.last_name} was marked for revision.")
+            return HttpResponseRedirect(reverse('app:list_specific_applications', args=(animal_id,)))
 
     except IndexError:
         messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're looking for isn't there.")

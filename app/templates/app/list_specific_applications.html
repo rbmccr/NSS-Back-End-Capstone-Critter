@@ -131,9 +131,14 @@
               </div>
               <p>{{ application.text }}</p>
               <div class='pb-1 mt-3 mb-2 border-bottom'>
+                <h5>Rejection</h5>
+              </div>
+              {% comment %} <p>Rejected by: {{ rejectors|index:forloop.counter0 }}</p> {% endcomment %}
+              <p>{{ application.reason }}</p>
+              <div class='pb-1 mt-3 mb-2 border-bottom'>
                 <h5>Controls</h5>
               </div>
-              <a href='#' class='btn btn-outline-success'>Revise Judgment</a>
+              <a href="{% url 'app:revise_judgment' animal.id application.id %}" class='btn btn-outline-success'>Revise Judgment</a>
             </div>
           </div>
         </div>

@@ -33,6 +33,8 @@ urlpatterns = [
     path("adoptions/pet/<int:id>", views.list_specific_applications, name='list_specific_applications'),
     # ex. /adoptions/1/final
     path("adoptions/pet/<int:animal_id>/final/app_id=<int:application_id>", views.final_decision, name='final_decision'),
-    # ex. /adoptions/1/final
+    # ex. /adoptions/1/final/reject/app_id=1
     path("adoptions/pet/<int:animal_id>/reject/app_id=<int:application_id>", views.reject_application, name='reject_application'),
+    # ex. /adoptions/1/final/revise/app_id=1
+    path("adoptions/pet/<int:animal_id>/revise/app_id=<int:application_id>", views.revise_judgment, name='revise_judgment'),
 ]
