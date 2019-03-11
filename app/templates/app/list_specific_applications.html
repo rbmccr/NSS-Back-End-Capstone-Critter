@@ -133,7 +133,7 @@
               <div class='pb-1 mt-3 mb-2 border-bottom'>
                 <h5>Rejection</h5>
               </div>
-              {% comment %} <p>Rejected by: {{ rejectors|index:forloop.counter0 }}</p> {% endcomment %}
+              <p>Rejected by: {{ application.staff.first_name }} {{ application.staff.last_name }}</p>
               <p>{{ application.reason }}</p>
               <div class='pb-1 mt-3 mb-2 border-bottom'>
                 <h5>Controls</h5>

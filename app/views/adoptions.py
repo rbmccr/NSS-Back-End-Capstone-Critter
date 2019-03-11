@@ -124,7 +124,7 @@ def reject_application(request, animal_id, application_id):
                 # capture rejection reason provided
                 application.reason = request.POST['reason']
                 # assign staff memeber who provided rejection to the application
-                application.staff = request.user.id
+                application.staff = request.user
                 # apply rejection and save
                 application.approved = False
                 application.save()
@@ -157,7 +157,7 @@ def revise_judgment(request, animal_id, application_id):
             # get instance of application
             application = Application.objects.get(pk=application_id)
             # assign staff memeber who revised rejection to the application
-            application.staff = request.user.id
+            application.staff = request.user
             # apply revision (i.e. change 0 to null in database)
             application.approved = None
             application.save()
