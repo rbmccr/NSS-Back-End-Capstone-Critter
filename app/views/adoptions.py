@@ -66,6 +66,7 @@ def list_specific_applications(request, id):
             }
             return render(request, 'app/list_specific_applications.html', context)
         except IndexError:
+            messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're looking for isn't there.")
             return HttpResponseRedirect(reverse('app:list_applications'))
 
 @staff_member_required
@@ -150,7 +151,7 @@ def reject_application(request, animal_id, application_id):
                 application.approved = False
                 application.save()
 
-                messages.success(request, f"You rejected the application submitted by {application.user.first_name} {application.user.last_name}")
+                messages.error(request, f"You rejected the application submitted by {application.user.first_name} {application.user.last_name}")
                 return HttpResponseRedirect(reverse('app:list_specific_applications', args=(animal_id,)))
             else:
                 messages.error(request, "There was a problem with your rejection. Please try again.")
