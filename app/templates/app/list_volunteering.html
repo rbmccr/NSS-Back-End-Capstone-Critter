@@ -10,6 +10,12 @@
       <h3>Upcoming Volunteering Opportunities</h3>
   </div>
 
+  {% if user.is_staff %}
+    <a href="{% url 'app:add_volunteering' %}" class='btn btn-outline-dark btn-sm'>Add New Activity</a>
+    <br>
+    <br>
+  {% endif %}
+
   {% if not activities %}
     There are no upcoming volunteering events. Please check back later!
   {% else %}

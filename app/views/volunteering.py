@@ -8,7 +8,7 @@ from django.urls import reverse
 # models
 from app.models import Activity
 # forms
-
+from app.forms import ActivityForm
 # messages
 from django.contrib import messages
 # tools
@@ -17,6 +17,7 @@ import datetime
 def list_volunteering(request):
 
     now = datetime.datetime.now()
+    # TODO: confirm this filter works
     activities = Activity.objects.filter(date_end__lte=now)
 
     if request.method == 'GET':
@@ -24,3 +25,14 @@ def list_volunteering(request):
             'activities': activities,
         }
         return render(request, 'app/list_volunteering.html', context)
+
+@staff_member_required
+def add_volunteering(request):
+
+    activity_form = ActivityForm()
+
+    if request.method == 'GET':
+        context = {
+            'activity_form': activity_form,
+        }
+        return render(request, 'app/add_volunteering.html', context)

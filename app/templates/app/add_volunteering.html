@@ -1,0 +1,16 @@
+{% extends 'app/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+  <style>
+  </style>
+{% endblock style %}
+
+{% block content %}
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+      <h3>Add a New Volunteering Activity</h3>
+  </div>
+
+  {% crispy activity_form %}
+
+{% endblock content %}

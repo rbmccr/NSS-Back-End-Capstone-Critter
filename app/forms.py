@@ -186,6 +186,7 @@ class ApplicationForm(forms.ModelForm):
         model = Application
         fields = ('text',)
 
+
 class RejectionForm(forms.ModelForm):
     reason = forms.CharField(widget=forms.Textarea(attrs={'rows':5}), label='')
 
@@ -198,3 +199,19 @@ class RejectionForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ('reason',)
+
+
+class ActivityForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.helper = FormHelper()
+            self.helper.form_tag = False
+
+    class Meta:
+        model = Activity
+        fields = ('name','description','date_start','date_end','max_attendance')
+        widgets = {
+            "date_start": forms.DateInput(attrs={"type": "date"}),
+            "date_end": forms.DateInput(attrs={"type": "date"})
+        }
