@@ -11,7 +11,8 @@
 
 {% block content %}
     <div class='pb-2 mt-4 mb-4 border-bottom'>
-        <h3>Pending Adoption Applications</h3>
+        <h3>Adoption Manager</h3>
+        <div>Click an animal to view applications</div>
     </div>
 
     <div class='messages'>
@@ -22,18 +23,18 @@
 
     <div class='list-group'>
       {% for animal in animals %}
-        <a href="#" class="list-group-item list-group-item-action">
+        <a href="{% url 'app:list_specific_applications' animal.id %}" class="list-group-item list-group-item-action">
           <div class='media'>
             <img class='mr-3' src='{{ animal.image.url }}' alt='img'>
             <div class='media-body'>
               <h5 class='mt-0'>{{ animal.name }}</h5>
-              <span class="badge badge-primary">
                 {% for key, value in num_pending_applications.items %}
                   {% if key == animal.id %}
-                    {{ value }} pending
+                    {% if value > 0 %}
+                    <span class="badge badge-primary">{{ value }} pending</span> <br>
+                    {% endif %}
                   {% endif %}
                 {% endfor %}
-              </span> <br>
               {{ animal.breed }} <br>
               Arrived: {{ animal.date_arrival|timesince }} ago
             </div>

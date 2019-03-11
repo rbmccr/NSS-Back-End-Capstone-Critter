@@ -21,4 +21,7 @@
   {% else %}
     <a class='btn btn-dark' href="{% url 'app:adopt' animal.id %}">Apply for adoption</a>
   {% endif %}
+  {% if user.is_staff %}
+    <a class='btn btn-primary' href="{% url 'app:list_specific_applications' animal.id %}">View Applications</a>
+  {% endif %}
 {% endblock content %}

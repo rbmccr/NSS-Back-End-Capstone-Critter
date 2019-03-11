@@ -1,0 +1,148 @@
+{% extends 'app/index.html' %}
+
+  {% block style %}
+    <style>
+      img {
+        max-width: 100px;
+        max-height: 100px;
+      }
+
+      .border-fix {
+        border-bottom: 1.5px solid rgba(0,0,0,.125);
+      }
+    </style>
+  {% endblock style %}
+
+{% block content %}
+    <div class='pb-2 mt-4 mb-4 border-bottom'>
+        <h3>You're Viewing: {{ animal.name }}</h3>
+    </div>
+
+    <div class='messages'>
+      {% for message in messages %}
+        <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
+      {% endfor %}
+    </div>
+
+    <div class='list-group mb-4'>
+      <div class='list-group-item'>
+        <div class='media'>
+          <img class='mr-3' src='{{ animal.image.url }}' alt='img'>
+          <div class='media-body'>
+            <h5 class='mt-0'>{{ animal.name }}</h5>
+            {{ animal.breed }} <br>
+            Arrived: {{ animal.date_arrival|timesince }} ago
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a class='btn btn-outline-dark' href="{% url 'app:animal_detail' animal.id %}">View Animal Details</a>
+    <a class='btn btn-outline-dark' href="{% url 'app:list_applications' %}">Return to Adoption Manager</a>
+
+    <div class='pb-2 mt-4 mb-4 border-bottom'>
+        <h3>Pending Applications</h3>
+        {% if num_applications > 0 %}
+          <div>
+            <span class='badge badge-primary'>{{ num_applications }} Pending</span>
+          </div>
+        {% endif %}
+    </div>
+
+    <!-- accordion layout for viewing applications -->
+    <div class="accordion" id="accordion">
+      {% for application in applications %}
+        <div class="card">
+          <!-- conditional fix for missing bottom border with only 1 application -->
+          {% if num_applications == 1 %}
+          <div class="card-header bg-light border-fix" id="heading{{forloop.counter}}">
+          {% else %}
+          <div class="card-header bg-light" id="heading{{forloop.counter}}">
+          {% endif %}
+            <div class="mb-0">
+              <button class="btn btn-outline-dark btn-sm" type="button" data-toggle="collapse" data-target="#collapse{{forloop.counter}}" aria-expanded="false" aria-controls="collapse{{forloop.counter}}">View</button> &nbsp;
+              <div style='display:inline-block'>{{ application.user.last_name }}, {{ application.user.first_name }}</div>
+            </div>
+          </div>
+          <div id="collapse{{forloop.counter}}" class="collapse" aria-labelledby="heading{{forloop.counter}}"   data-parent="#accordion">
+            <!-- conditional fix for missing bottom border with only 1 application -->
+            {% if num_applications == 1 %}
+            <div class="card-body border-fix">
+            {% else %}
+            <div class="card-body">
+            {% endif %}
+              Submitted: <strong>{{ application.date_submitted }}</strong> ({{ application.date_submitted|timesince }} ago) <br>
+              <div>
+                <h5 class='pb-2 mt-3 mb-2 border-bottom'>Contact Information</h5>
+                  ({{ application.user.volunteer.phone_number|make_list|slice:'0:3'|join:'' }})
+                  {{ application.user.volunteer.phone_number|make_list|slice:'3:6'|join:'' }}-{{ application.user.volunteer.phone_number|make_list|slice:'6:'|join:'' }} <br>
+                  {{ application.user.email }}
+              </div>
+              <div class='pb-1 mt-3 mb-2 border-bottom'>
+                <h5>Application Text</h5>
+              </div>
+              <p>{{ application.text }}</p>
+              <div class='pb-1 mt-3 mb-2 border-bottom'>
+                <h5>Controls</h5>
+              </div>
+              <a href="{% url 'app:final_decision' animal.id application.id %}" class='btn btn-outline-success'>Approve</a>
+              <a href="{% url 'app:reject_application' animal.id application.id %}" class='btn btn-outline-danger'>&nbsp; Reject &nbsp;</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class='pb-2 mt-4 mb-4 border-bottom'>
+      <h3>Rejected Applications</h3>
+    </div>
+
+    <!-- accordion layout for viewing rejected applications -->
+    <div class="accordion" id="accordion">
+      {% for application in rejections %}
+        <div class="card">
+          <!-- conditional fix for missing bottom border with only 1 rejection -->
+          {% if num_rejections == 1 %}
+          <div class="card-header bg-light border-fix" id="heading{{forloop.counter|add:'200000'}}">
+          {% else %}
+          <div class="card-header bg-light" id="heading{{forloop.counter|add:'200000'}}">
+          {% endif %}
+            <div class="mb-0">
+              <button class="btn btn-outline-dark btn-sm" type="button" data-toggle="collapse" data-target="#collapse{{forloop.counter|add:'200000'}}" aria-expanded="false" aria-controls="collapse{{forloop.counter|add:'200000'}}">View</button> &nbsp;
+              <div style='display:inline-block'>{{ application.user.last_name }}, {{ application.user.first_name }}</div>
+            </div>
+          </div>
+          <div id="collapse{{forloop.counter|add:'200000'}}" class="collapse" aria-labelledby="heading{{forloop.counter|add:'200000'}}"   data-parent="#accordion">
+            <!-- conditional fix for missing bottom border with only 1 rejection -->
+            {% if num_rejections == 1 %}
+            <div class="card-body border-fix">
+            {% else %}
+            <div class="card-body">
+            {% endif %}
+              Submitted: <strong>{{ application.date_submitted }}</strong> ({{ application.date_submitted|timesince }} ago) <br>
+              <div>
+                <h5 class='pb-2 mt-3 mb-2 border-bottom'>Contact Information</h5>
+                  ({{ application.user.volunteer.phone_number|make_list|slice:'0:3'|join:'' }})
+                  {{ application.user.volunteer.phone_number|make_list|slice:'3:6'|join:'' }}-{{ application.user.volunteer.phone_number|make_list|slice:'6:'|join:'' }} <br>
+                  {{ application.user.email }}
+              </div>
+              <div class='pb-1 mt-3 mb-2 border-bottom'>
+                <h5>Application Text</h5>
+              </div>
+              <p>{{ application.text }}</p>
+              <div class='pb-1 mt-3 mb-2 border-bottom'>
+                <h5>Rejection</h5>
+              </div>
+              <p>Rejected by: {{ application.staff.first_name }} {{ application.staff.last_name }}</p>
+              <p>{{ application.reason }}</p>
+              <div class='pb-1 mt-3 mb-2 border-bottom'>
+                <h5>Controls</h5>
+              </div>
+              <a href="{% url 'app:revise_judgment' animal.id application.id %}" class='btn btn-outline-success'>Revise Judgment</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+{% endblock content %}

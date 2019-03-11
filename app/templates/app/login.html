@@ -29,9 +29,9 @@
             <input type="hidden" value="{{next}}" name="next" />
         </div>
       </div>
-      <input class="btn btn-outline-dark" type="Submit" value="Authenticate" />
+      <button class="btn btn-outline-dark" type="Submit">Authenticate</button>
+      {% if next != "/" %}
+        <a class ="btn btn-outline-dark" href="/register?next={{next}}">Register</a>
+      {% endif %}
     </form>
-    {% if next != "/" %}
-      <a class ="btn btn-dark" href="/register?next={{next}}">Register</a>
-    {% endif %}
 {% endblock content %}
