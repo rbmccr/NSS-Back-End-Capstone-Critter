@@ -191,6 +191,7 @@ class Activity(models.Model):
     date_start = models.DateTimeField(default=None, null=True, blank=False)
     date_end = models.DateTimeField(default=None, null=True, blank=False)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, default=None, null=True, blank=True)
+    max_attendance = models.PositiveSmallIntegerField(default=None, null=True, blank=False)
 
     def __str__(self):
         return f"Name: {self.name} Staff: {self.staff}"

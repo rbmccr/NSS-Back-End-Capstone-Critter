@@ -62,7 +62,7 @@
         <ul class="navbar-nav mr-lg-auto">
           <li class="nav-item"><a class="nav-link" href="{% url 'app:pets' %}">Available Pets</a></li>
           {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'app:index' %}">Volunteering</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'app:list_volunteering' %}">Volunteering</a></li>
           {% endif %}
           {% if user.is_staff %}
             <li class="nav-item"><a class="nav-link" href="{% url 'app:new_arrival' %}">New Arrival</a></li>
@@ -99,44 +99,9 @@
     </div>
   </div>
 
-    {% comment %} <footer class="pt-4 mt-md-5 py-md-5 border-top bg-light footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-md-4">
-            <h5><a class="" href="{% url 'website:index' %}">Bangazon</a></h5>
-            {% if user.is_authenticated %}
-              <p><a class="" href="{% url 'website:logout' %}">Log Out</a></p>
-            {% else %}
-              <p><a class="" href="{% url 'website:login' %}">Log In</a></p>
-            {% endif %}
-          </div>
-          <div class="col-6 col-md-8">
-            <h5>Categories</h5>
-            <ul class="list-unstyled text-small d-md-flex">
-              {% for category in product_categories %}
-                <li class="mr-3"><a href="{% url 'website:product_by_category' category.id %}">{{category.name}}</a></li>
-              {% endfor%}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </footer> {% endcomment %}
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script> {% endcomment %}
-    {% comment %} <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script> {% endcomment %}
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 
   </body>
 </html>
-
-
-      {% comment %} <form class="form-inline ml-lg-auto my-2 my-lg-0" action="{% url 'app:index' %}" method="POST">
-        {% csrf_token %}
-        <div class="input-group">
-          <input class="form-control" name="product_query" type="search" placeholder="Find your new friend" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
-          </div>
-        </div>
-      </form> {% endcomment %}
