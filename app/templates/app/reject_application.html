@@ -1,4 +1,5 @@
 {% extends 'app/index.html' %}
+{% load crispy_forms_tags %}
 
   {% block style %}
     <style>
@@ -35,9 +36,7 @@
 
     <p>Please confirm that you would like to reject the application for <strong>{{ animal.name }}</strong> provided by <strong>{{ application.user.first_name }} {{ application.user.last_name }}</strong>.</p>
 
-    <p>Note that the following default reason for rejection will be provided to the applicant if no reason is provided in the field below.</p>
-
-    <p>Default reason for rejection: <em>"Thank you for your interest in this animal. While we believe that there is another, more suitable applicant for this animal, we hope you will consider adopting another pet!"</em></p>
+    <p>A default reason for rejection is provided below.</p>
 
     <form id='login_form' method='post' action="{% url 'app:reject_application' animal.id application.id %}">
       {% csrf_token %}
@@ -47,7 +46,7 @@
         </div>
         <div class='card-body'>
           <div class='form-group mb-0'>
-            <textarea class='form-control' rows='4' name='manual_reason'></textarea>
+            {% crispy rejection_form %}
           </div>
         </div>
       </div>

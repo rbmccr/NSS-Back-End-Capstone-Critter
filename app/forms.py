@@ -29,7 +29,7 @@ class UserForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         # this line is used to prevent crispy from automatically applying a form tag (i.e. I can wrap multiple forms together and define my own form tag and submit button)
-        self.helper.form_tag = False 
+        self.helper.form_tag = False
         self.helper.layout = Layout(
             Row(
                 Column('first_name', css_class='form-group col-md-6 mb-0'),
@@ -61,7 +61,7 @@ class EditProfileUserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = False 
+        self.helper.form_tag = False
         self.helper.layout = Layout(
             Row(
                 Column('first_name', css_class='form-group col-md-6 mb-0'),
@@ -98,7 +98,7 @@ class ChangePasswordForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = False 
+        self.helper.form_tag = False
         self.helper.layout = Layout(
             Row(
                 Column('old_password', css_class='form-group col-md-6 mb-0'),
@@ -185,3 +185,16 @@ class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ('text',)
+
+class RejectionForm(forms.ModelForm):
+    reason = forms.CharField(widget=forms.Textarea(attrs={'rows':5}), label='')
+
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.helper = FormHelper()
+            self.helper.form_tag = False
+            self.fields['reason'].initial = 'Thank you for your interest in this animal. While we believe that there is another, more suitable applicant for this animal, we hope you will consider adopting another pet!'
+
+    class Meta:
+        model = Application
+        fields = ('reason',)

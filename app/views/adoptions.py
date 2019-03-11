@@ -10,6 +10,8 @@ from django.urls import reverse
 from app.models import Application, Animal
 # messages
 from django.contrib import messages
+# forms
+from app.forms import RejectionForm
 
 @staff_member_required
 def list_applications(request):
@@ -106,22 +108,22 @@ def reject_application(request, animal_id, application_id):
         animal = animal[0] # if animal has been adopted or doesn't exist, admin is redirected to adoption manager page
         application = application[0] # if application doesn't exist, admin is redirected to adoption manager page
 
+        rejection_form = RejectionForm()
+
         if request.method == 'GET':
             context = {
                 'animal': animal,
                 'application': application,
+                'rejection_form': rejection_form
             }
             return render(request, 'app/reject_application.html', context)
 
         if request.method == 'POST':
-            print(request.POST['manual_reason'])
+            rejection_form = RejectionForm(data=request.POST)
 
-            if form.is_valid():
-                # if the admin gave a manual reason, include it in the database file.
-                if request.POST['manual_reason'] is not None:
-                    application.reason = request.POST['manual_reason']
-                else:
-                    application.reason = 'Thank you for your interest in this animal. While we believe that there is another, more suitable applicant for this animal, we hope you will consider adopting another pet!'
+            if rejection_form.is_valid():
+                # capture rejection reason provided
+                application.reason = request.POST['reason']
                 # assign staff memeber who provided rejection to the application
                 application.staff = request.user.id
                 # apply rejection and save
