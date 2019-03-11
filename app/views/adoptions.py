@@ -14,28 +14,26 @@ from django.contrib import messages
 from app.forms import RejectionForm
 
 @staff_member_required
-def list_applications(request):
+def list_animals(request):
     """
         This function gets all unadopted animals that have pending adoption applications and provides the list_applications template with a list of animals and a dictionary that contains animal ID's  as keys and number of apps as values
     """
 
     if request.method == 'GET':
 
+        # TODO: Handle a view with no animals in shelter
         unadopted_animals = Animal.objects.filter(date_adopted=None)
         num_pending_applications = dict()
-        animals = list()
 
         for animal in unadopted_animals:
             applications = Application.objects.filter(animal=animal).filter(approved=None)
             if len(applications) == 0:
                 num_pending_applications[animal.id] = 0
-                animals.append(animal)
             else:
                 num_pending_applications[animal.id] = len(applications)
-                animals.append(animal)
 
         context = {
-            'animals': animals,
+            'animals': unadopted_animals,
             'num_pending_applications': num_pending_applications
         }
 
