@@ -1,10 +1,12 @@
 from django.contrib.auth.models import User
 from django import forms
+# models
 from app.models import *
-
+# crispy
 import itertools
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column
+from crispy_forms.layout import Layout, Row, Column, Submit, ButtonHolder
+
 
 class UserForm(forms.ModelForm):
     """
@@ -202,16 +204,35 @@ class RejectionForm(forms.ModelForm):
 
 
 class ActivityForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows':10}))
 
     def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.helper = FormHelper()
             self.helper.form_tag = False
+            self.helper.layout = Layout(
+            Row(
+                Column('activity', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+            Row(
+                Column('description', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+            Row(
+                Column('date', css_class='form-group col-md-3 mb-0'),
+                Column('start_time', css_class='form-group col-md-3 mb-0'),
+                Column('end_time', css_class='form-group col-md-3 mb-0'),
+                Column('max_attendance', css_class='form-group col-md-3 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+        )
 
     class Meta:
         model = Activity
-        fields = ('name','description','date_start','date_end','max_attendance')
+        fields = ('activity','description','date','start_time','end_time','max_attendance')
         widgets = {
-            "date_start": forms.DateInput(attrs={"type": "date"}),
-            "date_end": forms.DateInput(attrs={"type": "date"})
+            "date": forms.DateInput(attrs={"type": "date"}),
+            "start_time": forms.TimeInput(attrs={"type": "time"}),
+            "end_time": forms.TimeInput(attrs={"type": "time"})
         }

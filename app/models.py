@@ -183,18 +183,19 @@ class Application(models.Model):
 class Activity(models.Model):
     """Defines a volunteering activity created by a staff member and applied to by users.
 
-        Returns: __str__ name, staffId
+        Returns: __str__ activity, staffId
     """
 
-    name = models.CharField(max_length=100)
+    activity = models.CharField(max_length=75, default=None, null=True, blank=False)
     description = models.CharField(max_length=500)
-    date_start = models.DateTimeField(default=None, null=True, blank=False)
-    date_end = models.DateTimeField(default=None, null=True, blank=False)
+    date = models.DateField(default=None, null=True, blank=False)
+    start_time = models.TimeField(default=None, null=True, blank=False)
+    end_time = models.TimeField(default=None, null=True, blank=False)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, default=None, null=True, blank=True)
     max_attendance = models.PositiveSmallIntegerField(default=None, null=True, blank=False)
 
     def __str__(self):
-        return f"Name: {self.name} Staff: {self.staff}"
+        return f"Name: {self.activity} Staff: {self.staff}"
 
 class ActivityVolunteer(models.Model):
     """Defines a join table associating volunteers with volunteer activities

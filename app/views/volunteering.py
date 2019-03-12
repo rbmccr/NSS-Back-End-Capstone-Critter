@@ -18,7 +18,7 @@ def list_volunteering(request):
 
     now = datetime.datetime.now()
     # TODO: confirm this filter works
-    activities = Activity.objects.filter(date_end__lte=now)
+    activities = Activity.objects.filter(date__lte=now)
 
     if request.method == 'GET':
         context = {
@@ -36,3 +36,21 @@ def add_volunteering(request):
             'activity_form': activity_form,
         }
         return render(request, 'app/add_volunteering.html', context)
+
+    if request.method == 'POST':
+
+        activity_form = ActivityForm(data=request.POST)
+
+        if activity_form.is_valid():
+            # save form and assign staff member
+            activity = activity_form.save(commit=False)
+            activity.staff = request.user
+            activity.save()
+
+            return HttpResponseRedirect(reverse('app:list_volunteering'))
+
+        else:
+            context = {
+                'activity_form': activity_form,
+            }
+            return render(request, 'app/add_volunteering.html', context)
