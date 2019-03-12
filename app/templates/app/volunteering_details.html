@@ -1,0 +1,51 @@
+{% extends 'app/index.html' %}
+{% load static %}
+
+{% block style %}
+  <style>
+    img {
+      height: 100px;
+      width: 100px;
+    }
+  </style>
+{% endblock style %}
+
+{% block content %}
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+      <h3>Upcoming Volunteering Opportunities</h3>
+  </div>
+
+  <div class='messages'>
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
+      {% else %}
+        <div class='{{ message.tags }} alert alert-success' role='alert'>{{ message }}</div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark btn-sm'>Back to List</a>
+
+  {% if user.is_staff %}
+    <a href="{% url 'app:index' %}" class='btn btn-outline-dark btn-sm'>Edit Activity</a>
+    <a href="{% url 'app:index' %}" class='btn btn-outline-danger btn-sm'>Delete Activity</a>
+    <br>
+  {% endif %}
+
+  <br>
+
+  <div class='list-group'>
+      <div class="list-group-item">
+        <div class='media'>
+          <img class='mr-3' src='{% static thumbnail_url %}' alt='{{ activity.activity_type }}'>
+          <div class='media-body'>
+            <h5 class='mt-0'>{{ activity.activity }}</h5>
+            Activity type: {{ activity.activity_type }} <br>
+            Date: {{ activity.date }}
+          </div>
+        </div>
+      </div>
+  </div>
+
+{% endblock content %}

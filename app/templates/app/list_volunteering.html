@@ -37,9 +37,9 @@
 
     <div class='list-group'>
       {% for activity in activities %}
-        <a href="{% url 'app:index' %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'app:volunteering_details' activity.id %}" class="list-group-item list-group-item-action">
           <div class='media'>
-            <!-- determine thumbnail for volunteering activity -->
+            <!-- determine thumbnail for volunteering activity with loop through dictionary -->
             {% for key, value in thumbnails.items %}
               {% if key == activity.id %}
                 <img class='mr-3' src='{% static value %}' alt='{{ activity.activity_type }}'>
@@ -47,7 +47,9 @@
             {% endfor %}
             <div class='media-body'>
               <h5 class='mt-0'>{{ activity.activity }}</h5>
-              Activity type: {{ activity.activity_type }}
+              Activity type: {{ activity.activity_type }} <br>
+              Date: {{ activity.date }} <br>
+              We need {{ activity.max_attendance }} more people!
             </div>
           </div>
         </a>

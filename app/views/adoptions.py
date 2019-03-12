@@ -18,7 +18,7 @@ import datetime
 @staff_member_required
 def list_animals(request):
     """
-        This function gets all unadopted animals that have pending adoption applications and provides the list_applications template with a list of animals and a dictionary that contains animal ID's  as keys and number of apps as values
+        This function gets all unadopted animals that have pending adoption applications and provides the list_animals template with a list of animals and a dictionary that contains animal ID's  as keys and number of apps as values
     """
 
     if request.method == 'GET':
@@ -39,7 +39,7 @@ def list_animals(request):
             'num_pending_applications': num_pending_applications
         }
 
-        return render(request, 'app/list_applications.html', context)
+        return render(request, 'app/list_animals.html', context)
 
 @staff_member_required
 def list_specific_applications(request, id):
