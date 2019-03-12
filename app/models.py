@@ -179,6 +179,13 @@ class Application(models.Model):
     def __str__(self):
         return f"User: {self.user} Date Submitted: {self.date_submitted}"
 
+ACTIVITY_CHOICES = (
+    ('cats','cats'),
+    ('dogs','dogs'),
+    ('other','other'),
+    ('multi','multi'),
+    ('general','general'),
+)
 
 class Activity(models.Model):
     """Defines a volunteering activity created by a staff member and applied to by users.
@@ -193,6 +200,7 @@ class Activity(models.Model):
     end_time = models.TimeField(default=None, null=True, blank=False)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, default=None, null=True, blank=True)
     max_attendance = models.PositiveSmallIntegerField(default=None, null=True, blank=False)
+    activity_type = models.CharField(max_length=5, choices=ACTIVITY_CHOICES, default=None, null=True, blank=False)
 
     def __str__(self):
         return f"Name: {self.activity} Staff: {self.staff}"

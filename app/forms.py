@@ -213,6 +213,7 @@ class ActivityForm(forms.ModelForm):
             self.helper.layout = Layout(
             Row(
                 Column('activity', css_class='form-group col-md-6 mb-0'),
+                Column('activity_type', css_class='form-group col-md-3 mb-0'),
                 css_class='form-row mb-n2'
             ),
             Row(
@@ -230,7 +231,7 @@ class ActivityForm(forms.ModelForm):
 
     class Meta:
         model = Activity
-        fields = ('activity','description','date','start_time','end_time','max_attendance')
+        fields = ('activity','description','date','start_time','end_time','max_attendance','activity_type')
         widgets = {
             "date": forms.DateInput(attrs={"type": "date"}),
             "start_time": forms.TimeInput(attrs={"type": "time"}),

@@ -17,12 +17,28 @@ import datetime
 def list_volunteering(request):
 
     now = datetime.datetime.now()
-    # TODO: confirm this filter works
-    activities = Activity.objects.filter(date__lte=now)
+    activities = Activity.objects.filter(date__gte=now)
+
+    # identify which thumbnail to use and pass in dictionary to template
+    thumbnails = dict()
+
+    for activity in activities:
+        if activity.activity_type == 'cats':
+            path = 'thumbnails/cat.png'
+        elif activity.activity_type == 'dogs':
+            path = 'thumbnails/dog.png'
+        elif activity.activity_type == 'other':
+            path = 'thumbnails/other.png'
+        elif activity.activity_type == 'multi':
+            path = 'thumbnails/multi.png'
+        else:
+            path = 'thumbnails/general.png'
+        thumbnails[activity.id] = path
 
     if request.method == 'GET':
         context = {
             'activities': activities,
+            'thumbnails': thumbnails,
         }
         return render(request, 'app/list_volunteering.html', context)
 

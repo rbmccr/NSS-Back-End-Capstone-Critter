@@ -1,13 +1,28 @@
 {% extends 'app/index.html' %}
+{% load static %}
 
 {% block style %}
   <style>
+    img {
+      height: 100px;
+      width: 100px;
+    }
   </style>
 {% endblock style %}
 
 {% block content %}
   <div class='pb-2 mt-4 mb-4 border-bottom'>
       <h3>Upcoming Volunteering Opportunities</h3>
+  </div>
+
+  <div class='messages'>
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
+      {% else %}
+        <div class='{{ message.tags }} alert alert-success' role='alert'>{{ message }}</div>
+      {% endif %}
+    {% endfor %}
   </div>
 
   {% if user.is_staff %}
@@ -19,6 +34,25 @@
   {% if not activities %}
     There are no upcoming volunteering events. Please check back later!
   {% else %}
+
+    <div class='list-group'>
+      {% for activity in activities %}
+        <a href="{% url 'app:index' %}" class="list-group-item list-group-item-action">
+          <div class='media'>
+            <!-- determine thumbnail for volunteering activity -->
+            {% for key, value in thumbnails.items %}
+              {% if key == activity.id %}
+                <img class='mr-3' src='{% static value %}' alt='{{ activity.activity_type }}'>
+              {% endif %}
+            {% endfor %}
+            <div class='media-body'>
+              <h5 class='mt-0'>{{ activity.activity }}</h5>
+              Activity type: {{ activity.activity_type }}
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
 
   {% endif %}
 
