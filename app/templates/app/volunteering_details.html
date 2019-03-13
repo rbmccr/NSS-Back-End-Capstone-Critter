@@ -25,15 +25,12 @@
     {% endfor %}
   </div>
 
-  <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark btn-sm'>Back to List</a>
-
   {% if user.is_staff %}
     <a href="{% url 'app:index' %}" class='btn btn-outline-dark btn-sm'>Edit Activity</a>
     <a href="{% url 'app:index' %}" class='btn btn-outline-danger btn-sm'>Delete Activity</a>
     <br>
+    <br>
   {% endif %}
-
-  <br>
 
   <div class='list-group'>
       <div class="list-group-item">
@@ -47,5 +44,23 @@
         </div>
       </div>
   </div>
+
+  <br>
+
+  <div class="card">
+    <div class="card-header">
+      Activity Description
+    </div>
+    <div class="card-body">
+      <p>Staff member: {{ activity.staff.first_name }} {{ activity.staff.last_name }}</p>
+      <p class="card-text">{{ activity.description }}</p>
+      <p class="card-text"><strong>Volunteer spots remaining: {{ activity.max_attendance }}</strong></p>
+    </div>
+  </div>
+
+  <br>
+
+  <a href="#" class="btn btn-outline-dark">Sign Up to Volunteer</a>
+  <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark'>Back to List</a>
 
 {% endblock content %}

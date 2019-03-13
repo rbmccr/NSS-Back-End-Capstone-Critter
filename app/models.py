@@ -194,7 +194,7 @@ class Activity(models.Model):
     """
 
     activity = models.CharField(max_length=75, default=None, null=True, blank=False)
-    description = models.CharField(max_length=500)
+    description = models.CharField(max_length=1500)
     date = models.DateField(default=None, null=True, blank=False)
     start_time = models.TimeField(default=None, null=True, blank=False)
     end_time = models.TimeField(default=None, null=True, blank=False)
