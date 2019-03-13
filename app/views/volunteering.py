@@ -44,10 +44,9 @@ def volunteering_details(request, activity_id):
     """
         This view function renders the detail page for a specific volunteering event after checking to ensure the event exists and/or has not been deleted.
     """
-
+    # ensure activity exists or has not been deleted using activity[0]
     activity = Activity.objects.filter(pk=activity_id)
 
-    # ensure activity exists or has not been deleted using activity[0]
     try:
         activity = activity[0]
         # identify which thumbnail to pass into template (function requires an iterable arg)
@@ -58,11 +57,21 @@ def volunteering_details(request, activity_id):
         # get day of week for use with date listing
         day_of_week = datetime.datetime.strptime(str(activity.date), '%Y-%m-%d').strftime('%a')
 
+        # get list of volunteers signed up for this activity using join table instances
+        activity_volunteer_instances = activity.activityvolunteer_set.all()
+        volunteer_list = list()
+
+        if len(activity_volunteer_instances) is not None:
+            for instance in activity_volunteer_instances:
+                volunteer_list.append(instance.volunteer)
+
         context = {
             'activity': activity,
             'thumbnail_url': thumbnail_url,
             'day_of_week': day_of_week,
-            'user_is_signed_up': check_if_user_is_signed_up(request.user, activity)
+            'user_is_signed_up': check_if_user_is_signed_up(request.user, activity),
+            'volunteers': volunteer_list, # Note that this is actuall a list of CustomUser instances...
+            'volunteer_count': len(volunteer_list) if volunteer_list is not None else 0
         }
 
         return render(request, 'app/volunteering_details.html', context)
@@ -185,8 +194,8 @@ def volunteering_signup(request, activity_id):
                 join_table.volunteer = request.user
                 join_table.save()
 
-                messages.success(request, 'Thanks for signing up to volunteer with us!')
-                return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
+                messages.success(request, f'Thanks for signing up to volunteer with us! We\'ll see you at {activity.activity}!')
+                return HttpResponseRedirect(reverse('app:list_volunteering'))
 
             # if user is already signed up, give them a reminder message
             else:
@@ -197,11 +206,10 @@ def volunteering_signup(request, activity_id):
             # if user is signed up, then delete join table.
             if check_if_user_is_signed_up(request.user, activity) == True:
                 join_table = ActivityVolunteer.objects.get(activity=activity, volunteer=request.user)
-                print("@@@@@@@@@@@@@join table", join_table)
                 join_table.delete()
 
-                messages.error(request, 'Sorry you can\'t make it! We hope you\'ll volunteer with us again soon!')
-                return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
+                messages.error(request, f'Sorry you can\'t make it to {activity.activity}! We hope you\'ll volunteer with us again soon!')
+                return HttpResponseRedirect(reverse('app:list_volunteering'))
 
             # if user is not already signed up, give them an error message
             else:
@@ -214,6 +222,8 @@ def volunteering_signup(request, activity_id):
 
 # Helper functions ------------------------------------------------
 # -----------------------------------------------------------------
+# -----------------------------------------------------------------
+
 def determine_thumbnail(list_or_queryset):
     """
         This helper function is used with list_volunteering and volunteering_details to determine the proper thumbnail (a static file path) for each volunteering activity. Requires an iterable arg (list, queryset, etc.)
