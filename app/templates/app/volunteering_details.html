@@ -39,7 +39,8 @@
           <div class='media-body'>
             <h5 class='mt-0'>{{ activity.activity }}</h5>
             Activity type: {{ activity.activity_type }} <br>
-            Date: {{ activity.date }}
+            Date: {{ day_of_week }}, {{ activity.date }} <br>
+            Time: {{ activity.start_time }} to {{ activity.end_time }}
           </div>
         </div>
       </div>

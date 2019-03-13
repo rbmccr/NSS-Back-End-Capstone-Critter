@@ -49,7 +49,12 @@
             <div class='media-body'>
               <h5 class='mt-0'>{{ activity.activity }}</h5>
               Activity type: {{ activity.activity_type }} <br>
-              Date: {{ activity.date }} <br>
+              <!-- assign day of week with the date listing -->
+              {% for key, value in day_of_week.items %}
+                {% if key == activity.id %}
+                  Date: {{ value }}, {{ activity.date }} <br>
+                {% endif %}
+              {% endfor %}
               We need {{ activity.max_attendance }} more people!
             </div>
           </div>

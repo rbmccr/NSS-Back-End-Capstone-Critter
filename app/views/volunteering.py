@@ -1,5 +1,6 @@
 # authentication
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 # HTTP
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -49,10 +50,17 @@ def list_volunteering(request):
     # identify which thumbnail to use and pass in dictionary to template
     thumbnails = determine_thumbnail(activities)
 
+    # get day of week for use with date listing
+    day_of_week = dict()
+    for activity in activities:
+        day = datetime.datetime.strptime(str(activity.date), '%Y-%m-%d').strftime('%a')
+        day_of_week[activity.id] = day
+
     if request.method == 'GET':
         context = {
             'activities': activities,
             'thumbnails': thumbnails,
+            'day_of_week': day_of_week,
         }
         return render(request, 'app/list_volunteering.html', context)
 
@@ -71,9 +79,13 @@ def volunteering_details(request, activity_id):
         thumbnail = determine_thumbnail(activity_list)
         thumbnail_url = thumbnail[activity_id]
 
+        # get day of week for use with date listing
+        day_of_week = datetime.datetime.strptime(str(activity.date), '%Y-%m-%d').strftime('%a')
+
         context = {
             'activity': activity,
             'thumbnail_url': thumbnail_url,
+            'day_of_week': day_of_week,
         }
 
         return render(request, 'app/volunteering_details.html', context)
@@ -126,19 +138,21 @@ def edit_volunteering(request, activity_id):
     try:
         activity = activity[0]
 
-        activity_data = {
-            'activity': activity.activity,
-            'date': activity.date,
-            'description': activity.description,
-            'start_time': activity.start_time,
-            'end_time': activity.end_time,
-            'activity_type': activity.activity_type,
-            'max_attendance': activity.max_attendance,
-        }
-
-        activity_form = ActivityForm(data=activity_data)
-
         if request.method == 'GET':
+
+            activity_data = {
+                'activity': activity.activity,
+                'date': activity.date,
+                'description': activity.description,
+                'start_time': activity.start_time,
+                'end_time': activity.end_time,
+                'activity_type': activity.activity_type,
+                'max_attendance': activity.max_attendance,
+            }
+
+            # pre-populate form using dictionary data
+            activity_form = ActivityForm(data=activity_data)
+
             context = {
                 'activity': activity,
                 'activity_form': activity_form,
@@ -172,4 +186,21 @@ def edit_volunteering(request, activity_id):
 
     except IndexError:
         messages.error(request, 'The volunteering activity you\'re trying to edit does not exist or occurred in the past.')
+        return HttpResponseRedirect(reverse('app:list_volunteering'))
+
+@login_required
+def volunteering_sign_up(request, activity_id):
+    """
+        This view function checks to ensure the desired volunteering event exists --> AND <-- is upcoming (otherwise it redirects user), then signs up a user instantly for the volunteering event.
+    """
+
+    now = datetime.datetime.now()
+    activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now)
+
+    try:
+        activity = activity[0]
+        #  TODO:
+
+    except IndexError:
+        messages.error(request, 'The volunteering activity you\'re trying to sign up for does not exist, is full, or already took place.')
         return HttpResponseRedirect(reverse('app:list_volunteering'))
