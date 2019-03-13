@@ -28,6 +28,7 @@
     {% endfor %}
   </div>
 
+  <!-- buttons for use by administrator -->
   {% if user.is_staff %}
     <a href="{% url 'app:edit_volunteering' activity.id %}" class='btn btn-outline-dark btn-sm'>Edit Activity</a>
     <a href="{% url 'app:index' %}" class='btn btn-outline-danger btn-sm'>Delete Activity</a>
@@ -35,6 +36,7 @@
     <br>
   {% endif %}
 
+  <!-- some details about event, displayed at top of page below header -->
   <div class='list-group'>
       <div class="list-group-item">
         <div class='media'>
@@ -44,7 +46,7 @@
             Date: {{ day_of_week }}, {{ activity.date }} <br>
             Time: {{ activity.start_time }} to {{ activity.end_time }}
             {% if user_is_signed_up %} <br>
-              <span class="badge badge-success" style="margin-top:2px;">You're signed up!</span>
+              <span class="badge badge-success" style="margin-top:4px;">You're signed up!</span>
             {% endif %}
           </div>
         </div>
@@ -53,6 +55,7 @@
 
   <br>
 
+  <!-- description and details about event -->
   <div class="card">
     <div class="card-header">
       Activity Description
@@ -66,7 +69,7 @@
 
   <br>
 
-  <!-- define which button is displayed to the user, depending on whether they're signed up or not -->
+  <!-- define which buttons are displayed to the user, depending on whether they're signed up or not -->
   {% if user_is_signed_up %}
     <form id="cancel_signup" method="post" action="{% url 'app:volunteering_signup' activity.id %}">
       {% csrf_token %}

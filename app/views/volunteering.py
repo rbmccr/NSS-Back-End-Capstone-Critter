@@ -26,17 +26,23 @@ def list_volunteering(request):
     # identify which thumbnail to use and pass in dictionary to template
     thumbnails = determine_thumbnail(activities)
 
-    # get day of week for use with date listing
+    # use single loop to get day of week for each event and determine which events user is signed up for
+    signed_up = list()
     day_of_week = dict()
     for activity in activities:
+        # get day of week for use with date listing
         day = datetime.datetime.strptime(str(activity.date), '%Y-%m-%d').strftime('%a')
         day_of_week[activity.id] = day
+        # identify which events the current user is signed up for
+        if check_if_user_is_signed_up(request.user, activity) == True:
+            signed_up.append(activity.id)
 
     if request.method == 'GET':
         context = {
             'activities': activities,
             'thumbnails': thumbnails,
             'day_of_week': day_of_week,
+            'signed_up': signed_up,
         }
         return render(request, 'app/list_volunteering.html', context)
 
@@ -49,6 +55,7 @@ def volunteering_details(request, activity_id):
 
     try:
         activity = activity[0]
+
         # identify which thumbnail to pass into template (function requires an iterable arg)
         activity_list = [activity]
         thumbnail = determine_thumbnail(activity_list)

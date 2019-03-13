@@ -55,7 +55,12 @@
                   Date: {{ value }}, {{ activity.date }} <br>
                 {% endif %}
               {% endfor %}
-              We need {{ activity.max_attendance }} more people!
+              <!-- determine if user is signed up for the activity and show it if so -->
+                {% if activity.id in signed_up %}
+                  <span class="badge badge-success" style="margin-top:4px;">You're signed up!</span>
+                {% else %}
+                  We need {{ activity.max_attendance }} more people!
+                {% endif %}
             </div>
           </div>
         </a>
