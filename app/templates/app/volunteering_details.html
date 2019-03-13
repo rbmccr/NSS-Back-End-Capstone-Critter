@@ -41,7 +41,7 @@
             Date: {{ day_of_week }}, {{ activity.date }} <br>
             Time: {{ activity.start_time }} to {{ activity.end_time }}
             {% if user_is_signed_up %} <br>
-              <span class="badge badge-success">You're signed up!</span>
+              <span class="badge badge-success" style="margin-top:2px;">You're signed up!</span>
             {% endif %}
           </div>
         </div>
@@ -63,7 +63,15 @@
 
   <br>
 
-  <a href="{% url 'app:volunteering_signup' activity.id %}" class="btn btn-outline-dark">Sign Up to Volunteer</a>
-  <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark'>Back to List</a>
+  {% if user_is_signed_up %}
+    <form id="cancel_signup" method="post" action="{% url 'app:volunteering_signup' activity.id %}">
+      {% csrf_token %}
+      <button type='submit' class='btn btn-outline-danger'>Cancel Reservation</button>
+      <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark'>Back to List</a>
+    </form>
+  {% else %}
+    <a href="{% url 'app:volunteering_signup' activity.id %}" class="btn btn-outline-dark">One-click Signup!</a>
+    <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark'>Back to List</a>
+  {% endif %}
 
 {% endblock content %}

@@ -177,20 +177,36 @@ def volunteering_signup(request, activity_id):
     try:
         activity = activity[0]
 
-        # if user is not signed up, then sign them up.
-        if check_if_user_is_signed_up(request.user, activity) == False:
-            join_table = ActivityVolunteer()
-            join_table.activity = activity
-            join_table.volunteer = request.user
-            join_table.save()
+        if request.method == 'GET':
+            # if user is not signed up, then sign them up.
+            if check_if_user_is_signed_up(request.user, activity) == False:
+                join_table = ActivityVolunteer()
+                join_table.activity = activity
+                join_table.volunteer = request.user
+                join_table.save()
 
-            messages.success(request, 'Thanks for signing up to volunteer with us!')
-            return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
+                messages.success(request, 'Thanks for signing up to volunteer with us!')
+                return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
 
-        # if user is already signed up, give them a reminder message
-        else:
-            messages.success(request, 'You\'ve already signed up for this activity. Thank you!')
-            return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
+            # if user is already signed up, give them a reminder message
+            else:
+                messages.success(request, 'You\'ve already signed up for this activity. Thank you!')
+                return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
+
+        if request.method == 'POST':
+            # if user is signed up, then delete join table.
+            if check_if_user_is_signed_up(request.user, activity) == True:
+                join_table = ActivityVolunteer.objects.get(activity=activity, volunteer=request.user)
+                print("@@@@@@@@@@@@@join table", join_table)
+                join_table.delete()
+
+                messages.error(request, 'Sorry you can\'t make it! We hope you\'ll volunteer with us again soon!')
+                return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
+
+            # if user is not already signed up, give them an error message
+            else:
+                messages.success(request, 'You aren\'t signed up for this activity.')
+                return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
 
     except IndexError:
         messages.error(request, 'The volunteering activity you\'re trying to sign up for does not exist, is full, or already took place.')
