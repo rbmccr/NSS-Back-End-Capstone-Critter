@@ -206,7 +206,7 @@ class Activity(models.Model):
         return f"Name: {self.activity} Staff: {self.staff}"
 
 class ActivityVolunteer(models.Model):
-    """Defines a join table associating volunteers with volunteer activities
+    """Defines a join table associating volunteers (Note: CustomUser table, not Volunteer table) with volunteer activities
 
     Returns: __str__ volunteerId, activityId
     """

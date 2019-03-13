@@ -40,6 +40,9 @@
             <h5 class='mt-0'>{{ activity.activity }}</h5>
             Date: {{ day_of_week }}, {{ activity.date }} <br>
             Time: {{ activity.start_time }} to {{ activity.end_time }}
+            {% if user_is_signed_up %} <br>
+              <span class="badge badge-success">You're signed up!</span>
+            {% endif %}
           </div>
         </div>
       </div>
