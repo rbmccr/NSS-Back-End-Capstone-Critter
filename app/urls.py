@@ -41,6 +41,8 @@ urlpatterns = [
     path("volunteering/all", views.list_volunteering, name='list_volunteering'),
     # ex. /volunteering/new
     path("volunteering/new", views.add_volunteering, name='add_volunteering'),
+    # ex. /volunteering/edit/1
+    path("volunteering/edit/<int:activity_id>", views.edit_volunteering, name='edit_volunteering'),
     # ex. /volunteering/details/1
     path("volunteering/details/<int:activity_id>", views.volunteering_details, name='volunteering_details'),
 ]

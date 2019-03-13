@@ -200,7 +200,7 @@ class Activity(models.Model):
     end_time = models.TimeField(default=None, null=True, blank=False)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, default=None, null=True, blank=True)
     max_attendance = models.PositiveSmallIntegerField(default=None, null=True, blank=False)
-    activity_type = models.CharField(max_length=5, choices=ACTIVITY_CHOICES, default=None, null=True, blank=False)
+    activity_type = models.CharField(max_length=7, choices=ACTIVITY_CHOICES, default=None, null=True, blank=False)
 
     def __str__(self):
         return f"Name: {self.activity} Staff: {self.staff}"
