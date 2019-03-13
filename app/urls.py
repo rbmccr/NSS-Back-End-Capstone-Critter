@@ -45,4 +45,6 @@ urlpatterns = [
     path("volunteering/edit/<int:activity_id>", views.edit_volunteering, name='edit_volunteering'),
     # ex. /volunteering/details/1
     path("volunteering/details/<int:activity_id>", views.volunteering_details, name='volunteering_details'),
+    # ex. /volunteering/signup/1
+    path("volunteering/signup/<int:activity_id>", views.volunteering_signup, name='volunteering_signup'),
 ]

@@ -7,13 +7,14 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.urls import reverse
 # models
-from app.models import Activity
+from app.models import Activity, ActivityVolunteer
 # forms
 from app.forms import ActivityForm
 # messages
 from django.contrib import messages
 # tools
 import datetime
+from django.db.models import Q
 
 def determine_thumbnail(list_or_queryset):
     """
@@ -189,17 +190,30 @@ def edit_volunteering(request, activity_id):
         return HttpResponseRedirect(reverse('app:list_volunteering'))
 
 @login_required
-def volunteering_sign_up(request, activity_id):
+def volunteering_signup(request, activity_id):
     """
         This view function checks to ensure the desired volunteering event exists --> AND <-- is upcoming (otherwise it redirects user), then signs up a user instantly for the volunteering event.
     """
 
     now = datetime.datetime.now()
     activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now)
+    is_user_signed_up_yet = ActivityVolunteer.objects.filter(Q(activity=activity) and Q(volunteer=request.user))
 
     try:
         activity = activity[0]
-        #  TODO:
+
+        if is_user_signed_up_yet[0] == None:
+            join_table = ActivityVolunteer()
+            join_table.activity = activity
+            join_table.volunteer = request.user
+            join_table.save()
+
+            messages.success(request, 'Thanks for signing up to volunteer with us!')
+            return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
+
+        else:
+            messages.success(request, 'You\'ve already signed up for this activity. Thank you!')
+            return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
 
     except IndexError:
         messages.error(request, 'The volunteering activity you\'re trying to sign up for does not exist, is full, or already took place.')
