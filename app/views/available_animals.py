@@ -17,7 +17,7 @@ def available_animals(request):
     """
 
     if request.method == 'GET':
-        animals = Animal.objects.filter(date_adopted=None).order_by('date_arrival')
+        animals = Animal.objects.filter(date_adopted=None).order_by('arrival_date')
         context = {
             'animals': animals,
             'animal_species': None,

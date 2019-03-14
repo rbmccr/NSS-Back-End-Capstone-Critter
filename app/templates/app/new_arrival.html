@@ -1,4 +1,29 @@
 {% extends 'app/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+    <style>
+        /*#div_id_image {
+	        position: relative;
+	        overflow: hidden;
+	        margin: 10px;
+        }
+        #div_id_image > div > input {
+	        position: absolute;
+	        top: 0;
+	        right: 0;
+	        margin: 0;
+	        padding: 0;
+	        font-size: 20px;
+	        cursor: pointer;
+	        opacity: 0;
+	        filter: alpha(opacity=0);
+        }*/
+        #div_id_image > div > input#id_image > * {
+            display: none
+        }
+    </style>
+{% endblock style %}
 
 {% block content %}
     <div class='pb-2 mt-4 mb-4 border-bottom'>
@@ -6,7 +31,55 @@
     </div>
     <form id="animal_form" method="POST" action="{% url 'app:new_arrival' %}" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ animal_form.as_p }}
-        <input class="btn btn-dark" type="submit" name="submit" value="Admit Animal" />
+        <div class='card mb-3'>
+            <div class='card-header'>
+              Required Information
+            </div>
+            <div class='card-body' style='padding-top: 10px; padding-bottom: 10px;'>
+                {% crispy animal_form %}
+            </div>
+        </div>
+        <input class="btn btn-outline-dark" type="submit" name="submit" value="Admit Animal" />
     </form>
 {% endblock content %}
+
+{% block script %}
+    <!-- style photo upload button by adding bootstrap classes with jQuery -->
+    <script>
+        // create custom file upload button and append to page in proper container
+        const my_button = document.createElement('button')
+        my_button.classList.add('btn')
+        my_button.classList.add('btn-outline-dark')
+        my_button.classList.add('btn-sm')
+        my_button.type = 'button'
+        my_button.textContent = 'Upload Image'
+        my_button.id = 'img_upload'
+        $('#div_id_image').find('div').append(my_button)
+
+        // hide the default file upload button and text
+        $('#div_id_image').find('div').find('input').hide()
+
+        // click function on custom button to trigger the default hidden file upload input
+        $('#img_upload').click(function(){
+            console.log('hello')
+            $('#id_image').click()
+        });
+
+        // capture file name of selected image file
+        $(document).ready(function(){
+        $('input[type="file"]').change(function(e){
+            var fileName = e.target.files[0].name;
+            halfway = fileName.length / 2
+            first_half = fileName.slice(0, halfway)
+            second_half = fileName.slice(halfway)
+            if (first_half.length > 9) {
+                text = first_half.substring(0,9)+"..."+second_half.slice(-9)
+                $('#div_id_image').find('div').append(text)
+            } else {
+                console.log(first_half+second_half)
+                text = first_half+second_half
+            }
+        })
+    })
+    </script>
+{% endblock script %}

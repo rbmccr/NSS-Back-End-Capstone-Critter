@@ -154,7 +154,7 @@ class Animal(models.Model):
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
     image = models.ImageField(upload_to='media/', default="media/placeholder.jpg")
     description = models.CharField(max_length=500)
-    date_arrival = models.DateTimeField(default=None, null=True, blank=True)
+    arrival_date = models.DateTimeField(default=None, null=True, blank=False)
     date_adopted = models.DateTimeField(default=None, null=True, blank=True)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, limit_choices_to={'is_staff': True}, default=None, null=True, blank=False)
 

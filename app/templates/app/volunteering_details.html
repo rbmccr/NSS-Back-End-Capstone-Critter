@@ -31,7 +31,7 @@
   <!-- buttons for use by administrator -->
   {% if user.is_staff %}
     <a href="{% url 'app:edit_volunteering' activity.id %}" class='btn btn-outline-dark btn-sm'>Edit Activity</a>
-    <a href="{% url 'app:index' %}" class='btn btn-outline-danger btn-sm'>Delete Activity</a>
+    <a href="{% url 'app:index' %}" class='btn btn-outline-danger btn-sm'>Cancel Activity</a>
     <br>
     <br>
   {% endif %}
