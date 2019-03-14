@@ -17,7 +17,7 @@ import datetime
 
 def list_volunteering(request):
     """
-        This view function loads a list of all --> upcoming <-- volunteering activities and provides a static file path to the template to render an appropirate thumbnail.
+        This view function loads a list of all --> upcoming <-- volunteering activities (including cancelled activites) and provides a static file path to the template to render an appropirate thumbnail.
     """
 
     now = datetime.datetime.now()
@@ -226,6 +226,44 @@ def volunteering_signup(request, activity_id):
     except IndexError:
         messages.error(request, 'The volunteering activity you\'re trying to sign up for does not exist, is full, or already took place.')
         return HttpResponseRedirect(reverse('app:list_volunteering'))
+
+@staff_member_required
+def cancel_volunteering(request, activity_id):
+    """
+        This view function checks to ensure the desired volunteering event exists, is not cancelled, and is upcoming (otherwise it redirects user), then allows a user to cancel the activity, which prevents a user from accessing the detail view and/or signing up.
+    """
+
+    now = datetime.datetime.now()
+    activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now).filter(cancelled=None)
+
+    try:
+        activity = activity[0]
+
+        if request.method == 'GET':
+            # identify which thumbnail to pass into template (function requires an iterable arg)
+            activity_list = [activity]
+            thumbnail = determine_thumbnail(activity_list)
+            thumbnail_url = thumbnail[activity_id]
+
+            # get day of week for use with date listing
+            day_of_week = datetime.datetime.strptime(str(activity.date), '%Y-%m-%d').strftime('%a')
+
+            context = {
+                'activity': activity,
+                'day_of_week': day_of_week,
+                'thumbnail_url': thumbnail_url,
+            }
+            return render(request, 'app/cancel_volunteering.html', context)
+
+        if request.method == 'POST':
+            activity.cancelled = True
+            activity.save()
+            return HttpResponseRedirect(reverse('app:list_volunteering'))
+
+    except IndexError:
+        messages.error(request, 'The volunteering activity you\'re trying to cancel does not exist, already took place, or was already cancelled.')
+        return HttpResponseRedirect(reverse('app:list_volunteering'))
+
 
 # Helper functions ------------------------------------------------
 # -----------------------------------------------------------------

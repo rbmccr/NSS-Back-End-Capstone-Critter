@@ -201,6 +201,7 @@ class Activity(models.Model):
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, default=None, null=True, blank=True)
     max_attendance = models.PositiveSmallIntegerField(default=None, null=True, blank=False)
     activity_type = models.CharField(max_length=7, choices=ACTIVITY_CHOICES, default=None, null=True, blank=False)
+    cancelled = models.BooleanField(default=None, null=True)
 
     @property
     def spots_remaining(self):
