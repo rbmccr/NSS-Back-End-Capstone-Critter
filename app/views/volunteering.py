@@ -190,16 +190,17 @@ def edit_volunteering(request, activity_id):
 @login_required
 def volunteering_signup(request, activity_id):
     """
-        This view function checks to ensure the desired volunteering event exists --> AND <-- is upcoming (otherwise it redirects user), then signs up a user instantly for the volunteering event.
+        This view function checks to ensure the desired volunteering event exists, is not cancelled, and is upcoming (otherwise it redirects user), then signs up a user instantly for the volunteering event.
     """
 
     now = datetime.datetime.now()
-    activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now)
+    activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now).filter(cancelled=None)
 
     try:
         activity = activity[0]
 
         if request.method == 'GET':
+
             # if user is not signed up, then sign them up.
             if check_if_user_is_signed_up(request.user, activity) == False:
                 join_table = ActivityVolunteer()
@@ -230,13 +231,13 @@ def volunteering_signup(request, activity_id):
                 return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
 
     except IndexError:
-        messages.error(request, 'The volunteering activity you\'re trying to sign up for does not exist, is full, or already took place.')
+        messages.error(request, 'The volunteering activity you\'re trying to access does not exist, is full, already took place, or was cancelled!')
         return HttpResponseRedirect(reverse('app:list_volunteering'))
 
 @staff_member_required
 def cancel_volunteering(request, activity_id):
     """
-        This view function checks to ensure the desired volunteering event exists, is not cancelled, and is upcoming (otherwise it redirects user), then allows a user to cancel the activity, which prevents a user from accessing the detail view and/or signing up.
+        This view function checks to ensure the desired volunteering event exists, is not cancelled, and is upcoming (otherwise it redirects user), then allows an administrator to cancel the activity entirely, which prevents a user from accessing the detail view (preventing sign up is done in the volunteering_signup view).
     """
 
     now = datetime.datetime.now()

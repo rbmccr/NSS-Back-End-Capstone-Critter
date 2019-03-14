@@ -42,10 +42,8 @@
       <div class='list-group'>
         {% for activity in activities %}
           <!-- conditional logic to determine accessibility of detail view for a specific event -->
-          {% if activity.cancelled == True and user.is_staff %}
-          <a href="{% url 'app:volunteering_details' activity.id %}" class="list-group-item list-group-item-action">
-          {% elif activity.cancelled == True %}
-          <div href="#" class="list-group-item text-muted">
+          {% if activity.cancelled == True %}
+          <a href="{% url 'app:volunteering_details' activity.id %}" class="list-group-item list-group-item-action text-muted">
           {% else %}
           <a href="{% url 'app:volunteering_details' activity.id %}" class="list-group-item list-group-item-action">
           {% endif %}
@@ -83,12 +81,7 @@
                   {% endif %}
               </div>
             </div>
-          <!-- match cancelled conditional formatting from above -->
-          {% if activity.cancelled == True %}
-          </div>
-          {% else %}
           </a>
-          {% endif %}
         {% endfor %}
       </div>
 
@@ -98,7 +91,7 @@
         {% for activity in activities %}
           <!-- conditional logic to determine accessibility of detail view for a specific event -->
           {% if activity.cancelled == True %}
-          <div href="#" class="list-group-item text-muted">
+          <a href="{% url 'app:volunteering_details' activity.id %}" class="list-group-item list-group-item-action text-muted">
           {% else %}
           <a href="{% url 'app:volunteering_details' activity.id %}" class="list-group-item list-group-item-action">
           {% endif %}
@@ -130,12 +123,7 @@
                 {% endif %}
               </div>
             </div>
-          <!-- match cancelled conditional formatting from above -->
-          {% if activity.cancelled == True %}
-          </div>
-          {% else %}
           </a>
-          {% endif %}
         {% endfor %}
       </div>
 
