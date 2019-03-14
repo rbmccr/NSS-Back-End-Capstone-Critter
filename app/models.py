@@ -202,6 +202,11 @@ class Activity(models.Model):
     max_attendance = models.PositiveSmallIntegerField(default=None, null=True, blank=False)
     activity_type = models.CharField(max_length=7, choices=ACTIVITY_CHOICES, default=None, null=True, blank=False)
 
+    @property
+    def spots_remaining(self):
+        volunteers_signed_up = ActivityVolunteer.objects.filter(activity=self).count()
+        return self.max_attendance - volunteers_signed_up
+
     def __str__(self):
         return f"Name: {self.activity} Staff: {self.staff}"
 

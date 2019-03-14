@@ -59,7 +59,12 @@
                 {% if activity.id in signed_up %}
                   <span class="badge badge-success" style="margin-top:4px;">You're signed up!</span>
                 {% else %}
-                  We need {{ activity.max_attendance }} more people!
+                  <!-- address the number of open volunteering spots -->
+                  {% if activity.spots_remaining <= 0 %}
+                    No volunteer spots remaining
+                  {% else %}
+                    Volunteers still needed: {{ activity.spots_remaining }}
+                  {% endif %}
                 {% endif %}
             </div>
           </div>

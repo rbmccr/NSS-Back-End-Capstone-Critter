@@ -63,7 +63,12 @@
     <div class="card-body">
       <p class="card-text">Lead staff member: {{ activity.staff.first_name }} {{ activity.staff.last_name }}</p>
       <p class="card-text">{{ activity.description }}</p>
-      <p class="card-text"><strong>Volunteer spots remaining: {{ activity.max_attendance }}</strong></p>
+      <!-- show FULL if there are no volunteer spots remaining (used <= to avoid errors) -->
+      {% if activity.spots_remaining <= 0 %}
+      <p class="card-text"><strong>This activity has no volunteer spots remaining!</strong></p>
+      {% else %}
+      <p class="card-text"><strong>Volunteer still needed: {{ activity.spots_remaining }}</strong></p>
+      {% endif %}
     </div>
   </div>
 
@@ -77,7 +82,10 @@
       <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark'>Back to List</a>
     </form>
   {% else %}
+    <!-- disabled sign up button if there are no spots remaining -->
+    {% if activity.spots_remaining > 0 %}
     <a href="{% url 'app:volunteering_signup' activity.id %}" class="btn btn-outline-dark">One-click Signup!</a>
+    {% endif %}
     <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark'>Back to List</a>
   {% endif %}
 
