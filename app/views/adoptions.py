@@ -18,7 +18,7 @@ import datetime
 @staff_member_required
 def list_animals(request):
     """
-        This function gets all unadopted animals that have pending adoption applications and provides the list_applications template with a list of animals and a dictionary that contains animal ID's  as keys and number of apps as values
+        This function gets all unadopted animals that have pending adoption applications and provides the list_animals template with a list of animals and a dictionary that contains animal ID's  as keys and number of apps as values
     """
 
     if request.method == 'GET':
@@ -39,7 +39,7 @@ def list_animals(request):
             'num_pending_applications': num_pending_applications
         }
 
-        return render(request, 'app/list_applications.html', context)
+        return render(request, 'app/list_animals.html', context)
 
 @staff_member_required
 def list_specific_applications(request, id):
@@ -66,6 +66,7 @@ def list_specific_applications(request, id):
             }
             return render(request, 'app/list_specific_applications.html', context)
         except IndexError:
+            messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're looking for isn't there.")
             return HttpResponseRedirect(reverse('app:list_applications'))
 
 @staff_member_required
@@ -150,7 +151,7 @@ def reject_application(request, animal_id, application_id):
                 application.approved = False
                 application.save()
 
-                messages.success(request, f"You rejected the application submitted by {application.user.first_name} {application.user.last_name}")
+                messages.error(request, f"You rejected the application submitted by {application.user.first_name} {application.user.last_name}")
                 return HttpResponseRedirect(reverse('app:list_specific_applications', args=(animal_id,)))
             else:
                 messages.error(request, "There was a problem with your rejection. Please try again.")
@@ -163,7 +164,7 @@ def reject_application(request, animal_id, application_id):
 @staff_member_required
 def revise_judgment(request, animal_id, application_id):
     """
-        This view function is responsible for determining that the selected animal is not yet adopted before removing the False condition from Application.approved.
+        This view function is responsible for determining that the selected animal is not yet adopted before removing the False condition from Application.approved so that an application can be re-considered for adoption.
     """
 
     # check that animal and application are in the database and animal isn't adopted yet
@@ -181,6 +182,7 @@ def revise_judgment(request, animal_id, application_id):
             application.staff = request.user
             # apply revision (i.e. change 0 to null in database)
             application.approved = None
+            application.reason = None
             application.save()
             messages.success(request, f"The application submitted by {application.user.first_name} {application.user.last_name} was marked for revision.")
             return HttpResponseRedirect(reverse('app:list_specific_applications', args=(animal_id,)))

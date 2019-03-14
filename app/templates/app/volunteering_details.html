@@ -1,0 +1,145 @@
+{% extends 'app/index.html' %}
+{% load static %}
+
+{% block style %}
+  <style>
+    img {
+      height: 100px;
+      width: 100px;
+    }
+    .border-fix {
+      border-bottom: 1.5px solid rgba(0,0,0,.125);
+    }
+  </style>
+{% endblock style %}
+
+{% block content %}
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+      <h3>Upcoming Volunteering Opportunities</h3>
+  </div>
+
+  <div class='messages'>
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
+      {% else %}
+        <div class='{{ message.tags }} alert alert-success' role='alert'>{{ message }}</div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- buttons for use by administrator -->
+  {% if user.is_staff %}
+    <a href="{% url 'app:edit_volunteering' activity.id %}" class='btn btn-outline-dark btn-sm'>Edit Activity</a>
+    <a href="{% url 'app:index' %}" class='btn btn-outline-danger btn-sm'>Cancel Activity</a>
+    <br>
+    <br>
+  {% endif %}
+
+  <!-- some details about event, displayed at top of page below header -->
+  <div class='list-group'>
+      <div class="list-group-item">
+        <div class='media'>
+          <img class='mr-3' src='{% static thumbnail_url %}' alt='{{ activity.activity_type }}'>
+          <div class='media-body'>
+            <h5 class='mt-0'>{{ activity.activity }}</h5>
+            Date: {{ day_of_week }}, {{ activity.date }} <br>
+            Time: {{ activity.start_time }} to {{ activity.end_time }}
+            {% if user_is_signed_up %} <br>
+              <span class="badge badge-success" style="margin-top:4px;">You're signed up!</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <br>
+
+  <!-- description and details about event -->
+  <div class="card">
+    <div class="card-header">
+      Activity Description
+    </div>
+    <div class="card-body">
+      <p class="card-text">Lead staff member: {{ activity.staff.first_name }} {{ activity.staff.last_name }}</p>
+      <p class="card-text">{{ activity.description }}</p>
+      <!-- show FULL if there are no volunteer spots remaining (used <= to avoid errors) -->
+      {% if activity.spots_remaining <= 0 %}
+      <p class="card-text"><strong>This activity has no volunteer spots remaining!</strong></p>
+      {% else %}
+      <p class="card-text"><strong>Volunteer still needed: {{ activity.spots_remaining }}</strong></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <br>
+
+  <!-- define which buttons are displayed to the user, depending on whether they're signed up or not -->
+  {% if user_is_signed_up %}
+    <form id="cancel_signup" method="post" action="{% url 'app:volunteering_signup' activity.id %}">
+      {% csrf_token %}
+      <button type='submit' class='btn btn-outline-danger'>Cancel Reservation</button>
+      <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark'>Back to List</a>
+    </form>
+  {% else %}
+    <!-- disabled sign up button if there are no spots remaining -->
+    {% if activity.spots_remaining > 0 %}
+    <a href="{% url 'app:volunteering_signup' activity.id %}" class="btn btn-outline-dark">One-click Signup!</a>
+    {% endif %}
+    <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark'>Back to List</a>
+  {% endif %}
+
+  <!-- ------------------------- administrator controls below this line ------------------------- -->
+  {% if user.is_staff %}
+    <div class='pb-2 mt-4 mb-3 border-bottom'>
+      <h3>Administrator Tools</h3>
+    </div>
+
+    <!-- conditional formatting for total people signed up -->
+    {% if volunteer_count == 1 %}
+      <p>There is {{ volunteer_count }} person signed up!</p>
+    {% elif volunteer_count > 1 %}
+      <p>There are {{ volunteer_count }} people signed up!</p>
+    {% endif %}
+
+    <!-- accordion layout for viewing applications -->
+    {% if volunteer_count == 0 %}
+      <p>There's nobody signed up for this volunteering activity.</p>
+    {% else %}
+      <div class="accordion" id="accordion">
+        {% for volunteer in volunteers %}
+          <div class="card">
+            <!-- conditional fix for missing bottom border with only 1 volunteer -->
+            {% if volunteer_count == 1 %}
+            <div class="card-header bg-light border-fix" id="heading{{forloop.counter}}">
+            {% else %}
+            <div class="card-header bg-light" id="heading{{forloop.counter}}">
+            {% endif %}
+              <div class="mb-0">
+                <button class="btn btn-outline-dark btn-sm" type="button" data-toggle="collapse" data-target="#collapse{{forloop.counter}}"   aria-expanded="false" aria-controls="collapse{{forloop.counter}}">View</button> &nbsp;
+                <div style='display:inline-block'>{{ volunteer.first_name }} {{ volunteer.last_name }}</div>
+              </div>
+            </div>
+            <div id="collapse{{forloop.counter}}" class="collapse" aria-labelledby="heading{{forloop.counter}}"   data-parent="#accordion">
+              <!-- conditional fix for missing bottom border with only 1 volunteer -->
+              {% if volunteer_count == 1 %}
+              <div class="card-body border-fix">
+              {% else %}
+              <div class="card-body">
+              {% endif %}
+                <div>
+                  <h5 class='pb-2 mt-0 mb-2 border-bottom'>Contact Information</h5>
+                    ({{ volunteer.volunteer.phone_number|make_list|slice:'0:3'|join:'' }})
+                    {{ volunteer.volunteer.phone_number|make_list|slice:'3:6'|join:'' }}-{{ volunteer.volunteer.phone_number|make_list|slice:'6:'|join:'' }} <br>
+                    {{ volunteer.email }}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  {% endif %}
+
+{% endblock content %}

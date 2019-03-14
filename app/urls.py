@@ -37,4 +37,14 @@ urlpatterns = [
     path("adoptions/pet/<int:animal_id>/reject/app_id=<int:application_id>", views.reject_application, name='reject_application'),
     # ex. /adoptions/1/final/revise/app_id=1
     path("adoptions/pet/<int:animal_id>/revise/app_id=<int:application_id>", views.revise_judgment, name='revise_judgment'),
+    # ex. /volunteering/all
+    path("volunteering/all", views.list_volunteering, name='list_volunteering'),
+    # ex. /volunteering/new
+    path("volunteering/new", views.add_volunteering, name='add_volunteering'),
+    # ex. /volunteering/edit/1
+    path("volunteering/edit/<int:activity_id>", views.edit_volunteering, name='edit_volunteering'),
+    # ex. /volunteering/details/1
+    path("volunteering/details/<int:activity_id>", views.volunteering_details, name='volunteering_details'),
+    # ex. /volunteering/signup/1
+    path("volunteering/signup/<int:activity_id>", views.volunteering_signup, name='volunteering_signup'),
 ]

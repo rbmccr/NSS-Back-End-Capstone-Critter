@@ -1,0 +1,29 @@
+{% extends 'app/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+  <style>
+  </style>
+{% endblock style %}
+
+{% block content %}
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+      <h3>Add a New Volunteering Activity</h3>
+  </div>
+
+  <form id='user_form' method='post' action="{% url 'app:add_volunteering' %}" enctype='multipart/form-data'>
+    {% csrf_token %}
+    <div class='card mb-3'>
+      <div class='card-header'>
+        Please Complete All Fields
+      </div>
+      <div class='card-body' style='padding-top: 10px; padding-bottom: 10px;'>
+        {% crispy activity_form %}
+      </div>
+    </div>
+    <input class='btn btn-outline-dark' type='submit' name='submit' value='Submit Activity' />
+    <a class='btn btn-outline-dark' href="{% url 'app:list_volunteering' %}">Cancel and Return</a>
+  </form>
+
+
+{% endblock content %}

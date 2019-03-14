@@ -154,7 +154,7 @@ class Animal(models.Model):
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
     image = models.ImageField(upload_to='media/', default="media/placeholder.jpg")
     description = models.CharField(max_length=500)
-    date_arrival = models.DateTimeField(default=None, null=True, blank=True)
+    arrival_date = models.DateTimeField(default=None, null=True, blank=False)
     date_adopted = models.DateTimeField(default=None, null=True, blank=True)
     staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, limit_choices_to={'is_staff': True}, default=None, null=True, blank=False)
 
@@ -178,3 +178,46 @@ class Application(models.Model):
 
     def __str__(self):
         return f"User: {self.user} Date Submitted: {self.date_submitted}"
+
+ACTIVITY_CHOICES = (
+    ('cats','cats'),
+    ('dogs','dogs'),
+    ('other','other'),
+    ('multi','multi'),
+    ('general','general'),
+)
+
+class Activity(models.Model):
+    """Defines a volunteering activity created by a staff member and applied to by users.
+
+        Returns: __str__ activity, staffId
+    """
+
+    activity = models.CharField(max_length=75, default=None, null=True, blank=False)
+    description = models.CharField(max_length=1500)
+    date = models.DateField(default=None, null=True, blank=False)
+    start_time = models.TimeField(default=None, null=True, blank=False)
+    end_time = models.TimeField(default=None, null=True, blank=False)
+    staff = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, default=None, null=True, blank=True)
+    max_attendance = models.PositiveSmallIntegerField(default=None, null=True, blank=False)
+    activity_type = models.CharField(max_length=7, choices=ACTIVITY_CHOICES, default=None, null=True, blank=False)
+
+    @property
+    def spots_remaining(self):
+        volunteers_signed_up = ActivityVolunteer.objects.filter(activity=self).count()
+        return self.max_attendance - volunteers_signed_up
+
+    def __str__(self):
+        return f"Name: {self.activity} Staff: {self.staff}"
+
+class ActivityVolunteer(models.Model):
+    """Defines a join table associating volunteers (Note: CustomUser table, not Volunteer table) with volunteer activities
+
+    Returns: __str__ volunteerId, activityId
+    """
+
+    volunteer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=None, null=True, blank=True)
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, default=None, null=True, blank=True)
+
+    def __str__(self):
+        return f"Volunteer: {self.volunteer} Activity: {self.activity}"

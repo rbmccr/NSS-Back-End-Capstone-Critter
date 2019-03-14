@@ -1,10 +1,13 @@
 from django.contrib.auth.models import User
 from django import forms
+# models
 from app.models import *
-
+# crispy
 import itertools
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column
+from crispy_forms.layout import Layout, Row, Column, Submit, ButtonHolder
+# tools
+import datetime
 
 class UserForm(forms.ModelForm):
     """
@@ -172,11 +175,52 @@ class EditProfileVolunteerForm(forms.ModelForm):
 
 
 class AnimalForm(forms.ModelForm):
+    """
+        This form class is used for new animal arrivals to the shelter. It includes most fields from the Animal model. Arrival date defaults to the current date.
+    """
+
+    name = forms.CharField(label='Name (16 characters or fewer)')
     description = forms.CharField(widget=forms.Textarea,)
+
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.helper = FormHelper()
+            self.helper.form_tag = False
+            # default arrival date to today
+            self.fields['arrival_date'].initial = datetime.datetime.today()
+            # get staff names instead of emails
+            self.fields['staff'].label_from_instance = lambda obj: "%s" % obj.get_full_name()
+            self.helper.layout = Layout(
+            Row(
+                Column('name', css_class='form-group col-md-4 mb-0'),
+                Column('age', css_class='form-group col-md-4 mb-0'),
+                Column('sex', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+            Row(
+                Column('species', css_class='form-group col-md-4 mb-0'),
+                Column('breed', css_class='form-group col-md-4 mb-0'),
+                Column('color', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+            Row(
+                Column('description', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+            Row(
+                Column('image', css_class='form-group col-md-4 mb-0'),
+                Column('arrival_date', css_class='form-group col-md-4 mb-0'),
+                Column('staff', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+        )
 
     class Meta:
         model = Animal
-        fields = ('name','age','species','breed','color','sex','image','description','date_arrival','staff',)
+        fields = ('name','age','species','breed','color','sex','image','description','arrival_date','staff',)
+        widgets = {
+            'arrival_date': forms.DateInput(attrs={"type": "date"})
+        }
 
 
 class ApplicationForm(forms.ModelForm):
@@ -185,6 +229,7 @@ class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ('text',)
+
 
 class RejectionForm(forms.ModelForm):
     reason = forms.CharField(widget=forms.Textarea(attrs={'rows':5}), label='')
@@ -198,3 +243,39 @@ class RejectionForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ('reason',)
+
+
+class ActivityForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows':10}))
+
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.helper = FormHelper()
+            self.helper.form_tag = False
+            self.helper.layout = Layout(
+            Row(
+                Column('activity', css_class='form-group col-md-6 mb-0'),
+                Column('activity_type', css_class='form-group col-md-3 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+            Row(
+                Column('description', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+            Row(
+                Column('date', css_class='form-group col-md-3 mb-0'),
+                Column('start_time', css_class='form-group col-md-3 mb-0'),
+                Column('end_time', css_class='form-group col-md-3 mb-0'),
+                Column('max_attendance', css_class='form-group col-md-3 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+        )
+
+    class Meta:
+        model = Activity
+        fields = ('activity','description','date','start_time','end_time','max_attendance','activity_type')
+        widgets = {
+            "date": forms.DateInput(attrs={"type": "date"}),
+            "start_time": forms.TimeInput(attrs={"type": "time"}),
+            "end_time": forms.TimeInput(attrs={"type": "time"})
+        }
