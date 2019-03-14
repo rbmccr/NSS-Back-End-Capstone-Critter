@@ -36,41 +36,110 @@
     There are no upcoming volunteering events. Please check back later!
   {% else %}
 
-    <div class='list-group'>
-      {% for activity in activities %}
-        <a href="{% url 'app:volunteering_details' activity.id %}" class="list-group-item list-group-item-action">
-          <div class='media'>
-            <!-- determine thumbnail for volunteering activity with loop through dictionary -->
-            {% for key, value in thumbnails.items %}
-              {% if key == activity.id %}
-                <img class='mr-3' src='{% static value %}' alt='{{ activity.activity_type }}'>
-              {% endif %}
-            {% endfor %}
-            <div class='media-body'>
-              <h5 class='mt-0'>{{ activity.activity }}</h5>
-              Activity type: {{ activity.activity_type }} <br>
-              <!-- assign day of week with the date listing -->
-              {% for key, value in day_of_week.items %}
+    <!-- if user is authenticated, show them what they're signed up for, otherwise show all events without that badge -->
+    {% if user.is_authenticated %}
+
+      <div class='list-group'>
+        {% for activity in activities %}
+          <!-- conditional logic to determine accessibility of detail view for a specific event -->
+          {% if activity.cancelled == True and user.is_staff %}
+          <a href="{% url 'app:volunteering_details' activity.id %}" class="list-group-item list-group-item-action">
+          {% elif activity.cancelled == True %}
+          <div href="#" class="list-group-item text-muted">
+          {% else %}
+          <a href="{% url 'app:volunteering_details' activity.id %}" class="list-group-item list-group-item-action">
+          {% endif %}
+            <div class='media'>
+              <!-- determine thumbnail for volunteering activity with loop through dictionary -->
+              {% for key, value in thumbnails.items %}
                 {% if key == activity.id %}
-                  Date: {{ value }}, {{ activity.date }} <br>
+                  <img class='mr-3' src='{% static value %}' alt='{{ activity.activity_type }}'>
                 {% endif %}
               {% endfor %}
-              <!-- determine if user is signed up for the activity and show it if so -->
-                {% if activity.id in signed_up %}
-                  <span class="badge badge-success" style="margin-top:4px;">You're signed up!</span>
+              <div class='media-body'>
+                <h5 class='mt-0'>{{ activity.activity }}</h5>
+                Activity type: {{ activity.activity_type }} <br>
+                <!-- assign day of week with the date listing -->
+                {% for key, value in day_of_week.items %}
+                  {% if key == activity.id %}
+                    Date: {{ value }}, {{ activity.date }} <br>
+                  {% endif %}
+                {% endfor %}
+                <!-- determine if activity is cancelled. If not, then... -->
+                <!-- determine if user is signed up for the activity and show it if so -->
+                  {% if activity.cancelled == True %}
+                    <span class="badge badge-danger" style="margin-top:4px;">Cancelled</span>
+                  {% else %}
+                    {% if activity.id in signed_up %}
+                      <span class="badge badge-success" style="margin-top:4px;">You're signed up!</span>
+                    {% else %}
+                      <!-- address the number of open volunteering spots -->
+                      {% if activity.spots_remaining <= 0 %}
+                        No volunteer spots remaining
+                      {% else %}
+                        Volunteers still needed: {{ activity.spots_remaining }}
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
+              </div>
+            </div>
+          <!-- match cancelled conditional formatting from above -->
+          {% if activity.cancelled == True %}
+          </div>
+          {% else %}
+          </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+    {% else %}
+
+      <div class='list-group'>
+        {% for activity in activities %}
+          <!-- conditional logic to determine accessibility of detail view for a specific event -->
+          {% if activity.cancelled == True %}
+          <div href="#" class="list-group-item text-muted">
+          {% else %}
+          <a href="{% url 'app:volunteering_details' activity.id %}" class="list-group-item list-group-item-action">
+          {% endif %}
+            <div class='media'>
+              <!-- determine thumbnail for volunteering activity with loop through dictionary -->
+              {% for key, value in thumbnails.items %}
+                {% if key == activity.id %}
+                  <img class='mr-3' src='{% static value %}' alt='{{ activity.activity_type }}'>
+                {% endif %}
+              {% endfor %}
+              <div class='media-body'>
+                <h5 class='mt-0'>{{ activity.activity }}</h5>
+                Activity type: {{ activity.activity_type }} <br>
+                <!-- assign day of week with the date listing -->
+                {% for key, value in day_of_week.items %}
+                  {% if key == activity.id %}
+                    Date: {{ value }}, {{ activity.date }} <br>
+                  {% endif %}
+                {% endfor %}
+                <!-- determine if activity is cancelled. If not, then show how many volunteers still needed -->
+                {% if activity.cancelled == True %}
+                  <span class="badge badge-danger" style="margin-top:4px;">Cancelled</span>
                 {% else %}
-                  <!-- address the number of open volunteering spots -->
                   {% if activity.spots_remaining <= 0 %}
                     No volunteer spots remaining
                   {% else %}
                     Volunteers still needed: {{ activity.spots_remaining }}
                   {% endif %}
                 {% endif %}
+              </div>
             </div>
+          <!-- match cancelled conditional formatting from above -->
+          {% if activity.cancelled == True %}
           </div>
-        </a>
-      {% endfor %}
-    </div>
+          {% else %}
+          </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+    {% endif %}
 
   {% endif %}
 

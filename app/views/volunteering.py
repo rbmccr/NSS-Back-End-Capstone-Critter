@@ -33,9 +33,10 @@ def list_volunteering(request):
         # get day of week for use with date listing
         day = datetime.datetime.strptime(str(activity.date), '%Y-%m-%d').strftime('%a')
         day_of_week[activity.id] = day
-        # identify which events the current user is signed up for
-        if check_if_user_is_signed_up(request.user, activity) == True:
-            signed_up.append(activity.id)
+        # identify which events the current user (if there is one) is signed up for
+        if request.user.is_authenticated:
+            if check_if_user_is_signed_up(request.user, activity) == True:
+                signed_up.append(activity.id)
 
     if request.method == 'GET':
         context = {
@@ -72,11 +73,16 @@ def volunteering_details(request, activity_id):
             for instance in activity_volunteer_instances:
                 volunteer_list.append(instance.volunteer)
 
+        # check if there is a user. if so, find out if they're signed up for the activity to give feedback.
+        user_is_signed_up = None
+        if request.user.is_authenticated:
+            user_is_signed_up = check_if_user_is_signed_up(request.user, activity)
+
         context = {
             'activity': activity,
             'thumbnail_url': thumbnail_url,
             'day_of_week': day_of_week,
-            'user_is_signed_up': check_if_user_is_signed_up(request.user, activity),
+            'user_is_signed_up': user_is_signed_up,
             'volunteers': volunteer_list, # Note that this is actuall a list of CustomUser instances...
             'volunteer_count': len(volunteer_list) if volunteer_list is not None else 0
         }
