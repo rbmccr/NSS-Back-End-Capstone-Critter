@@ -1,3 +1,5 @@
+# authentication
+from django.contrib.admin.views.decorators import staff_member_required
 # HTTP
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -6,11 +8,11 @@ from django.urls import reverse
 # messages
 from django.contrib import messages
 # models
-from app.models import Animal, Application, Species
-# tools
-from django.db.models import Q
-import datetime
-from dateutil.relativedelta import relativedelta
+from app.models import Animal, Application, Species, Breed, Color, CustomUser
+# forms
+from app.forms import AnimalForm
+# util functions
+from app.utils import establish_query
 
 def available_animals(request):
     """
@@ -98,13 +100,15 @@ def available_animals_search(request):
         }
         return render(request, 'app/available_animals.html', context)
 
-def animal_detail(request, id):
+def animal_detail(request, animal_id):
     """
         This view retrieves a single animal from the animal table, checks to ensure the animal is not adopted or id doesn't exist (control for manual user navigation to the url) and renders a detail template (otherwise redirects user with notification of animal status).
+
+        args: animal_id
     """
 
     if request.method == 'GET':
-        animal = Animal.objects.filter(pk=id, date_adopted=None)
+        animal = Animal.objects.filter(pk=animal_id, date_adopted=None)
 
         # A user who manually navigates to an adopted animal's detail view is redirected to the main pets page -- animal[0] won't exist
         try:
@@ -125,63 +129,62 @@ def animal_detail(request, id):
             return render(request, 'app/animal_detail.html', context)
 
         except IndexError:
-            messages.success(request, 'The animal you\'re looking for has been adopted or does not exist.')
+            messages.error(request, 'The animal you\'re looking for has been adopted or does not exist.')
             return HttpResponseRedirect(reverse('app:pets'))
 
-# Helper functions ------------------------------------------------
-# -----------------------------------------------------------------
-# -----------------------------------------------------------------
-
-def establish_query(animal_species, animal_age, search_text):
+@staff_member_required
+def animal_edit(request, animal_id):
     """
-        This function accepts three filter arguments (strings), constructs a query based on conditional logic, and completes the query.
+        This view retrieves a single animal from the animal table, checks to ensure the animal is not adopted or id doesn't exist (control for manual user navigation to the url) and renders a pre-populated animal form for an administrator
 
-        args: animal_species, animal_age, search_text
-
-        returns: complete queryset matching filters
+        args: animal_id
     """
 
-    # special query variables used with 'other' query
-    cat_Q = None
-    dog_Q = None
+    animal = Animal.objects.filter(pk=animal_id, date_adopted=None)
 
-    # animal_species
-    if animal_species is None or animal_species == 'None' or animal_species == '':
-        species_Q = None
-    elif animal_species == 'other':
-        species_Q = None
-        # need individual instances of cat and dog to provide main query below
-        cat_Q = ~Q(species=Species.objects.get(species='cat'))
-        dog_Q = ~Q(species=Species.objects.get(species='dog'))
-    else:
-        species_Q = Q(species=Species.objects.get(species=animal_species))
+    try:
+        animal = animal[0] # check that animal was found in query
 
-    # animal_age
-    two_yrs_ago = datetime.datetime.now() - relativedelta(years=2)
-    eight_yrs_ago = datetime.datetime.now() - relativedelta(years=8)
+        if request.method == 'GET':
 
-    if animal_age is None or animal_age == 'None' or animal_age == '':
-        age_Q = None
-    elif animal_age == 'young':
-        age_Q = Q(age__gte=two_yrs_ago)
-    elif animal_age == 'adult':
-        age_Q = Q(age__gt=eight_yrs_ago, age__lt=two_yrs_ago)
-    else:
-        two_yrs_ago = datetime.datetime.now() - relativedelta(years=2)
-        age_Q = Q(age__lte=eight_yrs_ago)
+            animal_form = AnimalForm(instance=animal)
+            context = {
+                'animal': animal,
+                'animal_form': animal_form,
+                'editing': True
+                }
+            return render(request, 'app/animal_form.html', context)
 
-    # search_text
-    if search_text is None or search_text == 'None' or search_text == '':
-        search_Q = None
-    else:
-        search_Q = Q(name__contains=search_text)
+        if request.method == 'POST':
 
-    # get all with primary key > 0 (used in filter_results to get everything for that filter if the condition is none)
-    _ = Q(pk__gt=0)
-    # get only unadopted animals
-    unadopted = Q(date_adopted=None)
+            animal_form = AnimalForm(data=request.POST, files=request.FILES)
 
-    # filter(species).filter(ignore cat and dog species if 'other' selected).filter(age).filter(name).filter(unadopted animals)
-    filter_results = Animal.objects.filter(species_Q if species_Q is not None else _).filter(cat_Q if cat_Q is not None else _).filter(dog_Q if dog_Q is not None else _).filter(age_Q if age_Q is not None else _).filter(search_Q if search_Q is not None else _).filter(unadopted)
+            if animal_form.is_valid():
+                animal.name = request.POST['name']
+                animal.age = request.POST['age']
+                animal.sex = request.POST['sex']
+                animal.description = request.POST['description']
+                animal.breed = Breed.objects.get(pk=request.POST['breed'])
+                animal.color = Color.objects.get(pk=request.POST['color'])
+                animal.species = Species.objects.get(pk=request.POST['species'])
+                animal.staff = CustomUser.objects.get(pk=request.POST['staff'])
+                animal.arrival_date = request.POST['arrival_date']
+                if 'image' in request.FILES:
+                    animal.image.delete()
+                    animal.image = request.FILES['image']
+                animal.save()
 
-    return filter_results
+                messages.success(request, f'{animal.name} was updated successfully.')
+                return HttpResponseRedirect(reverse('app:animal_detail', args=(animal_id,)))
+
+            else:
+                context = {
+                    'animal': animal,
+                    'animal_form': animal_form,
+                    'editing': True
+                }
+                return render(request, 'app/animal_form.html', context)
+
+    except IndexError:
+            messages.error(request, 'The animal you\'re looking for has been adopted or does not exist.')
+            return HttpResponseRedirect(reverse('app:pets'))

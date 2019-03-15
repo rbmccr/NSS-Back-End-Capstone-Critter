@@ -17,7 +17,12 @@
     <div class='pb-2 mt-4 mb-4 border-bottom'>
         <h3>Admit a New Animal</h3>
     </div>
+    <!-- change action if editing an existing animal -->
+    {% if editing %}
+    <form id="animal_form" method="POST" action="{% url 'app:animal_edit' animal.id %}" enctype="multipart/form-data">
+    {% else %}
     <form id="animal_form" method="POST" action="{% url 'app:new_arrival' %}" enctype="multipart/form-data">
+    {% endif %}
         {% csrf_token %}
         <div class='card mb-3'>
             <div class='card-header'>
@@ -27,7 +32,13 @@
                 {% crispy animal_form %}
             </div>
         </div>
+        <!-- change button if editing an existing animal -->
+        {% if editing %}
+        <input class="btn btn-outline-dark" type="submit" name="submit" value="Update Animal" />
+        <a class="btn btn-outline-dark" href="{% url 'app:animal_detail' animal.id %}">Back to Detail</a>
+        {% else %}
         <input class="btn btn-outline-dark" type="submit" name="submit" value="Admit Animal" />
+        {% endif %}
     </form>
 {% endblock content %}
 

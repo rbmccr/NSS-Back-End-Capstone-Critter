@@ -10,6 +10,17 @@
 {% endblock style %}
 
 {% block content %}
+
+  <div class='messages'>
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
+      {% else %}
+        <div class='{{ message.tags }} alert alert-success' role='alert'>{{ message }}</div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
   <img src='{{ animal.image.url }}' alt='{{ animal.name }}'>
   <div>{{ animal.name }}, {{ animal.age }}, {{ animal.description }}</div>
   {% if existing_application %}
@@ -22,6 +33,7 @@
     <a class='btn btn-dark' href="{% url 'app:adopt' animal.id %}">Apply for adoption</a>
   {% endif %}
   {% if user.is_staff %}
-    <a class='btn btn-primary' href="{% url 'app:list_specific_applications' animal.id %}">View Applications</a>
+    <a class='btn btn-outline-dark' href="{% url 'app:list_specific_applications' animal.id %}">View Applications</a>
+    <a class='btn btn-outline-dark' href="{% url 'app:animal_edit' animal.id %}">Edit Animal</a>
   {% endif %}
 {% endblock content %}

@@ -3,6 +3,11 @@
 {% block style %}
   <style>
 
+    /* always show scroll bar so page isn't jumpy with small number of results (i.e. when scroll bar would disappear) */
+    body {
+      overflow-y: scroll;
+    }
+
     /* align cards in grid */
     .card-container {
       display: grid;

@@ -17,10 +17,8 @@ def new_arrival(request):
 
     if request.method == 'GET':
         animal_form = AnimalForm()
-        context = {
-            'animal_form': animal_form
-        }
-        return render(request, 'app/new_arrival.html', context)
+        context = {'animal_form': animal_form}
+        return render(request, 'app/animal_form.html', context)
 
     if request.method == 'POST':
         form = AnimalForm(request.POST, request.FILES)

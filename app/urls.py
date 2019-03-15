@@ -21,8 +21,10 @@ urlpatterns = [
     path("pets", views.available_animals, name='pets'),
     # ex. /pets/search
     path("pets/search", views.available_animals_search, name='search_pets'),
+    # ex. /pets/edit/1
+    path("pets/edit/<int:animal_id>", views.animal_edit, name='animal_edit'),
     # ex. /pets/details/1
-    path("pets/details/<int:id>", views.animal_detail, name='animal_detail'),
+    path("pets/details/<int:animal_id>", views.animal_detail, name='animal_detail'),
     # ex. /new_arrival
     path("new_arrival", views.new_arrival, name='new_arrival'),
     # ex. /pets/adopt/1

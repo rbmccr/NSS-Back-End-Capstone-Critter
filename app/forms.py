@@ -179,7 +179,6 @@ class AnimalForm(forms.ModelForm):
         This form class is used for new animal arrivals to the shelter. It includes most fields from the Animal model. Arrival date defaults to the current date.
     """
 
-    name = forms.CharField(label='Name (16 characters or fewer)')
     description = forms.CharField(widget=forms.Textarea,)
 
     def __init__(self, *args, **kwargs):
@@ -223,6 +222,7 @@ class AnimalForm(forms.ModelForm):
             'age': forms.DateInput(attrs={"type": "date"})
         }
         labels = {
+            'name': 'Name (16 characters or fewer)',
             'age': 'Est. birthday'
         }
 

@@ -152,7 +152,7 @@ class Animal(models.Model):
         ('F', 'Female'),
     )
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
-    image = models.ImageField(upload_to='media/', default="media/placeholder.jpg")
+    image = models.ImageField(upload_to='media/', default="media/placeholder.jpg", blank=True)
     description = models.CharField(max_length=500)
     arrival_date = models.DateTimeField(default=None, null=True, blank=False)
     date_adopted = models.DateTimeField(default=None, null=True, blank=True)
