@@ -29,11 +29,13 @@
   </div>
 
   <!-- buttons for use by administrator -->
-  {% if user.is_staff %}
-    <a href="{% url 'app:edit_volunteering' activity.id %}" class='btn btn-outline-dark btn-sm'>Edit Activity</a>
-    <a href="{% url 'app:cancel_volunteering' activity.id %}" class='btn btn-outline-danger btn-sm'>Cancel Activity</a>
-    <br>
-    <br>
+  {% if activity.cancelled == None %}
+    {% if user.is_staff %}
+      <a href="{% url 'app:edit_volunteering' activity.id %}" class='btn btn-outline-dark btn-sm'>Edit Activity</a>
+      <a href="{% url 'app:cancel_volunteering' activity.id %}" class='btn btn-outline-danger btn-sm'>Cancel Activity</a>
+      <br>
+      <br>
+    {% endif %}
   {% endif %}
 
   <!-- some details about event, displayed at top of page below header -->
@@ -96,7 +98,7 @@
   <!-- ------------------------- administrator controls below this line ------------------------- -->
   {% if user.is_staff %}
     <div class='pb-2 mt-4 mb-3 border-bottom'>
-      <h3>Administrator Tools</h3>
+      <h3>Registered Volunteers</h3>
     </div>
 
     <!-- conditional formatting for total people signed up -->

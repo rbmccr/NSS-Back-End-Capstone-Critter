@@ -113,8 +113,7 @@
 
     <div class='card-body'>
 
-        <form class='filters ml-lg-auto my-2 my-lg-0' action="{% url 'app:search_pets' %}" method='POST'>
-          {% csrf_token %}
+        <form class='filters ml-lg-auto my-2 my-lg-0' action="{% url 'app:search_pets' %}" method='GET'>
           <input type='hidden' value='{{ animal_species }}' name='animal_species'>
           <input type='hidden' value='{{ animal_age }}' name='animal_age'>
           <div class=''>
