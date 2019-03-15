@@ -1,102 +1,9 @@
 {% extends 'app/index.html' %}
+{% load static %}
+{% load upto %}
 
 {% block style %}
-  <style>
-
-    /* always show scroll bar so page isn't jumpy with small number of results (i.e. when scroll bar would disappear) */
-    body {
-      overflow-y: scroll;
-    }
-
-    /* align cards in grid */
-    .card-container {
-      display: grid;
-      grid-template-columns: 27.93% 27.93% 27.93%; /* 310px card / 1110px container */
-      justify-content: space-evenly;
-    }
-
-    /* control max height of card body below image */
-    .card-body {
-      max-height: 130px;
-    }
-
-    /* override bootstrap card-text margin */
-    .card-text {
-      margin-bottom: 6px;
-    }
-
-    /* establish dimension of cards outside of media queries */
-    .card {
-      width: 310px;
-      height: 435px; /* was 450px */
-      margin-bottom: 15px;
-      position: relative;
-    }
-
-    /* position links to animal detail pages */
-    .card > a {
-      width: 33%;
-      position: absolute;
-      bottom: 17%; /* was 2.5% */
-      right: 5%; /* was 33% */
-    }
-
-    .card > img {
-      width: 310px;
-      height: 310px;
-    }
-
-    /* align filters in each column in form */
-    .filters {
-      display: grid;
-      grid-template-columns: auto auto auto;
-      justify-content: space-around;
-    }
-
-    /* used to center animal cards in body if window between 1200px and 992px */
-    @media only screen and (max-width: 1200px) and (min-width:992px) {
-      .card-container {
-        grid-template-columns: 32.25% 32.25% 32.25%; /* 300px card / 960px container */
-      }
-
-      .card {
-        width: 300px;
-        height: 420px;
-      }
-      .card > img {
-        width: 300px;
-        height: 300px;
-      }
-    }
-
-    /* used to center animal cards in body if window between 992px and 768px */
-    @media only screen and (max-width: 992px) and (min-width:768px) {
-      .card-container {
-        grid-template-columns: auto auto;
-      }
-    }
-
-    /* used to center animal cards in body if window smaller than 768px */
-    @media only screen and (max-width: 768px) {
-      .card-container {
-        display: grid;
-        grid-template-columns: auto;
-        justify-content: center;
-      }
-    }
-
-    /* used to scale animal cards in body if window smaller than 360px (used for iphone5 width of 320px) */
-    @media only screen and (max-width: 360px) {
-      .card {
-        width: 280px;
-      }
-      .card > img {
-        width: 280px;
-        height: 280px;
-      }
-    }
-
-  </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/available_animals.css' %}">
 {% endblock style %}
 
 {% block content %}
@@ -106,10 +13,13 @@
 
   <div class='messages'>
     {% for message in messages %}
-      <div class='{{ message.tags }} alert alert-info' role='alert'>{{ message }}</div>
+      {% if message.tags == 'error' %}
+        <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
+      {% else %}
+        <div class='{{ message.tags }} alert alert-success' role='alert'>{{ message }}</div>
+      {% endif %}
     {% endfor %}
   </div>
-
 
   <div class='card mb-3' style='width: 100%; height: auto;'>
     <div class='card-header'>
@@ -194,7 +104,7 @@
         <div class='card-body'>
           <h5 class='card-title'>{{ animal.name }}</h5>
           <p class='card-text'>{{ animal.breed }}</p>
-          <p class='card-text'>Age: {{ animal.age|timesince }}</p>
+          <p class='card-text'>{{ animal.age|timesince|upto:',' }} old</p>
         </div>
       </div>
     {% endfor %}
