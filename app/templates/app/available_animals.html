@@ -189,7 +189,7 @@
         <div class='card-body'>
           <h5 class='card-title'>{{ animal.name }}</h5>
           <p class='card-text'>{{ animal.breed }}</p>
-          <p class='card-text'>Age: {{ animal.age }}</p>
+          <p class='card-text'>Age: {{ animal.age|timesince }}</p>
         </div>
       </div>
     {% endfor %}

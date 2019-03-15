@@ -219,7 +219,11 @@ class AnimalForm(forms.ModelForm):
         model = Animal
         fields = ('name','age','species','breed','color','sex','image','description','arrival_date','staff',)
         widgets = {
-            'arrival_date': forms.DateInput(attrs={"type": "date"})
+            'arrival_date': forms.DateInput(attrs={"type": "date"}),
+            'age': forms.DateInput(attrs={"type": "date"})
+        }
+        labels = {
+            'age': 'Est. birthday'
         }
 
 

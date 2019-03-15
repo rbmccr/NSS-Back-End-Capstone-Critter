@@ -143,7 +143,7 @@ class Animal(models.Model):
 
     name = models.CharField(max_length=16)
     # you never know if you're going to adopt out a sea turtle...
-    age = models.PositiveIntegerField(validators=[MaxValueValidator(200)])
+    age = models.DateField(default=None, null=True, blank=False)
     species = models.ForeignKey(Species, on_delete=models.PROTECT)
     breed = models.ForeignKey(Breed, on_delete=models.PROTECT)
     color = models.ForeignKey(Color, on_delete=models.PROTECT)
