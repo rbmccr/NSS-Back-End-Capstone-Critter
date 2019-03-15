@@ -61,9 +61,7 @@
         {% comment %} Links on left side of navbar {% endcomment %}
         <ul class="navbar-nav mr-lg-auto">
           <li class="nav-item"><a class="nav-link" href="{% url 'app:pets' %}">Available Pets</a></li>
-          {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'app:list_volunteering' %}">Volunteering</a></li>
-          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'app:list_volunteering' %}">Volunteering</a></li>
           {% if user.is_staff %}
             <li class="nav-item"><a class="nav-link" href="{% url 'app:new_arrival' %}">New Arrival</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'app:list_applications' %}">Adoptions</a></li>

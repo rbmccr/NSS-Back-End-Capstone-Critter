@@ -57,7 +57,7 @@ def change_password(request):
         except ValidationError:
             # return to form with form instance and message
             context = {'new_password_form': new_password_form}
-            messages.error(request, "Password change failed. Please try again.")
+            messages.error(request, "Password change failed. New password too simple.")
             return render(request, 'app/change_password.html', context)
 
         # verify requesting user's email and old_password match
@@ -73,7 +73,7 @@ def change_password(request):
             # re-authenticate with new password
             authenticated_user = authenticate(email=user.email, password=request.POST['password'])
             login(request=request, user=authenticated_user)
-            
+
             # return to user profile with success message after logging user in with new credentials
             messages.success(request, "Password changed successfully!")
             return HttpResponseRedirect(request.POST.get('next', '/profile'))
@@ -81,7 +81,7 @@ def change_password(request):
         else:
             # return to form with form instance and message
             context = {'new_password_form': new_password_form}
-            messages.error(request, "Password change failed. Please try again.")
+            messages.error(request, "Password change failed. Old password incorrect or new passwords don't match")
             return render(request, 'app/change_password.html', context)
 
 @login_required

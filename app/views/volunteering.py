@@ -17,7 +17,7 @@ import datetime
 
 def list_volunteering(request):
     """
-        This view function loads a list of all --> upcoming <-- volunteering activities and provides a static file path to the template to render an appropirate thumbnail.
+        This view function loads a list of all --> upcoming <-- volunteering activities (including cancelled activites) and provides a static file path to the template to render an appropirate thumbnail.
     """
 
     now = datetime.datetime.now()
@@ -33,9 +33,10 @@ def list_volunteering(request):
         # get day of week for use with date listing
         day = datetime.datetime.strptime(str(activity.date), '%Y-%m-%d').strftime('%a')
         day_of_week[activity.id] = day
-        # identify which events the current user is signed up for
-        if check_if_user_is_signed_up(request.user, activity) == True:
-            signed_up.append(activity.id)
+        # identify which events the current user (if there is one) is signed up for
+        if request.user.is_authenticated:
+            if check_if_user_is_signed_up(request.user, activity) == True:
+                signed_up.append(activity.id)
 
     if request.method == 'GET':
         context = {
@@ -72,11 +73,16 @@ def volunteering_details(request, activity_id):
             for instance in activity_volunteer_instances:
                 volunteer_list.append(instance.volunteer)
 
+        # check if there is a user. if so, find out if they're signed up for the activity to give feedback.
+        user_is_signed_up = None
+        if request.user.is_authenticated:
+            user_is_signed_up = check_if_user_is_signed_up(request.user, activity)
+
         context = {
             'activity': activity,
             'thumbnail_url': thumbnail_url,
             'day_of_week': day_of_week,
-            'user_is_signed_up': check_if_user_is_signed_up(request.user, activity),
+            'user_is_signed_up': user_is_signed_up,
             'volunteers': volunteer_list, # Note that this is actuall a list of CustomUser instances...
             'volunteer_count': len(volunteer_list) if volunteer_list is not None else 0
         }
@@ -184,16 +190,17 @@ def edit_volunteering(request, activity_id):
 @login_required
 def volunteering_signup(request, activity_id):
     """
-        This view function checks to ensure the desired volunteering event exists --> AND <-- is upcoming (otherwise it redirects user), then signs up a user instantly for the volunteering event.
+        This view function checks to ensure the desired volunteering event exists, is not cancelled, and is upcoming (otherwise it redirects user), then signs up a user instantly for the volunteering event.
     """
 
     now = datetime.datetime.now()
-    activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now)
+    activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now).filter(cancelled=None)
 
     try:
         activity = activity[0]
 
         if request.method == 'GET':
+
             # if user is not signed up, then sign them up.
             if check_if_user_is_signed_up(request.user, activity) == False:
                 join_table = ActivityVolunteer()
@@ -224,8 +231,46 @@ def volunteering_signup(request, activity_id):
                 return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
 
     except IndexError:
-        messages.error(request, 'The volunteering activity you\'re trying to sign up for does not exist, is full, or already took place.')
+        messages.error(request, 'The volunteering activity you\'re trying to access does not exist, is full, already took place, or was cancelled!')
         return HttpResponseRedirect(reverse('app:list_volunteering'))
+
+@staff_member_required
+def cancel_volunteering(request, activity_id):
+    """
+        This view function checks to ensure the desired volunteering event exists, is not cancelled, and is upcoming (otherwise it redirects user), then allows an administrator to cancel the activity entirely, which prevents a user from accessing the detail view (preventing sign up is done in the volunteering_signup view).
+    """
+
+    now = datetime.datetime.now()
+    activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now).filter(cancelled=None)
+
+    try:
+        activity = activity[0]
+
+        if request.method == 'GET':
+            # identify which thumbnail to pass into template (function requires an iterable arg)
+            activity_list = [activity]
+            thumbnail = determine_thumbnail(activity_list)
+            thumbnail_url = thumbnail[activity_id]
+
+            # get day of week for use with date listing
+            day_of_week = datetime.datetime.strptime(str(activity.date), '%Y-%m-%d').strftime('%a')
+
+            context = {
+                'activity': activity,
+                'day_of_week': day_of_week,
+                'thumbnail_url': thumbnail_url,
+            }
+            return render(request, 'app/cancel_volunteering.html', context)
+
+        if request.method == 'POST':
+            activity.cancelled = True
+            activity.save()
+            return HttpResponseRedirect(reverse('app:list_volunteering'))
+
+    except IndexError:
+        messages.error(request, 'The volunteering activity you\'re trying to cancel does not exist, already took place, or was already cancelled.')
+        return HttpResponseRedirect(reverse('app:list_volunteering'))
+
 
 # Helper functions ------------------------------------------------
 # -----------------------------------------------------------------

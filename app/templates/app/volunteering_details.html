@@ -29,11 +29,13 @@
   </div>
 
   <!-- buttons for use by administrator -->
-  {% if user.is_staff %}
-    <a href="{% url 'app:edit_volunteering' activity.id %}" class='btn btn-outline-dark btn-sm'>Edit Activity</a>
-    <a href="{% url 'app:index' %}" class='btn btn-outline-danger btn-sm'>Cancel Activity</a>
-    <br>
-    <br>
+  {% if activity.cancelled == None %}
+    {% if user.is_staff %}
+      <a href="{% url 'app:edit_volunteering' activity.id %}" class='btn btn-outline-dark btn-sm'>Edit Activity</a>
+      <a href="{% url 'app:cancel_volunteering' activity.id %}" class='btn btn-outline-danger btn-sm'>Cancel Activity</a>
+      <br>
+      <br>
+    {% endif %}
   {% endif %}
 
   <!-- some details about event, displayed at top of page below header -->
@@ -45,8 +47,10 @@
             <h5 class='mt-0'>{{ activity.activity }}</h5>
             Date: {{ day_of_week }}, {{ activity.date }} <br>
             Time: {{ activity.start_time }} to {{ activity.end_time }}
-            {% if user_is_signed_up %} <br>
-              <span class="badge badge-success" style="margin-top:4px;">You're signed up!</span>
+            {% if activity.cancelled == True %}
+              <br> <span class="badge badge-danger" style="margin-top:4px;">Cancelled</span>
+            {% elif user_is_signed_up %}
+              <br> <span class="badge badge-success" style="margin-top:4px;">You're signed up!</span>
             {% endif %}
           </div>
         </div>
@@ -64,10 +68,12 @@
       <p class="card-text">Lead staff member: {{ activity.staff.first_name }} {{ activity.staff.last_name }}</p>
       <p class="card-text">{{ activity.description }}</p>
       <!-- show FULL if there are no volunteer spots remaining (used <= to avoid errors) -->
-      {% if activity.spots_remaining <= 0 %}
-      <p class="card-text"><strong>This activity has no volunteer spots remaining!</strong></p>
-      {% else %}
-      <p class="card-text"><strong>Volunteer still needed: {{ activity.spots_remaining }}</strong></p>
+      {% if activity.cancelled == None %}
+        {% if activity.spots_remaining <= 0 %}
+        <p class="card-text"><strong>This activity has no volunteer spots remaining!</strong></p>
+        {% else %}
+        <p class="card-text"><strong>Volunteers still needed: {{ activity.spots_remaining }}</strong></p>
+        {% endif %}
       {% endif %}
     </div>
   </div>
@@ -75,15 +81,15 @@
   <br>
 
   <!-- define which buttons are displayed to the user, depending on whether they're signed up or not -->
-  {% if user_is_signed_up %}
+  {% if user_is_signed_up and activity.cancelled == None %}
     <form id="cancel_signup" method="post" action="{% url 'app:volunteering_signup' activity.id %}">
       {% csrf_token %}
       <button type='submit' class='btn btn-outline-danger'>Cancel Reservation</button>
       <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark'>Back to List</a>
     </form>
   {% else %}
-    <!-- disabled sign up button if there are no spots remaining -->
-    {% if activity.spots_remaining > 0 %}
+    <!-- remove sign up button if there are no spots remaining OR activity is cancelled -->
+    {% if activity.spots_remaining > 0 and activity.cancelled == None %}
     <a href="{% url 'app:volunteering_signup' activity.id %}" class="btn btn-outline-dark">One-click Signup!</a>
     {% endif %}
     <a href="{% url 'app:list_volunteering' %}" class='btn btn-outline-dark'>Back to List</a>
@@ -92,7 +98,7 @@
   <!-- ------------------------- administrator controls below this line ------------------------- -->
   {% if user.is_staff %}
     <div class='pb-2 mt-4 mb-3 border-bottom'>
-      <h3>Administrator Tools</h3>
+      <h3>Registered Volunteers</h3>
     </div>
 
     <!-- conditional formatting for total people signed up -->

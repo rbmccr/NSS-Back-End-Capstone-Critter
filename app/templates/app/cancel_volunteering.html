@@ -1,0 +1,55 @@
+{% extends 'app/index.html' %}
+{% load static %}
+
+  {% block style %}
+    <style>
+      /* hide ugly validation error block that appears when passwords don't match */
+      img {
+        width: 100px;
+        height: 100px;
+      }
+    </style>
+  {% endblock style %}
+
+{% block content %}
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+      <h3>Cancel Volunteering Activity</h3>
+  </div>
+
+  <div class='messages'>
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
+      {% else %}
+        <div class='{{ message.tags }} alert alert-success' role='alert'>{{ message }}</div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class='list-group'>
+    <div class="list-group-item">
+      <div class='media'>
+        <img class='mr-3' src='{% static thumbnail_url %}' alt='{{ activity.activity_type }}'>
+        <div class='media-body'>
+          <h5 class='mt-0'>{{ activity.activity }}</h5>
+          Date: {{ day_of_week }}, {{ activity.date }} <br>
+          Time: {{ activity.start_time }} to {{ activity.end_time }}
+          {% if user_is_signed_up %} <br>
+            <span class="badge badge-success" style="margin-top:4px;">You're signed up!</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <p>Please confirm that you would like to cancel {{ activity.activity }}. <strong>This action cannot be undone.</strong></p>
+
+  <form id='password_form' method='post' action="{% url 'app:cancel_volunteering' activity.id %}" enctype='multipart/form-data'>
+    {% csrf_token %}
+    <input class='btn btn-outline-danger' type='submit' name='submit' value='Cancel Activity' />
+    <a class='btn btn-outline-dark' href="{% url 'app:volunteering_details' activity.id %}">Nevermind</a>
+  </form>
+
+{% endblock content %}
