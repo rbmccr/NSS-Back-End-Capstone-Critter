@@ -58,6 +58,10 @@
         // hide the default file upload button and text
         $('#div_id_image').find('div').find('input').hide()
 
+        {% if editing %}
+        $('#div_id_image').find('div').find('label').hide()
+        {% endif %}
+
         // make an element to hold the file name's text and append it to the page
         div = document.createElement('div')
         div.id = 'file_name_text'

@@ -108,7 +108,7 @@ class Species(models.Model):
     species = models.CharField(max_length=75)
 
     def __str__(self):
-        return f"Species: {self.species}"
+        return f"{self.species}"
 
 
 class Breed(models.Model):
@@ -120,7 +120,7 @@ class Breed(models.Model):
     breed = models.CharField(max_length=75)
 
     def __str__(self):
-        return f"Breed: {self.breed}"
+        return f"{self.breed}"
 
 
 class Color(models.Model):
@@ -132,7 +132,7 @@ class Color(models.Model):
     color = models.CharField(max_length=40)
 
     def __str__(self):
-        return f"Color: {self.color}"
+        return f"{self.color}"
 
 
 class Animal(models.Model):
