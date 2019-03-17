@@ -24,7 +24,7 @@ def list_animals(request):
     if request.method == 'GET':
 
         # TODO: Handle a view with no animals in shelter
-        unadopted_animals = Animal.objects.filter(date_adopted=None)
+        unadopted_animals = Animal.objects.filter(date_adopted=None).order_by('name')
         num_pending_applications = dict()
 
         for animal in unadopted_animals:

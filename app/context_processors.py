@@ -11,5 +11,3 @@ def pending_app_count(request):
                 count += 1
 
         return {'pending_app_count': count}
-
-
