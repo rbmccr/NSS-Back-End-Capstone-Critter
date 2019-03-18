@@ -171,47 +171,42 @@ def volunteering_signup(request, activity_id):
     """
         This view function checks to ensure the desired volunteering event exists, is not cancelled, and is upcoming (otherwise it redirects user), then signs up a user instantly for the volunteering event.
     """
-    # TODO: new helper view function in utils that checks cancelled filter
-    now = datetime.datetime.now()
-    activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now).filter(cancelled=None)
 
-    try:
-        activity = activity[0]
+    activity = check_for_existing_volunteering_activity(activity_id)
 
-        if request.method == 'GET':
-
-            # if user is not signed up, then sign them up.
-            if check_if_user_is_signed_up(request.user, activity) == False:
-                join_table = ActivityVolunteer()
-                join_table.activity = activity
-                join_table.volunteer = request.user
-                join_table.save()
-
-                messages.success(request, f'Thanks for signing up to volunteer with us! We\'ll see you at {activity.activity}!')
-                return HttpResponseRedirect(reverse('app:list_volunteering'))
-
-            # if user is already signed up, give them a reminder message
-            else:
-                messages.success(request, 'You\'ve already signed up for this activity. Thank you!')
-                return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
-
-        if request.method == 'POST':
-            # if user is signed up, then delete join table.
-            if check_if_user_is_signed_up(request.user, activity) == True:
-                join_table = ActivityVolunteer.objects.get(activity=activity, volunteer=request.user)
-                join_table.delete()
-
-                messages.error(request, f'Sorry you can\'t make it to {activity.activity}! We hope you\'ll volunteer with us again soon!')
-                return HttpResponseRedirect(reverse('app:list_volunteering'))
-
-            # if user is not already signed up, give them an error message
-            else:
-                messages.success(request, 'You aren\'t signed up for this activity.')
-                return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
-
-    except IndexError:
+    if activity is None or activity.cancelled is True:
         messages.error(request, 'The volunteering activity you\'re trying to access does not exist, is full, already took place, or was cancelled!')
         return HttpResponseRedirect(reverse('app:list_volunteering'))
+
+    if request.method == 'GET':
+        # if user is not signed up, then sign them up.
+        if check_if_user_is_signed_up(request.user, activity) == False:
+            join_table = ActivityVolunteer()
+            join_table.activity = activity
+            join_table.volunteer = request.user
+            join_table.save()
+
+            messages.success(request, f'Thanks for signing up to volunteer with us! We\'ll see you at {activity.activity}!')
+            return HttpResponseRedirect(reverse('app:list_volunteering'))
+
+        # if user is already signed up, give them a reminder message
+        else:
+            messages.success(request, 'You\'ve already signed up for this activity. Thank you!')
+            return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
+
+    if request.method == 'POST':
+        # if user is signed up, then delete join table.
+        if check_if_user_is_signed_up(request.user, activity) == True:
+            join_table = ActivityVolunteer.objects.get(activity=activity, volunteer=request.user)
+            join_table.delete()
+
+            messages.error(request, f'Sorry you can\'t make it to {activity.activity}! We hope you\'ll volunteer with us again soon!')
+            return HttpResponseRedirect(reverse('app:list_volunteering'))
+
+        # if user is not already signed up, give them an error message
+        else:
+            messages.error(request, 'You aren\'t signed up for this activity.')
+            return HttpResponseRedirect(reverse('app:volunteering_details', args=(activity_id,)))
 
 @staff_member_required
 def cancel_volunteering(request, activity_id):
@@ -219,33 +214,30 @@ def cancel_volunteering(request, activity_id):
         This view function checks to ensure the desired volunteering event exists, is not cancelled, and is upcoming (otherwise it redirects user), then allows an administrator to cancel the activity entirely, which prevents a user from accessing the detail view (preventing sign up is done in the volunteering_signup view).
     """
 
-    now = datetime.datetime.now()
-    activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now).filter(cancelled=None)
+    activity = check_for_existing_volunteering_activity(activity_id)
 
-    try:
-        activity = activity[0]
-
-        if request.method == 'GET':
-            # identify which thumbnail to pass into template (function requires an iterable arg)
-            activity_list = [activity]
-            thumbnail = determine_thumbnail(activity_list)
-            thumbnail_url = thumbnail[activity_id]
-
-            # get day of week for use with date listing
-            day_of_week = datetime.datetime.strptime(str(activity.date), '%Y-%m-%d').strftime('%a')
-
-            context = {
-                'activity': activity,
-                'day_of_week': day_of_week,
-                'thumbnail_url': thumbnail_url,
-            }
-            return render(request, 'app/cancel_volunteering.html', context)
-
-        if request.method == 'POST':
-            activity.cancelled = True
-            activity.save()
-            return HttpResponseRedirect(reverse('app:list_volunteering'))
-
-    except IndexError:
+    if activity is None or activity.cancelled is True:
         messages.error(request, 'The volunteering activity you\'re trying to cancel does not exist, already took place, or was already cancelled.')
+        return HttpResponseRedirect(reverse('app:list_volunteering'))
+
+    if request.method == 'GET':
+        # identify which thumbnail to pass into template (function requires an iterable arg)
+        activity_list = [activity]
+        thumbnail = determine_thumbnail(activity_list)
+        thumbnail_url = thumbnail[activity_id]
+
+        # get day of week for use with date listing
+        day_of_week = datetime.datetime.strptime(str(activity.date), '%Y-%m-%d').strftime('%a')
+
+        context = {
+            'activity': activity,
+            'day_of_week': day_of_week,
+            'thumbnail_url': thumbnail_url,
+        }
+        return render(request, 'app/cancel_volunteering.html', context)
+
+    if request.method == 'POST':
+        activity.cancelled = True
+        activity.save()
+        messages.success(request, f'You successfully cancelled {activity.activity}.')
         return HttpResponseRedirect(reverse('app:list_volunteering'))

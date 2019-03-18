@@ -22,7 +22,7 @@
         <img class='mr-3' src='{{ animal.image.url }}' alt='{{ animal.name }}'>
         <div class='media-body'>
           <h5 class='mt-0'>{{ animal.name }}</h5>
-            {{ animal.breed }} <br>
+            {{ animal.breed|capfirst }} <br>
             Age: {{ animal.age|timesince|upto:',' }} old <br>
         </div>
       </div>

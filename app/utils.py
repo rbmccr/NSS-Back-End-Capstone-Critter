@@ -140,7 +140,7 @@ def check_for_existing_adoption_application(application_id):
 
 def check_for_existing_volunteering_activity(activity_id):
     """
-        This helper function searches the Activity table for a volunteering activity with a specific id that is upcoming, then performs a try/except (IndexError)
+        This helper function searches the Activity table for an UPCOMING volunteering activity with a specific id, then performs a try/except (IndexError)
 
         args: activity_id
 
