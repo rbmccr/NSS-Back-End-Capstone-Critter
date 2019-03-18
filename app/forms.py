@@ -230,6 +230,17 @@ class AnimalForm(forms.ModelForm):
 class ApplicationForm(forms.ModelForm):
     text = forms.CharField(widget=forms.Textarea, label='',)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Row(
+                Column('text', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row mb-n2'
+            ),
+        )
+
     class Meta:
         model = Application
         fields = ('text',)

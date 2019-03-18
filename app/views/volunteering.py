@@ -14,6 +14,7 @@ from app.forms import ActivityForm
 from django.contrib import messages
 # tools
 import datetime
+from app.utils import determine_thumbnail, check_if_user_is_signed_up
 
 def list_volunteering(request):
     """
@@ -138,7 +139,7 @@ def edit_volunteering(request, activity_id):
         activity = activity[0]
 
         if request.method == 'GET':
-
+            # TODO: instance
             activity_data = {
                 'activity': activity.activity,
                 'date': activity.date,
@@ -270,46 +271,3 @@ def cancel_volunteering(request, activity_id):
     except IndexError:
         messages.error(request, 'The volunteering activity you\'re trying to cancel does not exist, already took place, or was already cancelled.')
         return HttpResponseRedirect(reverse('app:list_volunteering'))
-
-
-# Helper functions ------------------------------------------------
-# -----------------------------------------------------------------
-# -----------------------------------------------------------------
-
-def determine_thumbnail(list_or_queryset):
-    """
-        This helper function is used with list_volunteering and volunteering_details to determine the proper thumbnail (a static file path) for each volunteering activity. Requires an iterable arg (list, queryset, etc.)
-
-        Returns: dictionary in this format --> {'activity.id': 'static file path url'}
-    """
-
-    thumbnails = dict()
-
-    for activity in list_or_queryset:
-        if activity.activity_type == 'cats':
-            path = 'thumbnails/cat.png'
-        elif activity.activity_type == 'dogs':
-            path = 'thumbnails/dog.png'
-        elif activity.activity_type == 'other':
-            path = 'thumbnails/other.png'
-        elif activity.activity_type == 'multi':
-            path = 'thumbnails/multi.png'
-        else:
-            path = 'thumbnails/general.png'
-        thumbnails[activity.id] = path
-
-    return thumbnails
-
-def check_if_user_is_signed_up(current_user, activity):
-    """
-        This helper function accepts instances of 1. the current user and 2. the volunteering activity and looks for a join table connecting the two instances.
-
-        Returns: If there is no such table, the function returns False (bool), else True (bool)
-    """
-
-    is_user_signed_up_yet = ActivityVolunteer.objects.filter(activity=activity).filter(volunteer=current_user)
-
-    if len(is_user_signed_up_yet) > 0:
-        return True
-    else:
-        return False

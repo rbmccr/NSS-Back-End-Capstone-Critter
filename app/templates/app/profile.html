@@ -39,7 +39,11 @@
 
   <div class='messages'>
     {% for message in messages %}
-      <div class='{{ message.tags }} alert alert-info' role='alert'>{{ message }}</div>
+      {% if message.tags == 'error' %}
+        <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
+      {% else %}
+        <div class='{{ message.tags }} alert alert-success' role='alert'>{{ message }}</div>
+      {% endif %}
     {% endfor %}
   </div>
 
@@ -88,6 +92,7 @@
           <div class='media-body'>
             <h5 class='mt-0'>{{ application.animal.name }}</h5>
             {{ application.animal.breed }} <br>
+            Applied: {{ application.date_submitted|date:"M d, Y" }} <br>
             {% if application.approved == True %}
               <span class="badge badge-success">Approved</span> <br>
             {% elif application.approved == False %}

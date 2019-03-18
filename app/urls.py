@@ -28,7 +28,7 @@ urlpatterns = [
     # ex. /new_arrival
     path("new_arrival", views.new_arrival, name='new_arrival'),
     # ex. /pets/adopt/1
-    path("pets/adopt/<int:id>", views.adoption_app, name='adopt'),
+    path("pets/adopt/<int:animal_id>", views.adoption_app, name='adopt'),
     # ex. /adoptions/all
     path("adoptions/all", views.list_animals, name='list_applications'),
     # ex. /adoptions/1

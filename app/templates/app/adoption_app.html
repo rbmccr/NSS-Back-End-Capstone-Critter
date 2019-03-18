@@ -1,4 +1,6 @@
 {% extends 'app/index.html' %}
+{% load crispy_forms_tags %}
+{% load upto %}
 
 {% block style %}
   <style>
@@ -13,6 +15,7 @@
   <div class='pb-2 mt-4 mb-4 border-bottom'>
     <h3>Adoption Application</h3>
   </div>
+
   <ul class='list-group'>
     <li class='list-group-item'>
       <div class='media'>
@@ -20,15 +23,31 @@
         <div class='media-body'>
           <h5 class='mt-0'>{{ animal.name }}</h5>
             {{ animal.breed }} <br>
-            Age: {{ animal.age }} <br>
+            Age: {{ animal.age|timesince|upto:',' }} <br>
         </div>
       </div>
     </li>
   </ul>
-  <div>Please provide us with an explanation (up to 1,000 characters) that describes why you are a suitable candidate for adoption. Your user information is submitted automatically with this application. A staff member will contact you if your application is accepted. You can view the status of any of your adoption application(s) by visiting the link in the navigation bar, titled 'My Applications'.</div>
+
+  <br>
+
   <form id="adoption_form" method="POST" action="{% url 'app:adopt' animal.id %}">
-      {% csrf_token %}
-      {{ app_form.as_p }}
-      <input class="btn btn-dark" type="submit" name="submit" value="Submit Application" />
+    {% csrf_token %}
+    <div class='card mb-3'>
+      <div class='card-header'>
+        Please Complete this Form
+      </div>
+      <div class='card-body' style='padding-top: 18px; padding-bottom: 10px;'>
+        <ul class="list-group">
+          <li class="list-group-item">Please provide us with an explanation (up to 1,000 characters) that describes why you are a suitable candidate for adoption. Your contact information is submitted automatically. A staff member will contact you if your application is accepted. You can view the status of any of your adoption application(s) by visiting the link in the navigation bar, titled 'Profile and Applications'. Applications are reviewed in date order.</li>
+        </ul>
+
+        <br>
+
+        {% crispy app_form %}
+      </div>
+    </div>
+    <input class="btn btn-outline-dark" type="submit" name="submit" value="Submit Application" />
   </form>
+
 {% endblock content %}
