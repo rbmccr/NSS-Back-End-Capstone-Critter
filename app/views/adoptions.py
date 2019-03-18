@@ -20,59 +20,61 @@ from app.utils import check_for_unadopted_animal, check_for_existing_adoption_ap
 def list_animals(request):
     """
         This function gets all unadopted animals that have pending adoption applications and provides the list_animals template with a list of animals and a dictionary that contains animal ID's  as keys and number of apps as values
+
+        args: request
     """
 
-    if request.method == 'GET':
+    unadopted_animals = Animal.objects.filter(date_adopted=None).order_by('name')
+    num_pending_applications = dict()
 
-        unadopted_animals = Animal.objects.filter(date_adopted=None).order_by('name')
-        num_pending_applications = dict()
+    # count the number of pending applications for each animal
+    for animal in unadopted_animals:
+        applications = Application.objects.filter(animal=animal).filter(approved=None)
+        if len(applications) == 0:
+            num_pending_applications[animal.id] = 0
+        else:
+            num_pending_applications[animal.id] = len(applications)
 
-        for animal in unadopted_animals:
-            applications = Application.objects.filter(animal=animal).filter(approved=None)
-            if len(applications) == 0:
-                num_pending_applications[animal.id] = 0
-            else:
-                num_pending_applications[animal.id] = len(applications)
+    context = {
+        'animals': unadopted_animals,
+        'num_animals': len(unadopted_animals) if not None else 0,
+        'num_pending_applications': num_pending_applications,
+    }
 
-        context = {
-            'animals': unadopted_animals,
-            'num_animals': len(unadopted_animals) if not None else 0,
-            'num_pending_applications': num_pending_applications,
-        }
-
-        return render(request, 'app/list_animals.html', context)
+    return render(request, 'app/list_animals.html', context)
 
 @staff_member_required
 def list_specific_applications(request, animal_id):
     """
         This view function loads all pending and rejected applications for a specific animal
+
+        args: request, animal_id
     """
 
-    # check that animal is in the database and it isn't adopted yet
     animal = check_for_unadopted_animal(animal_id)
 
-    if request.method == 'GET':
+    if animal is None:
+        messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're lookingfor isn't there.")
+        return HttpResponseRedirect(reverse('app:list_applications'))
 
-        if animal is None:
-            messages.error(request, "Either the animal you're looking for was adopted or doesn't exist, or the application you're looking for isn't there.")
-            return HttpResponseRedirect(reverse('app:list_applications'))
+    applications = Application.objects.filter(animal=animal).filter(approved=None).order_by('date_submitted')
+    rejections = Application.objects.filter(animal=animal).filter(approved=False).order_by('date_submitted')
 
-        applications = Application.objects.filter(animal=animal).filter(approved=None).order_by('date_submitted')
-        rejections = Application.objects.filter(animal=animal).filter(approved=False).order_by('date_submitted')
-
-        context = {
-            'animal': animal,
-            'applications': applications,
-            'num_applications': len(applications) if not None else 0,
-            'rejections': rejections,
-            'num_rejections': len(rejections) if not None else 0
-        }
-        return render(request, 'app/list_specific_applications.html', context)
+    context = {
+        'animal': animal,
+        'applications': applications,
+        'num_applications': len(applications) if not None else 0,
+        'rejections': rejections,
+        'num_rejections': len(rejections) if not None else 0
+    }
+    return render(request, 'app/list_specific_applications.html', context)
 
 @staff_member_required
 def final_decision(request, animal_id, application_id):
     """
         This view function is responsible for determining that the selected animal is not yet adopted before rendering a confirmation of adoption template for the administrator.
+
+        args: request, animal_id, application_id
     """
 
     # check that animal and application are in the database and animal isn't adopted yet
@@ -115,6 +117,8 @@ def final_decision(request, animal_id, application_id):
 def reject_application(request, animal_id, application_id):
     """
         This view function is responsible for determining that the selected animal is not yet adopted before rendering a rejection template for the administrator.
+
+        args: request, animal_id, application_id
     """
 
     # check that animal and application are in the database and animal isn't adopted yet
@@ -156,6 +160,8 @@ def reject_application(request, animal_id, application_id):
 def revise_judgment(request, animal_id, application_id):
     """
         This view function is responsible for determining that the selected animal is not yet adopted before removing the False condition from Application.approved so that an application can be re-considered for adoption.
+
+        args: request, animal_id, application_id
     """
 
     # check that animal and application are in the database and animal isn't adopted yet

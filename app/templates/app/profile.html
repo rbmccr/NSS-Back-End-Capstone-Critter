@@ -91,7 +91,7 @@
           <img class='mr-3' src='{{ application.animal.image.url }}' alt='{{ application.animal.name }}'>
           <div class='media-body'>
             <h5 class='mt-0'>{{ application.animal.name }}</h5>
-            {{ application.animal.breed }} <br>
+            {{ application.animal.breed|capfirst }} <br>
             Applied: {{ application.date_submitted|date:"M d, Y" }} <br>
             {% if application.approved == True %}
               <span class="badge badge-success">Approved</span> <br>

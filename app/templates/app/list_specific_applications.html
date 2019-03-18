@@ -34,7 +34,7 @@
           <img class='mr-3' src='{{ animal.image.url }}' alt='img'>
           <div class='media-body'>
             <h5 class='mt-0'>{{ animal.name }}</h5>
-            {{ animal.breed }} <br>
+            {{ animal.breed|capfirst }} <br>
             Arrived: {{ animal.arrival_date|timesince }} ago
           </div>
         </div>
