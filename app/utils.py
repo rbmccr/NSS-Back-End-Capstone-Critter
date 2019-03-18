@@ -135,3 +135,23 @@ def check_for_existing_adoption_application(application_id):
         return application
     except IndexError:
         return None
+
+# general helper used to apply a try/except for single volunteering activity instance ---------------
+
+def check_for_existing_volunteering_activity(activity_id):
+    """
+        This helper function searches the Activity table for a volunteering activity with a specific id that is upcoming, then performs a try/except (IndexError)
+
+        args: activity_id
+
+        returns: None if activity does not exist, else instance of single activity
+    """
+
+    now = datetime.datetime.now()
+    activity = Activity.objects.filter(pk=activity_id).filter(date__gte=now)
+
+    try:
+        activity = activity[0]
+        return activity
+    except IndexError:
+        return None
