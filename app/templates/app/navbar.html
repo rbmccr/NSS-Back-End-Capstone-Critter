@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+  <a class="navbar-brand" href="{% url 'app:index' %}">Critter</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_collapse_content" aria-controls="navbar_collapse_content" aria-expanded="falsearia-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbar_collapse_content">
+    {% comment %} Links on left side of navbar {% endcomment %}
+    <ul class="navbar-nav mr-lg-auto">
+      <li class="nav-item"><a class="nav-link" href="{% url 'app:pets' %}">Available Pets</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'app:list_volunteering' %}">Volunteering</a></li>
+      {% if user.is_staff %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'app:new_arrival' %}">New Arrival</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'app:list_applications' %}">Adoptions
+          {% if pending_app_count %}
+            <span class="badge badge-primary">{{pending_app_count}}</span>
+          {% endif %}
+          </a>
+        </li>
+        {% endif %}
+    </ul>
+    {% comment %} Login/Logout link and search on right side of navbar {% endcomment %}
+    <ul class="navbar-nav ml-lg-auto">
+      {% if not user.is_authenticated %}
+        <li class="nav-item nav-lg" style="margin-right:8px;"><a class="btn btn-outline-light" href="{% url 'app:login' %}">Login</a></li>
+        <li class="nav-item nav-lg"><a class="btn btn-outline-light" href="{% url 'app:register' %}">Register</a></li>
+        <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:login' %}">Login</a></li>
+        <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:register' %}">Register</a></li>
+      {% else %}
+        <li class="nav-item nav-lg" style="margin-right:8px;"><a class="btn btn-outline-light" href="{% url 'app:profile' %}">Profile and Applications</a></li>
+        <li class="nav-item nav-lg"><a class="btn btn-outline-light" href="{% url 'app:logout' %}">Logout</a></li>
+        <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:profile' %}">Profile and Applications</a></li>
+        <li class="nav-item nav-sm"><a class="nav-link" href="{% url 'app:logout' %}">Logout</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,30 @@
+html, body {
+  min-height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 56px to account for fixed navbar */
+.container {
+  margin-top: 56px;
+}
+
+/* used with navbar mobile view to swap buttons with nav links for consistency in dropdown menu */
+@media only screen and (max-width: 992px) {
+  .nav-lg {
+    display: none;
+  }
+  .nav-sm {
+    display: block;
+  }
+}
+
+/* used with navbar mobile view to swap buttons with nav links for consistency in dropdown menu */
+@media only screen and (min-width: 992px) {
+  .nav-sm {
+    display: none;
+  }
+}
