@@ -103,7 +103,7 @@
         <a href="{% url 'app:animal_detail' animal.id %}" class='btn btn-outline-dark btn-sm'>View</a>
         <div class='card-body'>
           <h5 class='card-title'>{{ animal.name }}</h5>
-          <p class='card-text'>{{ animal.breed }}</p>
+          <p class='card-text'>{{ animal.breed|capfirst }}</p>
           <p class='card-text'>{{ animal.age|timesince|upto:',' }} old</p>
         </div>
       </div>
