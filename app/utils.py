@@ -98,7 +98,7 @@ def check_if_user_is_signed_up(current_user, activity):
     else:
         return False
 
-# general helper used to apply a try/except for animal ---------------
+# general helper used to apply a try/except for single animal instance ---------------
 
 def check_for_unadopted_animal(animal_id):
     """
@@ -114,5 +114,24 @@ def check_for_unadopted_animal(animal_id):
     try:
         animal = animal[0]
         return animal
+    except IndexError:
+        return None
+
+# general helper used to apply a try/except for single application instance ---------------
+
+def check_for_existing_adoption_application(application_id):
+    """
+        This helper function searches the Application table for an adoption application with a specific id, then performs a try/except (IndexError)
+
+        args: application_id
+
+        returns: None if application does not exist, else instance of single application
+    """
+
+    application = Application.objects.filter(pk=application_id)
+
+    try:
+        application = application[0]
+        return application
     except IndexError:
         return None

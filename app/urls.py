@@ -32,7 +32,7 @@ urlpatterns = [
     # ex. /adoptions/all
     path("adoptions/all", views.list_animals, name='list_applications'),
     # ex. /adoptions/1
-    path("adoptions/pet/<int:id>", views.list_specific_applications, name='list_specific_applications'),
+    path("adoptions/pet/<int:animal_id>", views.list_specific_applications, name='list_specific_applications'),
     # ex. /adoptions/1/final
     path("adoptions/pet/<int:animal_id>/final/app_id=<int:application_id>", views.final_decision, name='final_decision'),
     # ex. /adoptions/1/final/reject/app_id=1
