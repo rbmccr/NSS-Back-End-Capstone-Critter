@@ -108,7 +108,7 @@ class Species(models.Model):
     species = models.CharField(max_length=75)
 
     def __str__(self):
-        return f"Species: {self.species}"
+        return f"{self.species}"
 
 
 class Breed(models.Model):
@@ -120,7 +120,7 @@ class Breed(models.Model):
     breed = models.CharField(max_length=75)
 
     def __str__(self):
-        return f"Breed: {self.breed}"
+        return f"{self.breed}"
 
 
 class Color(models.Model):
@@ -132,7 +132,7 @@ class Color(models.Model):
     color = models.CharField(max_length=40)
 
     def __str__(self):
-        return f"Color: {self.color}"
+        return f"{self.color}"
 
 
 class Animal(models.Model):
@@ -143,7 +143,7 @@ class Animal(models.Model):
 
     name = models.CharField(max_length=16)
     # you never know if you're going to adopt out a sea turtle...
-    age = models.PositiveIntegerField(validators=[MaxValueValidator(200)])
+    age = models.DateField(default=None, null=True, blank=False)
     species = models.ForeignKey(Species, on_delete=models.PROTECT)
     breed = models.ForeignKey(Breed, on_delete=models.PROTECT)
     color = models.ForeignKey(Color, on_delete=models.PROTECT)
@@ -152,7 +152,7 @@ class Animal(models.Model):
         ('F', 'Female'),
     )
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
-    image = models.ImageField(upload_to='media/', default="media/placeholder.jpg")
+    image = models.ImageField(upload_to='media/', default="media/placeholder.jpg", blank=True)
     description = models.CharField(max_length=500)
     arrival_date = models.DateTimeField(default=None, null=True, blank=False)
     date_adopted = models.DateTimeField(default=None, null=True, blank=True)

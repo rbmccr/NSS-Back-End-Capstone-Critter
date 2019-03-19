@@ -1,17 +1,81 @@
 {% extends 'app/index.html' %}
+{% load upto %}
 
 {% block style %}
   <style>
     img {
       max-width: 500px;
       max-height: 500px;
+      width: 100%;
+      border-radius: 1%;
+    }
+    .card-body {
+      padding-top: 18px;
+      padding-bottom: 10px;
+    }
+
+    /* used to move text closer to image if window larger than 768px */
+    @media only screen and (min-width: 768px) {
+      .col-md-6:last-of-type {
+        padding-left: 0;
+      }
     }
   </style>
 {% endblock style %}
 
 {% block content %}
-  <img src='{{ animal.image.url }}' alt='{{ animal.name }}'>
-  <div>{{ animal.name }}, {{ animal.age }}, {{ animal.description }}</div>
+  <div class='pb-2 mt-4 mb-4 border-bottom'>
+    <h3>You're Viewing: {{ animal.name }}</h3>
+  </div>
+
+  <div class='messages'>
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        <div class='{{ message.tags }} alert alert-danger' role='alert'>{{ message }}</div>
+      {% else %}
+        <div class='{{ message.tags }} alert alert-success' role='alert'>{{ message }}</div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% if user.is_staff %}
+    <a class='btn btn-outline-dark btn-sm' href="{% url 'app:list_specific_applications' animal.id %}">View Applications</a>
+    <a class='btn btn-outline-dark btn-sm' href="{% url 'app:animal_edit' animal.id %}">Edit Animal</a>
+    <br>
+    <br>
+  {% endif %}
+
+    <div class='card mb-3 mb-0'>
+      <div class='card-header'>
+        About Me
+      </div>
+      <div class='card-body'>
+        <div class='row'>
+          <!-- display image on left -->
+          <div class='col-md-6 mb-2'>
+            <img src='{{ animal.image.url }}' alt='{{ animal.name }}'>
+          </div>
+          <!-- display details and description -->
+          <div class='col-md-6 mb-2'>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Arrived: {{ animal.arrival_date|date:"M d, Y" }}</li>
+            <li class="list-group-item">Age: {{ animal.age|timesince|upto:',' }} old</li>
+            {% if animal.sex == 'F' %}
+              <li class="list-group-item">Sex: Female</li>
+            {% else %}
+              <li class="list-group-item">Sex: Male</li>
+            {% endif %}
+            <li class="list-group-item">Species: {{ animal.species|capfirst }} </li>
+            <li class="list-group-item">Breed: {{ animal.breed|capfirst }} </li>
+            <li class="list-group-item">Color: {{ animal.color|capfirst }}</li>
+            <li class="list-group-item">{{ animal.description }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- prevent user from submitting an application for an animal more than once (also give feedback on app status) -->
   {% if existing_application %}
     {% if application.approved == None %}
       <button class='btn btn-secondary' disabled>Application pending</button>
@@ -19,9 +83,8 @@
       <button class='btn btn-danger' disabled>Application declined</button>
     {% endif %}
   {% else %}
-    <a class='btn btn-dark' href="{% url 'app:adopt' animal.id %}">Apply for adoption</a>
+    <a class='btn btn-outline-dark' href="{% url 'app:adopt' animal.id %}">Apply for adoption</a>
   {% endif %}
-  {% if user.is_staff %}
-    <a class='btn btn-primary' href="{% url 'app:list_specific_applications' animal.id %}">View Applications</a>
-  {% endif %}
+    <a class='btn btn-outline-dark' href="{% url 'app:pets' %}">Back to List</a>
+
 {% endblock content %}

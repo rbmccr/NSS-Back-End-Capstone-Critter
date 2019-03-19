@@ -25,6 +25,10 @@
       {% endfor %}
     </div>
 
+    {% if num_animals == 0 %}
+      <div>No unadopted animals were returned from the database.</div>
+    {% endif %}
+
     <div class='list-group'>
       {% for animal in animals %}
         <a href="{% url 'app:list_specific_applications' animal.id %}" class="list-group-item list-group-item-action">
@@ -39,8 +43,8 @@
                     {% endif %}
                   {% endif %}
                 {% endfor %}
-              {{ animal.breed }} <br>
-              Arrived: {{ animal.date_arrival|timesince }} ago
+              {{ animal.breed|capfirst }} <br>
+              Arrived: {{ animal.arrival_date|timesince }} ago
             </div>
           </div>
         </a>

@@ -3,6 +3,14 @@ from django.contrib.auth import get_user_model
 
 
 class UsersManagersTests(TestCase):
+    """
+        Defines test cases for the CustomUser model
+
+        Methods:
+            test_create_user
+            test_create_superuser
+    """
+
 
     def test_create_user(self):
         User = get_user_model()

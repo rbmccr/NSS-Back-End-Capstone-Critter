@@ -21,16 +21,18 @@ urlpatterns = [
     path("pets", views.available_animals, name='pets'),
     # ex. /pets/search
     path("pets/search", views.available_animals_search, name='search_pets'),
+    # ex. /pets/edit/1
+    path("pets/edit/<int:animal_id>", views.animal_edit, name='animal_edit'),
     # ex. /pets/details/1
-    path("pets/details/<int:id>", views.animal_detail, name='animal_detail'),
+    path("pets/details/<int:animal_id>", views.animal_detail, name='animal_detail'),
     # ex. /new_arrival
     path("new_arrival", views.new_arrival, name='new_arrival'),
     # ex. /pets/adopt/1
-    path("pets/adopt/<int:id>", views.adoption_app, name='adopt'),
+    path("pets/adopt/<int:animal_id>", views.adoption_app, name='adopt'),
     # ex. /adoptions/all
     path("adoptions/all", views.list_animals, name='list_applications'),
     # ex. /adoptions/1
-    path("adoptions/pet/<int:id>", views.list_specific_applications, name='list_specific_applications'),
+    path("adoptions/pet/<int:animal_id>", views.list_specific_applications, name='list_specific_applications'),
     # ex. /adoptions/1/final
     path("adoptions/pet/<int:animal_id>/final/app_id=<int:application_id>", views.final_decision, name='final_decision'),
     # ex. /adoptions/1/final/reject/app_id=1

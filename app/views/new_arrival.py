@@ -17,15 +17,17 @@ def new_arrival(request):
 
     if request.method == 'GET':
         animal_form = AnimalForm()
-        context = {
-            'animal_form': animal_form
-        }
-        return render(request, 'app/new_arrival.html', context)
+        context = {'animal_form': animal_form}
+        return render(request, 'app/animal_form.html', context)
 
     if request.method == 'POST':
-        form = AnimalForm(request.POST, request.FILES)
-        if form.is_valid():
+        animal = AnimalForm(request.POST, request.FILES)
+        if animal.is_valid():
             # Save the animal's form data to the database.
-            form.save()
+            animal.save()
             messages.success(request, 'New arrival saved successfully!')
             return HttpResponseRedirect(reverse("app:pets"))
+        else:
+            context = {'animal_form': animal_form}
+            return render(request, 'app/animal_form.html', context)
+            # TODO: check else logic for errors
