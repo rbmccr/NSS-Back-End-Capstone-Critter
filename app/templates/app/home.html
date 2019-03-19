@@ -25,10 +25,35 @@
 </div>
 
 <div class="row">
-{% for animal in recently_adopted_animals %}
-  <figure class="col-md-4">
-      <img alt="picture" src="{{ animal.image }}" class="img-fluid">
-      <p class='carousel-caption'>{{ animal.name }}</p>
-  </figure>
-{% endfor %}
+  {% for animal in recently_adopted_animals %}
+    <figure class="col-md-4">
+        <img alt="picture" src="{{ animal.image }}" class="img-fluid">
+        <p class='carousel-caption'>{{ animal.name }}</p>
+    </figure>
+  {% endfor %}
 </div>
+
+<div class='pb-2 mt-4 mb-4 border-bottom'>
+    <h3>Contact Us</h3>
+</div>
+
+<div class='container' style='margin-top:0px;'>
+  <div class="row">
+    <div class="col-md-3 col-lg-3 col-xl-3">
+      <address>
+        <strong>Critter</strong><br>
+        213 Oceola Ave<br>
+        Nashville, TN 37209<br>
+      </address>
+
+      <address>
+        <div>(123) 456-7890</div>
+        <a href="mailto:#">myemail@email.com</a>
+      </address>
+    </div>
+    <div class="col-md-9 col-lg-9 col-xl-9">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12887.272468041503!2d-86.8602441!3d36.1466416!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x25f1f3497874625!2sNashville+Humane+Association!5e0!3m2!1sen!2sus!4v1553027220722" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+

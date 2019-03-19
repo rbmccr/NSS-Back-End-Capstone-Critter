@@ -39,3 +39,7 @@ margin-right: auto;
     margin-bottom: 8px;
   }
 }
+
+iframe {
+  width: 100%;
+}
