@@ -24,11 +24,7 @@
       <div class="container body-content pb-5">
       {% block content %}
 
-        {% if user.is_authenticated %}
-        <h3>Authenticated view... Current user: {{ user.first_name }}</h3>
-        {% else %}
-        <h1>Unauthenticated view</h1>
-        {% endif %}
+        {% include 'app/home.html' %}
 
       {% endblock content %}
       </div>
