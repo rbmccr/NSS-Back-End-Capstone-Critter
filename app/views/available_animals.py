@@ -127,7 +127,7 @@ def animal_detail(request, animal_id):
             context['existing_application'] = True
             context['application'] = application[0]
 
-        return render(request, 'app/animal_detail.html', context)
+    return render(request, 'app/animal_detail.html', context)
 
 @staff_member_required
 def animal_edit(request, animal_id):
