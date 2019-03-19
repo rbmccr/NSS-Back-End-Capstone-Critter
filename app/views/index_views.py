@@ -6,8 +6,13 @@ from django.template import RequestContext
 from app.models import Animal
 
 def index(request):
+    """
+        This view function gets the three most-recently adopted animals and passes them to the index.html template
 
-    recently_adopted_animals = Animal.objects.filter(date_adopted__isnull=False).exclude(image='/media/placeholder.jpg').order_by('date_adopted')[0:3]
+        args: request
+    """
+
+    recently_adopted_animals = Animal.objects.filter(date_adopted__isnull=False).exclude(image='/media/placeholder.jpg').order_by('-date_adopted')[0:3]
 
     context = {
         'recently_adopted_animals': recently_adopted_animals,
