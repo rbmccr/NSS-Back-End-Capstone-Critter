@@ -14,6 +14,12 @@ from django.contrib import messages
 
 @staff_member_required
 def new_arrival(request):
+    """
+        This view function renders a form for an administrator to upload a new animal. On POST, a new animal instance is added to the database in the Animal table.
+
+        args: request
+    """
+
 
     if request.method == 'GET':
         animal_form = AnimalForm()
