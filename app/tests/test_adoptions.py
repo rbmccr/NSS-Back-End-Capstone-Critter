@@ -41,6 +41,7 @@ class AdminAdoptionsTest(TestCase):
             test_unauth_user_cannot_view_approval_and_cancellation_pages
             test_posting_to_rejection_applies_False_condition_to_application
             test_posting_to_approval_applies_True_condition_to_application
+            test_staff_user_can_revise_judgment
     """
 
     @classmethod

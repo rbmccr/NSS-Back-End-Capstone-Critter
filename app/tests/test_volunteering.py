@@ -33,6 +33,8 @@ class VolunteeringTests(TestCase):
             test_auth_user_volunteer_cannot_signup_for_past_activity
             test_auth_user_volunteer_cannot_signup_for_cancelled_activity
             test_auth_user_volunteer_can_revoke_signed_up_status
+            test_staff_user_can_cancel_upcoming_activity
+            test_staff_user_can_add_new_upcoming_activity
     """
 
     @classmethod
@@ -317,3 +319,43 @@ class VolunteeringTests(TestCase):
         # confirm a database join table was removed from ActivityVolunteer (i.e. length is empty)
         result = len(ActivityVolunteer.objects.all())
         self.assertEqual(result,0)
+
+    def test_staff_user_can_cancel_upcoming_activity(self):
+        """
+            Validate that a staff user can cancel an upcoming activity
+        """
+
+        self.client.login(email='test_admin@test.com', password='secret')
+        # GET cancel url path
+        response = self.client.get(reverse('app:cancel_volunteering', args=(1,)))
+        self.assertEqual(response.status_code, 200)
+        # POST to cancel url path (i.e. click confirmation button)
+        response = self.client.post(reverse('app:cancel_volunteering', args=(1,)))
+        # confirm database table shows cancelled property of True
+        activity = Activity.objects.get(pk=1)
+        self.assertTrue(activity.cancelled)
+
+    def test_staff_user_can_add_new_upcoming_activity(self):
+        """
+            Validate that a staff user can cancel an upcoming activity
+        """
+
+        self.client.login(email='test_admin@test.com', password='secret')
+        # GET add volunteering path and check for 200
+        response = self.client.get(reverse('app:add_volunteering'))
+        self.assertEqual(response.status_code, 200)
+        # POST to add volunteering url path (i.e. submit form)
+
+        form_data = {
+            'activity': 'new_upcoming_activity',
+            'activity_type': 'cats',
+            'date': '2050-03-20',
+            'description': 'a new activity',
+            'start_time': '10:00:00',
+            'end_time': '14:00:00',
+            'max_attendance': 15,
+        }
+
+        response = self.client.post(reverse('app:add_volunteering'), form_data)
+        # confirm database table shows cancelled property of True
+        activity = Activity.objects.get(pk=4)
