@@ -32,6 +32,7 @@ class VolunteeringTests(TestCase):
             test_auth_user_volunteer_signup
             test_auth_user_volunteer_cannot_signup_for_past_activity
             test_auth_user_volunteer_cannot_signup_for_cancelled_activity
+            test_auth_user_volunteer_can_revoke_signed_up_status
     """
 
     @classmethod

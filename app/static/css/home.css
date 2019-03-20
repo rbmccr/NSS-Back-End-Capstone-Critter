@@ -7,6 +7,13 @@ img {
   display: block;
 }
 
+/* size logo */
+img.logo {
+  max-width: 582px;
+  width: 100%;
+  height: auto;
+}
+
 /* reduce vertical padding in jumbotron */
 .jumbotron {
   padding-top: 32px;
