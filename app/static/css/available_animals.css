@@ -35,25 +35,43 @@
       bottom: 17%; /* was 2.5% */
       right: 5%; /* was 33% */
     }
-
     .card > img {
       width: 310px;
       height: 310px;
     }
 
-    /* align filters in each column in form */
-    .filters {
-      display: grid;
-      grid-template-columns: auto auto auto;
-      justify-content: space-around;
+    /* STYLE FILTERS ---------------------------------------- */
+
+    /* style species and age button groups */
+    .btn-group {
+      width: 100%;
     }
+    .btn-group > .btn {
+      width: 33.33%;
+    }
+
+    /* style clear filters button */
+    .clear-btn {
+      width: 100%;
+    }
+
+    #filters {
+      max-height: 250px;
+    }
+
+    @media only screen and (max-width: 992px) {
+      .btn-group, .clear-btn {
+        margin-top: 12px;
+      }
+    }
+
+    /* END STYLE FILTERS ---------------------------------------- */
 
     /* used to center animal cards in body if window between 1200px and 992px */
     @media only screen and (max-width: 1200px) and (min-width:992px) {
       .card-container {
         grid-template-columns: 32.25% 32.25% 32.25%; /* 300px card / 960px container */
       }
-
       .card {
         width: 300px;
         height: 420px;

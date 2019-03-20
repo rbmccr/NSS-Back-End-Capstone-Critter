@@ -35,9 +35,9 @@
   <form id="adoption_form" method="POST" action="{% url 'app:adopt' animal.id %}">
     {% csrf_token %}
     <div class='card mb-3'>
-      <div class='card-header'>
+      <h5 class='card-header'>
         Please Complete this Form
-      </div>
+      </h5>
       <div class='card-body' style='padding-top: 18px; padding-bottom: 10px;'>
         <ul class="list-group">
           <li class="list-group-item">Please provide us with an explanation (up to 1,000 characters) that describes why you are a suitable candidate for adoption. Your contact information is submitted automatically. A staff member will contact you if your application is accepted. You can view the status of any of your adoption application(s) by visiting the link in the navigation bar, titled 'Profile and Applications'. Applications are reviewed in date order.</li>
