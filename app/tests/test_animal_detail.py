@@ -8,8 +8,8 @@ from app.models import Animal, Breed, Color, CustomUser, Species
 
 
 class AnimalDetailTests(TestCase):
-    """Defines tests for payment.py and cart.py views
-        Model:
+    """
+        Models:
             Animal
             CustomUser
             Breed

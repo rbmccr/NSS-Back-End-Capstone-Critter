@@ -10,8 +10,8 @@ from app.forms import AnimalForm
 
 
 class NewArrivalTests(TestCase):
-    """Defines tests for payment.py and cart.py views
-        Model:
+    """
+        Models:
             Animal
             CustomUser
             Breed

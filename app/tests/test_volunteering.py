@@ -8,8 +8,8 @@ from app.models import Activity, ActivityVolunteer, CustomUser, Volunteer
 
 
 class VolunteeringTests(TestCase):
-    """Defines tests for payment.py and cart.py views
-        Model:
+    """
+        Models:
             Activity
             ActivityVolunteer
             CustomUser
