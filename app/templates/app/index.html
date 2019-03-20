@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>{% block title %}Critter{% endblock title %}</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{% static '/thumbnails/other.png' %}" type="image/x-icon">
     <!-- FontAwesome (for use with Bootstrap) -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <!-- static css files -->
@@ -24,11 +26,7 @@
       <div class="container body-content pb-5">
       {% block content %}
 
-        {% if user.is_authenticated %}
-        <h3>Authenticated view... Current user: {{ user.first_name }}</h3>
-        {% else %}
-        <h1>Unauthenticated view</h1>
-        {% endif %}
+        {% include 'app/home.html' %}
 
       {% endblock content %}
       </div>

@@ -26,9 +26,9 @@
     {% endif %}
         {% csrf_token %}
         <div class='card mb-3'>
-            <div class='card-header'>
+            <h5 class='card-header'>
               Required Information
-            </div>
+            </h5>
             <div class='card-body' style='padding-top: 10px; padding-bottom: 10px;'>
                 {% crispy animal_form %}
             </div>

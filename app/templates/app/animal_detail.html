@@ -57,18 +57,18 @@
           </div>
           <!-- display details and description -->
           <div class='col-md-6 mb-2'>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">Arrived: {{ animal.arrival_date|date:"M d, Y" }}</li>
-            <li class="list-group-item">Age: {{ animal.age|timesince|upto:',' }} old</li>
+          <ul class='list-group list-group-flush'>
+            <li class='list-group-item'>Arrived: {{ animal.arrival_date|date:'M d, Y' }}</li>
+            <li class='list-group-item'>Age: {{ animal.age|timesince|upto:',' }} old</li>
             {% if animal.sex == 'F' %}
-              <li class="list-group-item">Sex: Female</li>
+              <li class='list-group-item'>Sex: Female</li>
             {% else %}
-              <li class="list-group-item">Sex: Male</li>
+              <li class='list-group-item'>Sex: Male</li>
             {% endif %}
-            <li class="list-group-item">Species: {{ animal.species|capfirst }} </li>
-            <li class="list-group-item">Breed: {{ animal.breed|capfirst }} </li>
-            <li class="list-group-item">Color: {{ animal.color|capfirst }}</li>
-            <li class="list-group-item">{{ animal.description }}</li>
+            <li class='list-group-item'>Species: {{ animal.species|capfirst }} </li>
+            <li class='list-group-item'>Breed: {{ animal.breed|capfirst }} </li>
+            <li class='list-group-item'>Color: {{ animal.color|capfirst }}</li>
+            <li class='list-group-item'>{{ animal.description }}</li>
           </ul>
         </div>
       </div>

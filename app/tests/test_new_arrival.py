@@ -1,25 +1,31 @@
 # unittest
 import unittest
-from django.test import TestCase, Client
+from django.test import TestCase
 # HTTP
 from django.urls import reverse
 # models
-from app.models import *
+from app.models import Animal, Breed, Color, CustomUser, Species
 # forms
 from app.forms import AnimalForm
 
 
 class NewArrivalTests(TestCase):
-    """Defines tests for payment.py and cart.py views
-        Model:
+    """
+        Models:
             Animal
             CustomUser
+            Breed
+            Color
+            Species
         Templates:
             new_arrival.html
         Views:
             new_arrival.py
         Methods:
+            setUpclass
+            test_non_admin_cannot_access_form
             test_add_new_arrival
+            test_add_image
     """
 
     @classmethod
@@ -50,7 +56,7 @@ class NewArrivalTests(TestCase):
             is_staff=True,
         )
 
-        # create user (administrator)
+        # create user (non-administrator)
         CustomUser.objects.create_user(
             first_name='Test_firstname2',
             last_name='Test_lastname2',
@@ -112,7 +118,6 @@ class NewArrivalTests(TestCase):
         """
             This test confirms that an uploaded .jpg image will appear on a POSTed Animal instance's image property.
         """
-
 
         # log user (administrator) in
         self.client.login(email='test_user@test.com', password='secret')

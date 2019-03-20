@@ -22,59 +22,64 @@
   </div>
 
   <div class='card mb-3' style='width: 100%; height: auto;'>
-    <div class='card-header'>
-      Apply a filter or search by name
-    </div>
+    <h5 class='card-header'>
+      Filter or search by name
+    </h5>
 
-    <div class='card-body'>
+    <div class='card-body' id='filters'>
 
-        <form class='filters ml-lg-auto my-2 my-lg-0' action="{% url 'app:search_pets' %}" method='GET'>
+        <form class='ml-lg-auto my-2 my-lg-0' action="{% url 'app:search_pets' %}" method='GET'>
           <input type='hidden' value='{{ animal_species }}' name='animal_species'>
           <input type='hidden' value='{{ animal_age }}' name='animal_age'>
-          <div class=''>
-            <div class='input-group'>
-              <input class='form-control' name='name_query' type='search' placeholder='Search by name' aria-label='Search' value='{{ search_text }}'>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-dark' type='submit'><i class='fas fa-search'></i></button>
+          <div class='row'>
+            <div class='col-md-12 col-lg-3 col-xl-4'>
+              <div class='input-group'>
+                <input class='form-control' name='name_query' type='search' placeholder='Search by name' aria-label='Search' value='{{  search_text }}'>
+                <div class='input-group-append'>
+                  <button class='btn btn-outline-dark' type='submit'><i class='fas fa-search'></i></button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class=''>
-            <div class='btn-group' role='group' aria-label='animal filters'>
-              {% if animal_species == 'cat' %}
-                <button type='submit' class='btn btn-outline-dark active' name='cat'>&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
-              {% else %}
-                <button type='submit' class='btn btn-outline-dark' name='cat'>&nbsp;&nbsp; Cat &nbsp;&nbsp;</button>
-              {% endif %}
-              {% if animal_species == 'dog' %}
-                <button type='submit' class='btn btn-outline-dark active' name='dog'>&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
-              {% else %}
-                <button type='submit' class='btn btn-outline-dark' name='dog'>&nbsp;&nbsp; Dog &nbsp;&nbsp;</button>
-              {% endif %}
-              {% if animal_species == 'other' %}
-                <button type='submit' class='btn btn-outline-dark active' name='other'>&nbsp; Other &nbsp;</button>
-              {% else %}
-                <button type='submit' class='btn btn-outline-dark' name='other'>&nbsp; Other &nbsp;</button>
-              {% endif %}
+            <div id='species-filters' class='col-md-6 col-lg-3 col-xl-3 text-center'>
+              <div class='btn-group' role='group' aria-label='animal species filter'>
+                {% if animal_species == 'cat' %}
+                  <button type='submit' class='btn btn-outline-dark active' name='cat'>Cat</button>
+                {% else %}
+                  <button type='submit' class='btn btn-outline-dark' name='cat'>Cat</button>
+                {% endif %}
+                {% if animal_species == 'dog' %}
+                  <button type='submit' class='btn btn-outline-dark active' name='dog'>Dog</button>
+                {% else %}
+                  <button type='submit' class='btn btn-outline-dark' name='dog'>Dog</button>
+                {% endif %}
+                {% if animal_species == 'other' %}
+                  <button type='submit' class='btn btn-outline-dark active' name='other'>Other</button>
+                {% else %}
+                  <button type='submit' class='btn btn-outline-dark' name='other'>Other</button>
+                {% endif %}
+              </div>
             </div>
-          </div>
-          <div class=''>
-            <div class='btn-group' role='group' aria-label='animal filters'>
-              {% if animal_age == 'young' %}
-                <button type='submit' class='btn btn-outline-dark active' name='young'>&nbsp; Young &nbsp;</button>
-              {% else %}
-                <button type='submit' class='btn btn-outline-dark' name='young'>&nbsp; Young &nbsp;</button>
-              {% endif %}
-              {% if animal_age == 'adult' %}
-                <button type='submit' class='btn btn-outline-dark active' name='adult'>&nbsp; Adult &nbsp;</button>
-              {% else %}
-                <button type='submit' class='btn btn-outline-dark' name='adult'>&nbsp; Adult &nbsp;</button>
-              {% endif %}
-              {% if animal_age == 'senior' %}
-                <button type='submit' class='btn btn-outline-dark active' name='senior'>&nbsp; Senior &nbsp;</button>
-              {% else %}
-                <button type='submit' class='btn btn-outline-dark' name='senior'>&nbsp; Senior &nbsp;</button>
-              {% endif %}
+            <div id='age-filters' class='col-md-6 col-lg-4 col-xl-3 text-center'>
+              <div class='btn-group' role='group' aria-label='animal age filter'>
+                {% if animal_age == 'young' %}
+                  <button type='submit' class='btn btn-outline-dark active' name='young'>Young</button>
+                {% else %}
+                  <button type='submit' class='btn btn-outline-dark' name='young'>Young</button>
+                {% endif %}
+                {% if animal_age == 'adult' %}
+                  <button type='submit' class='btn btn-outline-dark active' name='adult'>Adult</button>
+                {% else %}
+                  <button type='submit' class='btn btn-outline-dark' name='adult'>Adult</button>
+                {% endif %}
+                {% if animal_age == 'senior' %}
+                  <button type='submit' class='btn btn-outline-dark active' name='senior'>Senior</button>
+                {% else %}
+                  <button type='submit' class='btn btn-outline-dark' name='senior'>Senior</button>
+                {% endif %}
+              </div>
+            </div>
+            <div class='col-md-12 col-lg-2 col-xl-2'>
+              <a href="{% url 'app:pets' %}" class='btn btn-outline-dark clear-btn'>Clear</a>
             </div>
           </div>
         </form>
