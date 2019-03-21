@@ -33,9 +33,7 @@ I have a big heart for animals, and I personally understand the immense impact a
 - run `pip install -r requirements.txt`
 
 ### Seed the database with pre-fabricated data
-- run `python manage.py makemigrations api`
-- run `python manage.py migrate`
-- run `./manage.py loaddata db.json`
+- run `./django_data.sh app db.json`. This will make migrations and seed the database with content
 
 ### Confirm passing unit tests
 - run `python manage.py test`
