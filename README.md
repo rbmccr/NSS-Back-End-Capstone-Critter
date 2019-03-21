@@ -15,6 +15,7 @@ I've already created a file to populate the database.
 
 ### Confirm passing unit tests
 - run `python manage.py test`
+- optional: view coverage report (71% overall) by running `pytest --cov=app`
 
 ### Run the project
 - run `python manage.py runserver`

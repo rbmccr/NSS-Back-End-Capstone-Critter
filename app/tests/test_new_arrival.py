@@ -101,16 +101,12 @@ class NewArrivalTests(TestCase):
         }
 
         animal_form = AnimalForm(form_data)
-
         # confirm validity of form
         self.assertTrue(animal_form.is_valid())
-
         # save form data to test database and get instance of the new animal
         new_animal = animal_form.save()
-
         # check that ID of saved animal is 1
         self.assertEqual(new_animal.id, 1)
-
         # check that image placeholder path is listed correctly (since no image was provided)
         self.assertEqual(new_animal.image, 'media/placeholder.jpg')
 
@@ -141,15 +137,12 @@ class NewArrivalTests(TestCase):
 
             # post the form data
             response = self.client.post(reverse('app:new_arrival'), form_data)
-
             # confirm post response
             self.assertEqual(response.status_code, 302)
-
             # get instance of new_animal
             new_animal = Animal.objects.get(pk=1)
-
             # confirm new_animal was posted via name check
             self.assertEqual(new_animal.name, 'test_animal')
-
             # confirm name of test media file shows in instance (e.g. media/test_7x1jLfb.jpg)
             self.assertIn('media/test', str(new_animal.image))
+            new_animal.image.delete()
