@@ -1,3 +1,27 @@
+## About the Project
+<em>Critter</em> is an application designed to support a small, limited-resource animal shelter that may not have the financial or technical ability to develop a website of its own. It is written in Python and Django with Bootstrap styling.
+
+Features of the application vary, depending on permissions. Anyone can search for animals, view an animal’s details, and see upcoming volunteering opportunities. Registered users can apply to adopt animals and monitor an application’s status on their profile. They can also easily sign up to volunteer. Site administrators can manage animals that appear on the site, review applications for a specific animal before approving or declining them, and organize volunteering activities.
+
+I have a big heart for animals, and I personally understand the immense impact a pet can have on a person’s quality of life. <em>Critter</em> was an opportunity for me to create a deployable template that I can offer to animal shelters.
+
+### Languages, Libraries, and Frameworks
+<p float="left">
+  <img src="https://energyframeworks.com/wp-content/uploads/2013/12/html5-css-javascript-logos.png" height="75" alt="html css javascript" title="html css javascript">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://js.foundation/wp-content/uploads/sites/33/2017/02/jquery.png" height="70" alt="jQuery" title="jQuery">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1024px-Python-logo-notext.svg.png" height="75" alt="Python" title="Python"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="http://dlyapun.com/static/images/django.png" height="75" alt="Django" title="Django"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Boostrap_logo.svg" height="70" alt="Bootstrap" title="Bootstrap"/>
+</p>
+
+### Development Tools
+<p float="left">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Visual_Studio_Code_1.18_icon.svg/1200px-Visual_Studio_Code_1.18_icon.svg.png" height="75" alt="VS Code"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://git-scm.com/images/logos/downloads/Git-Icon-Black.png" height="75" alt="git" title="git"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://assets.ubuntu.com/v1/29985a98-ubuntu-logo32.png" height="75" alt="ubuntu" title="ubuntu"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://docs.pytest.org/en/latest/_static/pytest1.png" height="75" alt="pytest" title="pytest"/>
+</p>
+
 ## Project Setup
 
 ### Installing the project
@@ -27,6 +51,11 @@
 Although there are several aspects of the site available to an unauthenticated user, most site features are only accessible when logged in. Use either of the following usernames to log in (passwords are 'password'):
 - `brendan@email.com` (staff permissions)
 - `dave@email.com` (standard permissions)
+
+### Login / Registration (navbar)
+Permissions required: none
+- A user who is not registered can complete a form with their contact information to create an account
+- An existing user can log in
 
 ### Home
 Permissions required: none
