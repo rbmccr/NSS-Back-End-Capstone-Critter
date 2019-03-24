@@ -13,6 +13,7 @@ from app.models import Animal, Application, Species, Breed, Color, CustomUser
 from app.forms import AnimalForm
 # util functions
 from app.utils import establish_query, check_for_unadopted_animal
+from django.db.models.functions import Lower
 
 def available_animals(request):
     """
@@ -21,7 +22,7 @@ def available_animals(request):
         args: request
     """
 
-    animals = Animal.objects.filter(date_adopted=None).order_by('name')
+    animals = Animal.objects.filter(date_adopted=None).order_by(Lower('name'))
     context = {
         'animals': animals,
         'animal_species': None,
